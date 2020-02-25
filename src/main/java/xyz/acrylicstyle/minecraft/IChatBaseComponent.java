@@ -10,15 +10,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
-public interface IChatBaseComponent {
+public interface IChatBaseComponent extends Cloneable {
     default IChatBaseComponent a(String s) {
-        IChatBaseComponent c;
-        try {
-            c = (IChatBaseComponent) this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            c = this;
-        }
+        IChatBaseComponent c = this;
         c.setO(invoke("a", s));
         return c;
     }
@@ -45,13 +39,7 @@ public interface IChatBaseComponent {
     }
 
     default IChatBaseComponent h() {
-        IChatBaseComponent c;
-        try {
-            c = (IChatBaseComponent) this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            c = this;
-        }
+        IChatBaseComponent c = this;
         c.setO(invoke("h"));
         return c;
     }
