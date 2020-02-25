@@ -14,7 +14,7 @@ public class NBTTagCompound {
     private Object o;
 
     public Object getNBTTagCompound() {
-        if (o.getClass().getSimpleName().equals("NBTTagCompound")) return o;
+        if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getSimpleName().equals("NBTTagCompound")) return o;
         try {
             return o.getClass().getField("tag").get(o);
         } catch (IllegalAccessException | NoSuchFieldException e) {
