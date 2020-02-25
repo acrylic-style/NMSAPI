@@ -31,7 +31,10 @@ import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import util.CollectionList;
+import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.minecraft.EntityPlayer;
+import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
@@ -39,18 +42,28 @@ import java.util.*;
 
 public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity {
     private Player player;
+    public Object craftPlayer = null;
 
-    public CraftPlayer(Player player) {
-        this.player = player;
+    public CraftPlayer(Object o) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (o.getClass().isAssignableFrom(Player.class)) {
+            this.player = (Player) o;
+            this.craftPlayer = o;
+            return;
+        }
+        if ((o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer"))
+                || o.getClass().getCanonicalName().equals("org.bukkit.entity.Player")) {
+            this.player = (Player) o;
+            this.craftPlayer = o;
+            return;
+        }
+        if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) {
+            this.player = (Player) o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
+            this.craftPlayer = o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
+        }
     }
 
-    public Object getProfile() {
-        try {
-            return getHandle().getClass().getMethod("getProfile").invoke(getHandle());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-            throw new UnsupportedOperationException();
-        }
+    public GameProfile getProfile() {
+        return getHandle().getProfile();
     }
 
     public EntityPlayer getHandle() {
@@ -221,6 +234,7 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    @Deprecated
     public void playNote(@NotNull Location location, byte b, byte b1) {
         player.playNote(location, b, b1);
     }
@@ -271,6 +285,7 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    @Deprecated
     public void playEffect(@NotNull Location location, @NotNull Effect effect, int i) {
         player.playEffect(location, effect, i);
     }
@@ -281,6 +296,7 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    @Deprecated
     public void sendBlockChange(@NotNull Location location, @NotNull Material material, byte b) {
         player.sendBlockChange(location, material, b);
     }
@@ -291,6 +307,7 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    @Deprecated
     public boolean sendChunkChange(@NotNull Location location, int i, int i1, int i2, @NotNull byte[] bytes) {
         return player.sendChunkChange(location, i, i1, i2, bytes);
     }
@@ -382,707 +399,715 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
 
     @Override
     public void decrementStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType) throws IllegalArgumentException {
-
+        player.decrementStatistic(statistic, entityType);
     }
 
     @Override
     public int getStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType) throws IllegalArgumentException {
-        return 0;
+        return player.getStatistic(statistic, entityType);
     }
 
     @Override
     public void incrementStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType, int i) throws IllegalArgumentException {
-
+        player.incrementStatistic(statistic, entityType, i);
     }
 
     @Override
     public void decrementStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType, int i) {
-
+        player.decrementStatistic(statistic, entityType, i);
     }
 
     @Override
     public void setStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType, int i) {
-
+        player.setStatistic(statistic, entityType, i);
     }
 
     @Override
     public void setPlayerTime(long l, boolean b) {
-
+        player.setPlayerTime(l, b);
     }
 
     @Override
     public long getPlayerTime() {
-        return 0;
+        return player.getPlayerTime();
     }
 
     @Override
     public long getPlayerTimeOffset() {
-        return 0;
+        return player.getPlayerTimeOffset();
     }
 
     @Override
     public boolean isPlayerTimeRelative() {
-        return false;
+        return player.isPlayerTimeRelative();
     }
 
     @Override
     public void resetPlayerTime() {
-
+        player.resetPlayerTime();
     }
 
     @Override
     public void setPlayerWeather(@NotNull WeatherType weatherType) {
-
+        player.setPlayerWeather(weatherType);
     }
 
     @Override
     public @Nullable WeatherType getPlayerWeather() {
-        throw new UnsupportedOperationException();
+        return player.getPlayerWeather();
     }
 
     @Override
     public void resetPlayerWeather() {
-
+        player.resetPlayerWeather();
     }
 
     @Override
     public void giveExp(int i) {
-
+        player.giveExp(i);
     }
 
     @Override
     public void giveExpLevels(int i) {
-
+        player.giveExpLevels(i);
     }
 
     @Override
     public float getExp() {
-        return 0;
+        return player.getExp();
     }
 
     @Override
     public void setExp(float v) {
-
+        player.setExp(v);
     }
 
     @Override
     public int getLevel() {
-        return 0;
+        return player.getLevel();
     }
 
     @Override
     public void setLevel(int i) {
-
+        player.setLevel(i);
     }
 
     @Override
     public int getTotalExperience() {
-        return 0;
+        return player.getTotalExperience();
     }
 
     @Override
     public void setTotalExperience(int i) {
-
+        player.setTotalExperience(i);
     }
 
     @Override
-    public void sendExperienceChange(float v) {
-
+    public void sendExperienceChange(float progress) {
+        player.sendExperienceChange(progress);
     }
 
     @Override
-    public void sendExperienceChange(float v, int i) {
-
+    public void sendExperienceChange(float progress, int level) {
+        player.sendExperienceChange(progress, level);
     }
 
     @Override
     public float getExhaustion() {
-        return 0;
+        return player.getExhaustion();
     }
 
     @Override
     public void setExhaustion(float v) {
-
+        player.setExhaustion(v);
     }
 
     @Override
     public float getSaturation() {
-        return 0;
+        return player.getSaturation();
     }
 
     @Override
     public void setSaturation(float v) {
-
+        player.setSaturation(v);
     }
 
     @Override
     public int getFoodLevel() {
-        return 0;
+        return player.getFoodLevel();
     }
 
     @Override
     public void setFoodLevel(int i) {
-
+        player.setFoodLevel(i);
     }
 
     @Override
     public boolean getAllowFlight() {
-        return false;
+        return player.getAllowFlight();
     }
 
     @Override
     public void setAllowFlight(boolean b) {
-
+        player.setAllowFlight(b);
     }
 
     @Override
+    @Deprecated
     public void hidePlayer(@NotNull Player player) {
-
+        player.hidePlayer(player);
     }
 
     @Override
     public void hidePlayer(@NotNull Plugin plugin, @NotNull Player player) {
-
+        player.hidePlayer(plugin, player);
     }
 
     @Override
+    @Deprecated
     public void showPlayer(@NotNull Player player) {
-
+        player.showPlayer(player);
     }
 
     @Override
     public void showPlayer(@NotNull Plugin plugin, @NotNull Player player) {
-
+        player.showPlayer(plugin, player);
     }
 
     @Override
     public boolean canSee(@NotNull Player player) {
-        return false;
+        return player.canSee(player);
     }
 
     @Override
     public boolean isFlying() {
-        return false;
+        return player.isFlying();
     }
 
     @Override
     public void setFlying(boolean b) {
-
+        player.setFlying(b);
     }
 
     @Override
     public void setFlySpeed(float v) throws IllegalArgumentException {
-
+        player.setFlySpeed(v);
     }
 
     @Override
     public void setWalkSpeed(float v) throws IllegalArgumentException {
-
+        player.setWalkSpeed(v);
     }
 
     @Override
     public float getFlySpeed() {
-        return 0;
+        return player.getFlySpeed();
     }
 
     @Override
     public float getWalkSpeed() {
-        return 0;
+        return player.getWalkSpeed();
     }
 
     @Override
+    @Deprecated
     public void setTexturePack(@NotNull String s) {
-
+        player.setTexturePack(s);
     }
 
     @Override
     public void setResourcePack(@NotNull String s) {
-
+        player.setResourcePack(s);
     }
 
     @Override
     public void setResourcePack(@NotNull String s, @NotNull byte[] bytes) {
-
+        player.setResourcePack(s, bytes);
     }
 
     @Override
     public @NotNull Scoreboard getScoreboard() {
-        throw new UnsupportedOperationException();
+        return player.getScoreboard();
     }
 
     @Override
     public void setScoreboard(@NotNull Scoreboard scoreboard) throws IllegalArgumentException, IllegalStateException {
-
+        player.setScoreboard(scoreboard);
     }
 
     @Override
     public boolean isHealthScaled() {
-        return false;
+        return player.isHealthScaled();
     }
 
     @Override
     public void setHealthScaled(boolean b) {
-
+        player.setHealthScaled(b);
     }
 
     @Override
     public void setHealthScale(double v) throws IllegalArgumentException {
-
+        player.setHealthScale(v);
     }
 
     @Override
     public double getHealthScale() {
-        return 0;
+        return player.getHealthScale();
     }
 
     @Override
     public @Nullable Entity getSpectatorTarget() {
-        throw new UnsupportedOperationException();
+        return player.getSpectatorTarget();
     }
 
     @Override
     public void setSpectatorTarget(@Nullable Entity entity) {
-
+        player.setSpectatorTarget(entity);
     }
 
     @Override
-    public void sendTitle(@Nullable String s, @Nullable String s1) {
-
+    @Deprecated
+    public void sendTitle(@Nullable String title, @Nullable String subtitle) {
+        player.sendTitle(title, subtitle);
     }
 
     @Override
-    public void sendTitle(@Nullable String s, @Nullable String s1, int i, int i1, int i2) {
-
+    public void sendTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
     }
 
     @Override
     public void resetTitle() {
-
+        player.resetTitle();
     }
 
     @Override
     public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i) {
-
+        player.spawnParticle(particle, location, i);
     }
 
     @Override
-    public void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i) {
-
+    public void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count) {
+        player.spawnParticle(particle, x, y, z, count);
     }
 
     @Override
     public <T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, @Nullable T t) {
-
+        player.spawnParticle(particle, location, i, t);
     }
 
     @Override
     public <T> void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, @Nullable T t) {
-
+        player.spawnParticle(particle, v, v1, v2, i, t);
     }
 
     @Override
-    public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double v, double v1, double v2) {
-
+    public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double offsetX, double offsetY, double offsetZ) {
+        player.spawnParticle(particle, location, i, offsetX, offsetY, offsetZ);
     }
 
     @Override
     public void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5) {
-
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5);
     }
 
     @Override
     public <T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double v, double v1, double v2, @Nullable T t) {
-
+        player.spawnParticle(particle, location, i, v, v1, v2, t);
     }
 
     @Override
     public <T> void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, @Nullable T t) {
-
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, t);
     }
 
     @Override
     public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double v, double v1, double v2, double v3) {
-
+        player.spawnParticle(particle, location, i, v, v1, v2, v3);
     }
 
     @Override
     public void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6) {
-
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, v6);
     }
 
     @Override
     public <T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double v, double v1, double v2, double v3, @Nullable T t) {
-
+        player.spawnParticle(particle, location, i, v, v1, v2, v3, t);
     }
 
     @Override
     public <T> void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6, @Nullable T t) {
-
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, v6, t);
     }
 
     @Override
     public @NotNull AdvancementProgress getAdvancementProgress(@NotNull Advancement advancement) {
-        throw new UnsupportedOperationException();
+        return player.getAdvancementProgress(advancement);
     }
 
     @Override
     public int getClientViewDistance() {
-        return 0;
+        return player.getClientViewDistance();
     }
 
     @Override
     public @NotNull String getLocale() {
-        throw new UnsupportedOperationException();
+        return player.getLocale();
     }
 
     @Override
     public void updateCommands() {
-
+        player.updateCommands();
     }
 
     @Override
     public void openBook(@NotNull ItemStack itemStack) {
-
+        player.openBook(itemStack);
     }
 
     @Override
     public @NotNull Location getLocation() {
-        throw new UnsupportedOperationException();
+        return player.getLocation();
     }
 
     @Override
     public @Nullable Location getLocation(@Nullable Location location) {
-        throw new UnsupportedOperationException();
+        return player.getLocation(location);
     }
 
     @Override
     public void setVelocity(@NotNull Vector vector) {
-
+        player.setVelocity(vector);
     }
 
     @Override
     public @NotNull Vector getVelocity() {
-        throw new UnsupportedOperationException();
+        return player.getVelocity();
     }
 
     @Override
     public double getHeight() {
-        return 0;
+        return player.getHeight();
     }
 
     @Override
     public double getWidth() {
-        return 0;
+        return player.getWidth();
     }
 
     @Override
     public @NotNull BoundingBox getBoundingBox() {
-        throw new UnsupportedOperationException();
+        return player.getBoundingBox();
     }
 
     @Override
     public boolean isOnGround() {
-        return false;
+        return player.isOnGround();
     }
 
     @Override
     public @NotNull World getWorld() {
-        throw new UnsupportedOperationException();
+        return player.getWorld();
     }
 
     @Override
-    public void setRotation(float v, float v1) {
-
+    public void setRotation(float yaw, float pitch) {
+        player.setRotation(yaw, pitch);
     }
 
     @Override
     public boolean teleport(@NotNull Location location) {
-        return false;
+        return player.teleport(location);
     }
 
     @Override
     public boolean teleport(@NotNull Location location, PlayerTeleportEvent.@NotNull TeleportCause teleportCause) {
-        return false;
+        return player.teleport(location, teleportCause);
     }
 
     @Override
     public boolean teleport(@NotNull Entity entity) {
-        return false;
+        return player.teleport(entity);
     }
 
     @Override
     public boolean teleport(@NotNull Entity entity, PlayerTeleportEvent.@NotNull TeleportCause teleportCause) {
-        return false;
+        return player.teleport(entity, teleportCause);
     }
 
     @Override
-    public @NotNull List<Entity> getNearbyEntities(double v, double v1, double v2) {
-        throw new UnsupportedOperationException();
+    public @NotNull List<Entity> getNearbyEntities(double x, double y, double z) {
+        return player.getNearbyEntities(x, y, z);
     }
 
     @Override
     public int getEntityId() {
-        return 0;
+        return player.getEntityId();
     }
 
     @Override
     public int getFireTicks() {
-        return 0;
+        return player.getFireTicks();
     }
 
     @Override
     public int getMaxFireTicks() {
-        return 0;
+        return player.getFireTicks();
     }
 
     @Override
-    public void setFireTicks(int i) {
-
+    public void setFireTicks(int ticks) {
+        player.setFireTicks(ticks);
     }
 
     @Override
     public void remove() {
-
+        player.remove();
     }
 
     @Override
     public boolean isDead() {
-        return false;
+        return player.isDead();
     }
 
     @Override
     public boolean isValid() {
-        return false;
+        return player.isValid();
     }
 
     @Override
     public void sendMessage(@NotNull String s) {
-
+        player.sendMessage(s);
     }
 
     @Override
-    public void sendMessage(@NotNull String[] strings) {
-
+    public void sendMessage(@NotNull String[] message) {
+        player.sendMessage(message);
     }
 
     @Override
     public @NotNull Server getServer() {
-        throw new UnsupportedOperationException();
+        return player.getServer();
     }
 
     @Override
+    @Deprecated
     public boolean isPersistent() {
-        return false;
+        return player.isPersistent();
     }
 
     @Override
+    @Deprecated
     public void setPersistent(boolean b) {
-
+        player.setPersistent(b);
     }
 
     @Override
+    @Deprecated
     public @Nullable Entity getPassenger() {
-        throw new UnsupportedOperationException();
+        return player.getPassenger();
     }
 
     @Override
+    @Deprecated
     public boolean setPassenger(@NotNull Entity entity) {
-        return false;
+        return player.setPassenger(entity);
     }
 
     @Override
     public @NotNull List<Entity> getPassengers() {
-        throw new UnsupportedOperationException();
+        return player.getPassengers();
     }
 
     @Override
     public boolean addPassenger(@NotNull Entity entity) {
-        return false;
+        return player.addPassenger(entity);
     }
 
     @Override
     public boolean removePassenger(@NotNull Entity entity) {
-        return false;
+        return player.removePassenger(entity);
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return player.isEmpty();
     }
 
     @Override
     public boolean eject() {
-        return false;
+        return player.eject();
     }
 
     @Override
     public float getFallDistance() {
-        return 0;
+        return player.getFallDistance();
     }
 
     @Override
     public void setFallDistance(float v) {
-
+        player.setFallDistance(v);
     }
 
     @Override
     public void setLastDamageCause(@Nullable EntityDamageEvent entityDamageEvent) {
-
+        player.setLastDamageCause(entityDamageEvent);
     }
 
     @Override
     public @Nullable EntityDamageEvent getLastDamageCause() {
-        throw new UnsupportedOperationException();
+        return player.getLastDamageCause();
     }
 
     @Override
     public @NotNull UUID getUniqueId() {
-        throw new UnsupportedOperationException();
+        return player.getUniqueId();
     }
 
     @Override
     public int getTicksLived() {
-        return 0;
+        return player.getTicksLived();
     }
 
     @Override
     public void setTicksLived(int i) {
-
+        player.setTicksLived(i);
     }
 
     @Override
     public void playEffect(@NotNull EntityEffect entityEffect) {
-
+        player.playEffect(entityEffect);
     }
 
     @Override
     public @NotNull EntityType getType() {
-        throw new UnsupportedOperationException();
+        return player.getType();
     }
 
     @Override
     public boolean isInsideVehicle() {
-        return false;
+        return player.isInsideVehicle();
     }
 
     @Override
     public boolean leaveVehicle() {
-        return false;
+        return player.leaveVehicle();
     }
 
     @Override
     public @Nullable Entity getVehicle() {
-        throw new UnsupportedOperationException();
+        return player.getVehicle();
     }
 
     @Override
     public void setCustomNameVisible(boolean b) {
-
+        player.setCustomNameVisible(b);
     }
 
     @Override
     public boolean isCustomNameVisible() {
-        return false;
+        return player.isCustomNameVisible();
     }
 
     @Override
     public void setGlowing(boolean b) {
-
+        player.setGlowing(b);
     }
 
     @Override
     public boolean isGlowing() {
-        return false;
+        return player.isGlowing();
     }
 
     @Override
     public void setInvulnerable(boolean b) {
-
+        player.setInvulnerable(b);
     }
 
     @Override
     public boolean isInvulnerable() {
-        return false;
+        return player.isInvulnerable();
     }
 
     @Override
     public boolean isSilent() {
-        return false;
+        return player.isSilent();
     }
 
     @Override
     public void setSilent(boolean b) {
-
+        player.setSilent(b);
     }
 
     @Override
     public boolean hasGravity() {
-        return false;
+        return player.hasGravity();
     }
 
     @Override
     public void setGravity(boolean b) {
-
+        player.setGravity(b);
     }
 
     @Override
     public int getPortalCooldown() {
-        return 0;
+        return player.getPortalCooldown();
     }
 
     @Override
     public void setPortalCooldown(int i) {
-
+        player.setPortalCooldown(i);
     }
 
     @Override
     public @NotNull Set<String> getScoreboardTags() {
-        throw new UnsupportedOperationException();
+        return player.getScoreboardTags();
     }
 
     @Override
     public boolean addScoreboardTag(@NotNull String s) {
-        return false;
+        return player.addScoreboardTag(s);
     }
 
     @Override
     public boolean removeScoreboardTag(@NotNull String s) {
-        return false;
+        return player.removeScoreboardTag(s);
     }
 
     @Override
     public @NotNull PistonMoveReaction getPistonMoveReaction() {
-        throw new UnsupportedOperationException();
+        return player.getPistonMoveReaction();
     }
 
     @Override
     public @NotNull BlockFace getFacing() {
-        throw new UnsupportedOperationException();
+        return player.getFacing();
     }
 
     @Override
     public @NotNull Pose getPose() {
-        throw new UnsupportedOperationException();
+        return player.getPose();
     }
 
     @Override
     public boolean isOnline() {
-        return false;
+        return player.isOnline();
     }
 
     @Override
     public boolean isBanned() {
-        return false;
+        return player.isBanned();
     }
 
     @Override
     public boolean isWhitelisted() {
-        return false;
+        return player.isWhitelisted();
     }
 
     @Override
     public void setWhitelisted(boolean b) {
-
+        player.setWhitelisted(b);
     }
 
     @Override
@@ -1092,636 +1117,694 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
 
     @Override
     public long getFirstPlayed() {
-        return 0;
+        return player.getFirstPlayed();
     }
 
     @Override
     public long getLastPlayed() {
-        return 0;
+        return player.getLastPlayed();
     }
 
     @Override
     public boolean hasPlayedBefore() {
-        return false;
+        return player.hasPlayedBefore();
     }
 
     @Override
     public @NotNull Map<String, Object> serialize() {
-        throw new UnsupportedOperationException();
+        return player.serialize();
     }
 
     @Override
     public @NotNull String getName() {
-        throw new UnsupportedOperationException();
+        return player.getName();
     }
 
     @Override
     public @NotNull PlayerInventory getInventory() {
-        throw new UnsupportedOperationException();
+        return player.getInventory();
     }
 
     @Override
     public @NotNull Inventory getEnderChest() {
-        throw new UnsupportedOperationException();
+        return player.getEnderChest();
     }
 
     @Override
     public @NotNull MainHand getMainHand() {
-        throw new UnsupportedOperationException();
+        return player.getMainHand();
     }
 
     @Override
     public boolean setWindowProperty(InventoryView.@NotNull Property property, int i) {
-        return false;
+        return player.setWindowProperty(property, i);
     }
 
     @Override
     public @NotNull InventoryView getOpenInventory() {
-        throw new UnsupportedOperationException();
+        return player.getOpenInventory();
     }
 
     @Override
     public @Nullable InventoryView openInventory(@NotNull Inventory inventory) {
-        throw new UnsupportedOperationException();
+        return player.openInventory(inventory);
     }
 
     @Override
     public @Nullable InventoryView openWorkbench(@Nullable Location location, boolean b) {
-        throw new UnsupportedOperationException();
+        return player.openWorkbench(location, b);
     }
 
     @Override
     public @Nullable InventoryView openEnchanting(@Nullable Location location, boolean b) {
-        throw new UnsupportedOperationException();
+        return player.openEnchanting(location, b);
     }
 
     @Override
     public void openInventory(@NotNull InventoryView inventoryView) {
-
+        player.openInventory(inventoryView);
     }
 
     @Override
     public @Nullable InventoryView openMerchant(@NotNull Villager villager, boolean b) {
-        throw new UnsupportedOperationException();
+        return player.openMerchant(villager, b);
     }
 
     @Override
     public @Nullable InventoryView openMerchant(@NotNull Merchant merchant, boolean b) {
-        throw new UnsupportedOperationException();
+        return player.openMerchant(merchant, b);
     }
 
     @Override
     public void closeInventory() {
-
+        player.closeInventory();
     }
 
     @Override
+    @Deprecated
     public @NotNull ItemStack getItemInHand() {
-        throw new UnsupportedOperationException();
+        return player.getItemInHand();
     }
 
     @Override
+    @Deprecated
     public void setItemInHand(@Nullable ItemStack itemStack) {
-
+        player.setItemInHand(itemStack);
     }
 
     @Override
     public @NotNull ItemStack getItemOnCursor() {
-        throw new UnsupportedOperationException();
+        return player.getItemOnCursor();
     }
 
     @Override
     public void setItemOnCursor(@Nullable ItemStack itemStack) {
-
+        player.setItemOnCursor(itemStack);
     }
 
     @Override
     public boolean hasCooldown(@NotNull Material material) {
-        return false;
+        return player.hasCooldown(material);
     }
 
     @Override
     public int getCooldown(@NotNull Material material) {
-        return 0;
+        return player.getCooldown(material);
     }
 
     @Override
     public void setCooldown(@NotNull Material material, int i) {
-
+        player.setCooldown(material, i);
     }
 
     @Override
     public int getSleepTicks() {
-        return 0;
+        return player.getSleepTicks();
     }
 
     @Override
     public @Nullable Location getBedSpawnLocation() {
-        throw new UnsupportedOperationException();
+        return player.getBedSpawnLocation();
     }
 
     @Override
     public void setBedSpawnLocation(@Nullable Location location) {
-
+        player.setBedSpawnLocation(location);
     }
 
     @Override
     public void setBedSpawnLocation(@Nullable Location location, boolean b) {
-
+        player.setBedSpawnLocation(location, b);
     }
 
     @Override
     public boolean sleep(@NotNull Location location, boolean b) {
-        return false;
+        return player.sleep(location, b);
     }
 
     @Override
     public void wakeup(boolean b) {
-
+        player.wakeup(b);
     }
 
     @Override
     public @NotNull Location getBedLocation() {
-        throw new UnsupportedOperationException();
+        return player.getBedLocation();
     }
 
     @Override
     public @NotNull GameMode getGameMode() {
-        throw new UnsupportedOperationException();
+        return player.getGameMode();
     }
 
     @Override
     public void setGameMode(@NotNull GameMode gameMode) {
-
+        player.setGameMode(gameMode);
     }
 
     @Override
     public boolean isBlocking() {
-        return false;
+        return player.isBlocking();
     }
 
     @Override
     public boolean isHandRaised() {
-        return false;
+        return player.isHandRaised();
     }
 
     @Override
     public int getExpToLevel() {
-        return 0;
+        return player.getExpToLevel();
     }
 
     @Override
     public boolean discoverRecipe(@NotNull NamespacedKey namespacedKey) {
-        return false;
+        return player.discoverRecipe(namespacedKey);
     }
 
     @Override
     public int discoverRecipes(@NotNull Collection<NamespacedKey> collection) {
-        return 0;
+        return player.discoverRecipes(collection);
     }
 
     @Override
     public boolean undiscoverRecipe(@NotNull NamespacedKey namespacedKey) {
-        return false;
+        return player.undiscoverRecipe(namespacedKey);
     }
 
     @Override
     public int undiscoverRecipes(@NotNull Collection<NamespacedKey> collection) {
-        return 0;
+        return player.undiscoverRecipes(collection);
     }
 
     @Override
+    @Deprecated
     public @Nullable Entity getShoulderEntityLeft() {
-        throw new UnsupportedOperationException();
+        return player.getShoulderEntityLeft();
     }
 
     @Override
+    @Deprecated
     public void setShoulderEntityLeft(@Nullable Entity entity) {
-
+        player.setShoulderEntityLeft(entity);
     }
 
     @Override
+    @Deprecated
     public @Nullable Entity getShoulderEntityRight() {
-        throw new UnsupportedOperationException();
+        return player.getShoulderEntityRight();
     }
 
     @Override
+    @Deprecated
     public void setShoulderEntityRight(@Nullable Entity entity) {
-
+        player.setShoulderEntityRight(entity);
     }
 
     @Override
     public double getEyeHeight() {
-        return 0;
+        return player.getEyeHeight();
     }
 
     @Override
-    public double getEyeHeight(boolean b) {
-        return 0;
+    public double getEyeHeight(boolean ignorePose) {
+        return player.getEyeHeight(ignorePose);
     }
 
     @Override
     public @NotNull Location getEyeLocation() {
-        throw new UnsupportedOperationException();
+        return player.getEyeLocation();
     }
 
     @Override
     public @NotNull List<Block> getLineOfSight(@Nullable Set<Material> set, int i) {
-        throw new UnsupportedOperationException();
+        return player.getLineOfSight(set, i);
     }
 
     @Override
     public @NotNull Block getTargetBlock(@Nullable Set<Material> set, int i) {
-        throw new UnsupportedOperationException();
+        return player.getTargetBlock(set, i);
     }
 
     @Override
     public @NotNull List<Block> getLastTwoTargetBlocks(@Nullable Set<Material> set, int i) {
-        throw new UnsupportedOperationException();
+        return player.getLastTwoTargetBlocks(set, i);
     }
 
     @Override
-    public @Nullable Block getTargetBlockExact(int i) {
-        throw new UnsupportedOperationException();
+    public @Nullable Block getTargetBlockExact(int maxDistance) {
+        return player.getTargetBlockExact(maxDistance);
     }
 
     @Override
-    public @Nullable Block getTargetBlockExact(int i, @NotNull FluidCollisionMode fluidCollisionMode) {
-        throw new UnsupportedOperationException();
+    public @Nullable Block getTargetBlockExact(int maxDistance, @NotNull FluidCollisionMode fluidCollisionMode) {
+        return player.getTargetBlockExact(maxDistance, fluidCollisionMode);
     }
 
     @Override
-    public @Nullable RayTraceResult rayTraceBlocks(double v) {
-        throw new UnsupportedOperationException();
+    public @Nullable RayTraceResult rayTraceBlocks(double maxDistance) {
+        return player.rayTraceBlocks(maxDistance);
     }
 
     @Override
-    public @Nullable RayTraceResult rayTraceBlocks(double v, @NotNull FluidCollisionMode fluidCollisionMode) {
-        throw new UnsupportedOperationException();
+    public @Nullable RayTraceResult rayTraceBlocks(double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode) {
+        return player.rayTraceBlocks(maxDistance, fluidCollisionMode);
     }
 
     @Override
     public int getRemainingAir() {
-        return 0;
+        return player.getRemainingAir();
     }
 
     @Override
-    public void setRemainingAir(int i) {
-
+    public void setRemainingAir(int ticks) {
+        player.setRemainingAir(ticks);
     }
 
     @Override
     public int getMaximumAir() {
-        return 0;
+        return player.getMaximumAir();
     }
 
     @Override
-    public void setMaximumAir(int i) {
-
+    public void setMaximumAir(int ticks) {
+        player.setMaximumAir(ticks);
     }
 
     @Override
     public int getMaximumNoDamageTicks() {
-        return 0;
+        return player.getMaximumNoDamageTicks();
     }
 
     @Override
-    public void setMaximumNoDamageTicks(int i) {
-
+    public void setMaximumNoDamageTicks(int ticks) {
+        player.setMaximumNoDamageTicks(ticks);
     }
 
     @Override
     public double getLastDamage() {
-        return 0;
+        return player.getLastDamage();
     }
 
     @Override
-    public void setLastDamage(double v) {
-
+    public void setLastDamage(double damage) {
+        player.setLastDamage(damage);
     }
 
     @Override
     public int getNoDamageTicks() {
-        return 0;
+        return player.getNoDamageTicks();
     }
 
     @Override
-    public void setNoDamageTicks(int i) {
-
+    public void setNoDamageTicks(int ticks) {
+        player.setNoDamageTicks(ticks);
     }
 
     @Override
     public @Nullable Player getKiller() {
-        throw new UnsupportedOperationException();
+        return player.getKiller();
     }
 
     @Override
     public boolean addPotionEffect(@NotNull PotionEffect potionEffect) {
-        return false;
+        return player.addPotionEffect(potionEffect);
     }
 
     @Override
-    public boolean addPotionEffect(@NotNull PotionEffect potionEffect, boolean b) {
-        return false;
+    @Deprecated
+    public boolean addPotionEffect(@NotNull PotionEffect potionEffect, boolean force) {
+        return player.addPotionEffect(potionEffect, force);
     }
 
     @Override
     public boolean addPotionEffects(@NotNull Collection<PotionEffect> collection) {
-        return false;
+        return player.addPotionEffects(collection);
     }
 
     @Override
     public boolean hasPotionEffect(@NotNull PotionEffectType potionEffectType) {
-        return false;
+        return player.hasPotionEffect(potionEffectType);
     }
 
     @Override
     public @Nullable PotionEffect getPotionEffect(@NotNull PotionEffectType potionEffectType) {
-        throw new UnsupportedOperationException();
+        return player.getPotionEffect(potionEffectType);
     }
 
     @Override
     public void removePotionEffect(@NotNull PotionEffectType potionEffectType) {
-
+        player.removePotionEffect(potionEffectType);
     }
 
     @Override
     public @NotNull Collection<PotionEffect> getActivePotionEffects() {
-        throw new UnsupportedOperationException();
+        return player.getActivePotionEffects();
     }
 
     @Override
     public boolean hasLineOfSight(@NotNull Entity entity) {
-        return false;
+        return player.hasLineOfSight(entity);
     }
 
     @Override
     public boolean getRemoveWhenFarAway() {
-        return false;
+        return player.getRemoveWhenFarAway();
     }
 
     @Override
     public void setRemoveWhenFarAway(boolean b) {
-
+        player.setRemoveWhenFarAway(b);
     }
 
     @Override
     public @Nullable EntityEquipment getEquipment() {
-        throw new UnsupportedOperationException();
+        return player.getEquipment();
     }
 
     @Override
     public void setCanPickupItems(boolean b) {
-
+        player.setCanPickupItems(b);
     }
 
     @Override
     public boolean getCanPickupItems() {
-        return false;
+        return player.getCanPickupItems();
     }
 
     @Override
     public boolean isLeashed() {
-        return false;
+        return player.isLeashed();
     }
 
     @Override
     public @NotNull Entity getLeashHolder() throws IllegalStateException {
-        throw new UnsupportedOperationException();
+        return player.getLeashHolder();
     }
 
     @Override
     public boolean setLeashHolder(@Nullable Entity entity) {
-        return false;
+        return player.setLeashHolder(entity);
     }
 
     @Override
     public boolean isGliding() {
-        return false;
+        return player.isGliding();
     }
 
     @Override
     public void setGliding(boolean b) {
-
+        player.setGliding(b);
     }
 
     @Override
     public boolean isSwimming() {
-        return false;
+        return player.isSwimming();
     }
 
     @Override
     public void setSwimming(boolean b) {
-
+        player.setSwimming(b);
     }
 
     @Override
     public boolean isRiptiding() {
-        return false;
+        return player.isRiptiding();
     }
 
     @Override
     public boolean isSleeping() {
-        return false;
+        return player.isSleeping();
     }
 
     @Override
     public void setAI(boolean b) {
-
+        player.setAI(b);
     }
 
     @Override
     public boolean hasAI() {
-        return false;
+        return player.hasAI();
     }
 
     @Override
     public void setCollidable(boolean b) {
-
+        player.setCollidable(b);
     }
 
     @Override
     public boolean isCollidable() {
-        return false;
+        return player.isCollidable();
     }
 
     @Override
     public <T> @Nullable T getMemory(@NotNull MemoryKey<T> memoryKey) {
-        throw new UnsupportedOperationException();
+        return player.getMemory(memoryKey);
     }
 
     @Override
     public <T> void setMemory(@NotNull MemoryKey<T> memoryKey, @Nullable T t) {
-
+        player.setMemory(memoryKey, t);
     }
 
     @Override
     public @Nullable AttributeInstance getAttribute(@NotNull Attribute attribute) {
-        throw new UnsupportedOperationException();
+        return player.getAttribute(attribute);
     }
 
     @Override
     public void damage(double v) {
-
+        player.damage(v);
     }
 
     @Override
     public void damage(double v, @Nullable Entity entity) {
-
+        player.damage(v, entity);
     }
 
     @Override
     public double getHealth() {
-        return 0;
+        return player.getHealth();
     }
 
     @Override
     public void setHealth(double v) {
-
+        player.setHealth(v);
     }
 
     @Override
     public double getAbsorptionAmount() {
-        return 0;
+        return player.getAbsorptionAmount();
     }
 
     @Override
     public void setAbsorptionAmount(double v) {
-
+        player.setAbsorptionAmount(v);
     }
 
     @Override
+    @Deprecated
     public double getMaxHealth() {
-        return 0;
+        return player.getMaxHealth();
     }
 
     @Override
+    @Deprecated
     public void setMaxHealth(double v) {
-
+        player.setMaxHealth(v);
     }
 
     @Override
+    @Deprecated
     public void resetMaxHealth() {
-
+        player.resetMaxHealth();
     }
 
     @Override
     public @Nullable String getCustomName() {
-        throw new UnsupportedOperationException();
+        return player.getCustomName();
     }
 
     @Override
     public void setCustomName(@Nullable String s) {
-
+        player.setCustomName(s);
     }
 
     @Override
-    public void setMetadata(@NotNull String s, @NotNull MetadataValue metadataValue) {
-
+    public void setMetadata(@NotNull String key, @NotNull MetadataValue value) {
+        player.setMetadata(key, value);
     }
 
     @Override
-    public @NotNull List<MetadataValue> getMetadata(@NotNull String s) {
-        throw new UnsupportedOperationException();
+    public @NotNull List<MetadataValue> getMetadata(@NotNull String key) {
+        return player.getMetadata(key);
     }
 
     @Override
-    public boolean hasMetadata(@NotNull String s) {
-        return false;
+    public boolean hasMetadata(@NotNull String key) {
+        return player.hasMetadata(key);
     }
 
     @Override
-    public void removeMetadata(@NotNull String s, @NotNull Plugin plugin) {
-
+    public void removeMetadata(@NotNull String key, @NotNull Plugin plugin) {
+        player.removeMetadata(key, plugin);
     }
 
     @Override
     public boolean isPermissionSet(@NotNull String s) {
-        return false;
+        return player.isPermissionSet(s);
     }
 
     @Override
     public boolean isPermissionSet(@NotNull Permission permission) {
-        return false;
+        return player.isPermissionSet(permission);
     }
 
     @Override
     public boolean hasPermission(@NotNull String s) {
-        return false;
+        return player.hasPermission(s);
     }
 
     @Override
     public boolean hasPermission(@NotNull Permission permission) {
-        return false;
+        return player.hasPermission(permission);
     }
 
     @Override
-    public @NotNull PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String s, boolean b) {
-        throw new UnsupportedOperationException();
+    public @NotNull PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String name, boolean value) {
+        return player.addAttachment(plugin, name, value);
     }
 
     @Override
     public @NotNull PermissionAttachment addAttachment(@NotNull Plugin plugin) {
-        throw new UnsupportedOperationException();
+        return player.addAttachment(plugin);
     }
 
     @Override
-    public @Nullable PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String s, boolean b, int i) {
-        throw new UnsupportedOperationException();
+    public @Nullable PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String name, boolean value, int ticks) {
+        return player.addAttachment(plugin, name, value, ticks);
     }
 
     @Override
-    public @Nullable PermissionAttachment addAttachment(@NotNull Plugin plugin, int i) {
-        throw new UnsupportedOperationException();
+    public @Nullable PermissionAttachment addAttachment(@NotNull Plugin plugin, int ticks) {
+        return player.addAttachment(plugin, ticks);
     }
 
     @Override
     public void removeAttachment(@NotNull PermissionAttachment permissionAttachment) {
-
+        player.removeAttachment(permissionAttachment);
     }
 
     @Override
     public void recalculatePermissions() {
-
+        player.recalculatePermissions();
     }
 
     @Override
     public @NotNull Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        throw new UnsupportedOperationException();
+        return player.getEffectivePermissions();
     }
 
     @Override
     public boolean isOp() {
-        return false;
+        return player.isOp();
     }
 
     @Override
     public void setOp(boolean b) {
-
+        player.setOp(b);
     }
 
     @Override
     public @NotNull PersistentDataContainer getPersistentDataContainer() {
-        throw new UnsupportedOperationException();
+        return player.getPersistentDataContainer();
     }
 
     @Override
-    public void sendPluginMessage(@NotNull Plugin plugin, @NotNull String s, @NotNull byte[] bytes) {
-
+    public void sendPluginMessage(@NotNull Plugin plugin, @NotNull String channel, @NotNull byte[] message) {
+        player.sendPluginMessage(plugin, channel, message);
     }
 
     @Override
     public @NotNull Set<String> getListeningPluginChannels() {
-        throw new UnsupportedOperationException();
+        return player.getListeningPluginChannels();
     }
 
     @Override
     public <T extends Projectile> @NotNull T launchProjectile(@NotNull Class<? extends T> aClass) {
-        throw new UnsupportedOperationException();
+        return player.launchProjectile(aClass);
     }
 
     @Override
     public <T extends Projectile> @NotNull T launchProjectile(@NotNull Class<? extends T> aClass, @Nullable Vector vector) {
-        throw new UnsupportedOperationException();
+        return player.launchProjectile(aClass, vector);
     }
+
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    @Override
+    public boolean equals(Object o) {
+        return player.equals(o);
+    }
+
+    public void removeDisconnectingPlayer(Player player) {
+        invoke("removeDisconnectingPlayer", player);
+    }
+
+    public CraftPlayer getCraftPlayer() {
+        return this;
+    }
+
+    public Object getOBCCraftPlayer() {
+        return craftPlayer;
+    }
+
+    public String toString() {
+        return "CraftPlayer{name=" + getName() + "}";
+    }
+
+    // NMSAPI start
+    public Object invoke(String method) {
+        try {
+            return ReflectionUtil.getOBCClass("CraftPlayer")
+                    .getMethod(method)
+                    .invoke(craftPlayer);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Object invoke(String method, Object... o) {
+        try {
+            CollectionList<Class<?>> classes = new CollectionList<>();
+            for (Object o1 : o) classes.add(o1.getClass());
+            return ReflectionUtil.getOBCClass("CraftPlayer")
+                    .getMethod(method, classes.toArray(new Class[0]))
+                    .invoke(craftPlayer, o);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    // NMSAPI end
 }

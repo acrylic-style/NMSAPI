@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import util.CollectionList;
 import util.ReflectionHelper;
+import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.CraftPlayer;
 import xyz.acrylicstyle.craftbukkit.CraftUtils;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
@@ -12,13 +13,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class EntityPlayer extends CraftPlayer {
-    private CraftPlayer player;
+public class EntityPlayer {
+    private Object o;
     public PlayerConnection playerConnection;
 
-    public EntityPlayer(CraftPlayer player) {
-        super(player);
-        this.player = player;
+    public EntityPlayer(Object o) {
+        this.o = o;
         this.playerConnection = new PlayerConnection(this);
     }
 
@@ -62,10 +62,16 @@ public class EntityPlayer extends CraftPlayer {
         invoke("setPlayerWeather", type, plugin);
     }
 
+    public GameProfile getProfile() {
+        return new GameProfile(invoke("bT"));
+    }
+
     // NMSAPI start
     public Object getEntityPlayer() {
         try {
-            return CraftUtils.getHandle(player.getPlayer());
+            if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) return o;
+            if (o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer")) return CraftUtils.getHandle(o);
+            return CraftUtils.getHandle(o).getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") ? CraftUtils.getHandle(o) : null;
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
@@ -101,11 +107,11 @@ public class EntityPlayer extends CraftPlayer {
         return (boolean) getField("viewingCredits");
     }
 
-    public String getDisplayNameField() {
+    public String getDisplayName() {
         return (String) getField("displayName");
     }
 
-    public Location getCompassTargetField() {
+    public Location getCompassTarget() {
         return (Location) getField("compassTarget");
     }
 
@@ -125,7 +131,7 @@ public class EntityPlayer extends CraftPlayer {
         return (boolean) getField("sentListPacket");
     }
 
-    public Integer getClientViewDistanceField() {
+    public Integer getClientViewDistance() {
         return (Integer) getField("clientViewDistance");
     }
 
@@ -176,6 +182,11 @@ public class EntityPlayer extends CraftPlayer {
     // NMSAPI end
 
     public CraftPlayer getBukkitEntity() {
-        return player;
+        try {
+            return new CraftPlayer(invoke("getBukkitEntity", getEntityPlayer()));
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
