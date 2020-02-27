@@ -115,32 +115,38 @@ public class EntityPlayer {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (disposed) this.cancel();
-                EntityPlayer.this.ping = getPing();
-                EntityPlayer.this.removeQueue = getRemoveQueue();
-                EntityPlayer.this.locale = getLocale();
-                EntityPlayer.this.invulnerableTicks = getInvulnerableTicks();
-                EntityPlayer.this.displayName = getDisplayName();
-                EntityPlayer.this.timeOffset = (long) getField("timeOffset");
-                EntityPlayer.this.relativeTime = getRelativeTime();
-                EntityPlayer.this.pluginRainPosition = getPluginRainPosition();
-                EntityPlayer.this.pluginRainPositionPrevious = getPluginRainPositionPrevious();
-                EntityPlayer.this.compassTarget = getCompassTarget();
-                EntityPlayer.this.clientViewDistance = getClientViewDistance();
-                EntityPlayer.this.viewingCredits = getViewingCredits();
-                EntityPlayer.this.sentListPacket = getSentListPacket();
-                EntityPlayer.this.joining = getJoining();
-                EntityPlayer.this.maxHealthCache = getMaxHealthCache();
-                EntityPlayer.this.keepLevel = getKeepLevel();
-                EntityPlayer.this.newExp = (int) getField("newExp");
-                EntityPlayer.this.newLevel = (int) getField("newLevel");
-                EntityPlayer.this.newTotalExp = (int) getField("newTotalExp");
-                EntityPlayer.this.e = getE();
-                EntityPlayer.this.containerCounter = (int) getField("containerCounter");
-                EntityPlayer.this.cp = (int) getField("cp");
-                EntityPlayer.this.cq = (boolean) getField("cq");
-                EntityPlayer.this.cm = (boolean) getField("cm");
-                EntityPlayer.this.ci = (boolean) getField("ci");
+                try {
+                    if (disposed) this.cancel();
+                    EntityPlayer.this.ping = getPing();
+                    EntityPlayer.this.removeQueue = getRemoveQueue();
+                    EntityPlayer.this.locale = getLocale();
+                    EntityPlayer.this.invulnerableTicks = getInvulnerableTicks();
+                    EntityPlayer.this.displayName = getDisplayName();
+                    EntityPlayer.this.timeOffset = (long) getField("timeOffset");
+                    EntityPlayer.this.relativeTime = getRelativeTime();
+                    EntityPlayer.this.pluginRainPosition = getPluginRainPosition();
+                    EntityPlayer.this.pluginRainPositionPrevious = getPluginRainPositionPrevious();
+                    EntityPlayer.this.compassTarget = getCompassTarget();
+                    EntityPlayer.this.clientViewDistance = getClientViewDistance();
+                    EntityPlayer.this.viewingCredits = getViewingCredits();
+                    EntityPlayer.this.sentListPacket = getSentListPacket();
+                    EntityPlayer.this.joining = getJoining();
+                    EntityPlayer.this.maxHealthCache = getMaxHealthCache();
+                    EntityPlayer.this.keepLevel = getKeepLevel();
+                    EntityPlayer.this.newExp = (int) getField("newExp");
+                    EntityPlayer.this.newLevel = (int) getField("newLevel");
+                    EntityPlayer.this.newTotalExp = (int) getField("newTotalExp");
+                    EntityPlayer.this.e = getE();
+                    EntityPlayer.this.containerCounter = (int) getField("containerCounter");
+                    EntityPlayer.this.cp = (int) getField("cp");
+                    EntityPlayer.this.cq = (boolean) getField("cq");
+                    EntityPlayer.this.cm = (boolean) getField("cm");
+                    EntityPlayer.this.ci = (boolean) getField("ci");
+                } catch (Throwable throwable) {
+                    System.out.println("An error occurred while polling data! Cancelling the polling.");
+                    throwable.printStackTrace();
+                    this.cancel();
+                }
             }
         }.runTaskTimer(plugin, 0, 2);
     }
