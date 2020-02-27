@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class Scoreboard {
@@ -50,9 +51,9 @@ public class Scoreboard {
         return (Collection) invoke("getScoresForObjective", scoreboardObjective.getNMSScoreboard());
     }
 
-    @SuppressWarnings("unchecked")
-    public Collection<ScoreboardObjective> getObjectives() {
-        return (Collection<ScoreboardObjective>) invoke("getObjectives");
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public CollectionList<ScoreboardObjective> getObjectives() {
+        return new CollectionList(((Collection) invoke("getObjectives")).stream().map(ScoreboardObjective::new).collect(Collectors.toList()));
     }
 
     @SuppressWarnings("unchecked")
