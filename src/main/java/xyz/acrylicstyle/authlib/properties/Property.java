@@ -3,6 +3,7 @@ package xyz.acrylicstyle.authlib.properties;
 import org.apache.commons.codec.binary.Base64;
 import util.CollectionList;
 import util.ReflectionHelper;
+import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.security.*;
@@ -43,7 +44,7 @@ public class Property {
     }
 
     // NMSAPI start
-    private Object o;
+    private Object o = null;
 
     public Property(Object o) {
         this.o = o;
@@ -64,7 +65,12 @@ public class Property {
 
     public Object getProperty() {
         if (o.getClass().getCanonicalName().equals("com.mojang.authlib.properties.Property")) return o;
-        return null;
+        try {
+            return Class.forName("com.mojang.authlib.properties.Property").getConstructor(String.class, String.class, String.class).newInstance(this.name, this.value, this.signature);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Object getField(String field) {

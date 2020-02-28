@@ -6,9 +6,8 @@ import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.Cast;
+import xyz.acrylicstyle.CastNMSAPI;
 import xyz.acrylicstyle.craftbukkit.CraftUtils;
-import xyz.acrylicstyle.craftbukkit.NMSClass;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -20,7 +19,7 @@ public class PropertyMap {
         return (Multimap) invoke("delegate");
     }
 
-    public boolean put(String key, @Cast(clazz = "com.mojang.authlib.properties.Property") Property value) {
+    public boolean put(String key, @CastNMSAPI(clazz = "com.mojang.authlib.properties.Property", method = "getProperty") Property value) {
         return (boolean) invoke("put", key, value);
     }
 
@@ -85,11 +84,13 @@ public class PropertyMap {
     public Object invoke(String method, Object... o) {
         CollectionList<Class<?>> classes = new CollectionList<>();
         try {
-            for (Object o1 : o) {
-                if (o.getClass().isAnnotationPresent(NMSClass.class)) {
-                    classes.add(ReflectionUtil.getNMSClass(o.getClass().getAnnotation(NMSClass.class).clazz()));
-                } else if (o.getClass().isAnnotationPresent(Cast.class)) {
+            for (int i = 0; i < o.length; i++) {
+                Object o1 = o[i];
+                if (o1.getClass().isAnnotationPresent(Cast.class)) {
                     classes.add(Class.forName(o.getClass().getAnnotation(Cast.class).clazz()));
+                } else if (o1.getClass().isAnnotationPresent(CastNMSAPI.class)) {
+                    classes.add(Class.forName(o1.getClass().getAnnotation(CastNMSAPI.class).clazz()));
+                    o[i] = o1.getClass().getMethod(o1.getClass().getAnnotation(CastNMSAPI.class).method()).invoke(o1);
                 } else classes.add(o1.getClass());
             }
             return Class.forName("org.mojang.authlib.properties.PropertyMap")
