@@ -13,6 +13,7 @@ import xyz.acrylicstyle.craftbukkit.CraftPlayer;
 import xyz.acrylicstyle.craftbukkit.CraftUtils;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class EntityPlayer {
     private Object o;
     public PlayerConnection playerConnection;
     public int ping = -1;
-    public final MinecraftServer server = MinecraftServer.getMinecraftServer(getField("server"));
+    public final MinecraftServer server;
     public List<Integer> removeQueue = Lists.newLinkedList();
     public String locale = "en_us";
     public int invulnerableTicks = 60;
@@ -53,16 +54,14 @@ public class EntityPlayer {
     public EntityPlayer(Object o) {
         this.o = o;
         this.playerConnection = new PlayerConnection(this);
+        this.server = MinecraftServer.getMinecraftServer(getField("server"));
     }
 
     public void reset() {
         invoke("reset");
     }
 
-    /**
-     * @implNote Original method name: getScoreboard()
-     */
-    public Object getPlayerScoreboard() {
+    public Object getScoreboard() {
         try {
             return CraftUtils.getHandle(getBukkitEntity().getScoreboard());
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -92,17 +91,21 @@ public class EntityPlayer {
     }
 
     public GameProfile getProfile() {
-        return new GameProfile(invoke("bT"));
+        return new GameProfile(invoke("getProfile"));
+    }
+
+    public void die() {
+        invoke("die");
     }
 
     // NMSAPI start
+    public void setProfile(GameProfile profile) {
+        setField("bT", profile.getGameProfile());
+    }
+
     public EntityPlayer setPlugin(Plugin plugin) {
         this.plugin = plugin;
         return this;
-    }
-
-    public static EntityPlayer fromCraftPlayer(CraftPlayer player) {
-        return new EntityPlayer(player);
     }
 
     /**
@@ -155,6 +158,7 @@ public class EntityPlayer {
         try {
             if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) return o;
             if (o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer")) return CraftUtils.getHandle(o);
+            if (o.getClass().getCanonicalName().equals(CraftPlayer.class.getCanonicalName())) return CraftUtils.getHandle(((CraftPlayer) o).getOBCCraftPlayer());
             return CraftUtils.getHandle(o).getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") ? CraftUtils.getHandle(o) : null;
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
@@ -240,6 +244,24 @@ public class EntityPlayer {
         }
     }
 
+    public void setField(String field, Object value) {
+        try {
+            Field f = ReflectionUtil.getNMSClass("EntityPlayer").getDeclaredField(field);
+            f.setAccessible(true);
+            f.set(getEntityPlayer(), value);
+        } catch (NoSuchFieldException e) {
+            try {
+                Field f = ReflectionUtil.getNMSClass("EntityPlayer").getSuperclass().getDeclaredField(field);
+                f.setAccessible(true);
+                f.set(getEntityPlayer(), value);
+            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        } catch (ClassNotFoundException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Object invoke(String method) {
         try {
             return ReflectionUtil.getNMSClass("EntityPlayer")
@@ -266,11 +288,6 @@ public class EntityPlayer {
     // NMSAPI end
 
     public CraftPlayer getBukkitEntity() {
-        try {
-            return new CraftPlayer(invoke("getBukkitEntity", getEntityPlayer()));
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new CraftPlayer(invoke("getBukkitEntity", getEntityPlayer()));
     }
 }

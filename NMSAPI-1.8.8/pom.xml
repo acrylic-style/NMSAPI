@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>xyz.xyz.acrylicstyle</groupId>
-    <artifactId>NMSAPI-1.15.2</artifactId>
-    <version>0.0.35</version>
+    <groupId>xyz.acrylicstyle</groupId>
+    <artifactId>NMSAPI-1.8.8</artifactId>
+    <version>0.0.3</version>
     <build>
         <plugins>
             <plugin>
@@ -43,9 +43,9 @@
             <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository>
-            <id>xyz.acrylicstyle-repo</id>
+            <id>acrylicstyle-repo</id>
             <name>Acrylic Style's Repository2</name>
-            <url>https://repo.xyz.acrylicstyle.xyz/</url>
+            <url>https://repo.acrylicstyle.xyz/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -80,13 +80,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -21,7 +21,7 @@ public class PlayerConnection {
 
     public PlayerConnection(EntityPlayer player) {
         this.player = player;
-        minecraftServer = new MinecraftServer(player.getEntityPlayer());
+        minecraftServer = player.server;
         try {
             networkManager = new NetworkManager(this.getPlayerConnection().getClass().getField("networkManager").get(this.getPlayerConnection()));
         } catch (IllegalAccessException | NoSuchFieldException e) {

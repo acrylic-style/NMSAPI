@@ -64,7 +64,7 @@ public class Property {
     }
 
     public Object getProperty() {
-        if (o.getClass().getCanonicalName().equals("com.mojang.authlib.properties.Property")) return o;
+        if (o != null && o.getClass().getCanonicalName().equals("com.mojang.authlib.properties.Property")) return o;
         try {
             return Class.forName("com.mojang.authlib.properties.Property").getConstructor(String.class, String.class, String.class).newInstance(this.name, this.value, this.signature);
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | ClassNotFoundException e) {

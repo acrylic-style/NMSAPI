@@ -1,12 +1,11 @@
 package xyz.acrylicstyle.authlib.properties;
 
+import com.google.common.collect.ForwardingMultimap;
 import com.google.common.collect.Multimap;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
-import xyz.acrylicstyle.Cast;
-import xyz.acrylicstyle.CastNMSAPI;
 import xyz.acrylicstyle.craftbukkit.CraftUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,8 +18,15 @@ public class PropertyMap {
         return (Multimap) invoke("delegate");
     }
 
-    public boolean put(String key, @CastNMSAPI(clazz = "com.mojang.authlib.properties.Property", method = "getProperty") Property value) {
-        return (boolean) invoke("put", key, value);
+    public boolean put(String key, Property value) {
+        try {
+            return (boolean) ForwardingMultimap.class
+                    .getMethod("put", Object.class, Object.class)
+                    .invoke(o, key, value.getProperty());
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -53,7 +59,7 @@ public class PropertyMap {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(Class.forName("org.mojang.authlib.properties.PropertyMap"), getPropertyMap(), field);
+            return ReflectionHelper.getField(Class.forName("com.mojang.authlib.properties.PropertyMap"), getPropertyMap(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -62,12 +68,12 @@ public class PropertyMap {
 
     public Object invoke(String method) {
         try {
-            return Class.forName("org.mojang.authlib.properties.PropertyMap")
+            return Class.forName("com.mojang.authlib.properties.PropertyMap")
                     .getMethod(method)
                     .invoke(getPropertyMap());
         } catch (NoSuchMethodException e) {
             try {
-                return Class.forName("org.mojang.authlib.properties.PropertyMap")
+                return Class.forName("com.mojang.authlib.properties.PropertyMap")
                         .getSuperclass()
                         .getMethod(method)
                         .invoke(getPropertyMap());
@@ -83,22 +89,14 @@ public class PropertyMap {
 
     public Object invoke(String method, Object... o) {
         CollectionList<Class<?>> classes = new CollectionList<>();
+        for (Object o1 : o) classes.add(o1.getClass());
         try {
-            for (int i = 0; i < o.length; i++) {
-                Object o1 = o[i];
-                if (o1.getClass().isAnnotationPresent(Cast.class)) {
-                    classes.add(Class.forName(o.getClass().getAnnotation(Cast.class).clazz()));
-                } else if (o1.getClass().isAnnotationPresent(CastNMSAPI.class)) {
-                    classes.add(Class.forName(o1.getClass().getAnnotation(CastNMSAPI.class).clazz()));
-                    o[i] = o1.getClass().getMethod(o1.getClass().getAnnotation(CastNMSAPI.class).method()).invoke(o1);
-                } else classes.add(o1.getClass());
-            }
-            return Class.forName("org.mojang.authlib.properties.PropertyMap")
+            return Class.forName("com.mojang.authlib.properties.PropertyMap")
                     .getMethod(method, classes.toArray(new Class[0]))
                     .invoke(getPropertyMap(), o);
         } catch (NoSuchMethodException e) {
             try {
-                return Class.forName("org.mojang.authlib.properties.PropertyMap")
+                return Class.forName("com.mojang.authlib.properties.PropertyMap")
                         .getSuperclass()
                         .getMethod(method, classes.toArray(new Class[0]))
                         .invoke(getPropertyMap(), o);

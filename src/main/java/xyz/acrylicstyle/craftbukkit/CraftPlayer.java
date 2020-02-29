@@ -42,23 +42,38 @@ import java.util.*;
 
 public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity {
     private Player player;
-    public Object craftPlayer = null;
+    public Object craftPlayer;
 
-    public CraftPlayer(Object o) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        if (o.getClass().isAssignableFrom(Player.class)) {
-            this.player = (Player) o;
-            this.craftPlayer = o;
-            return;
+    public CraftPlayer(Object o) {
+        try {
+            if (o.getClass().isAssignableFrom(Player.class)) {
+                this.player = (Player) o;
+                this.craftPlayer = o;
+                return;
+            }
+            if ((o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer"))
+                    || o.getClass().getCanonicalName().equals("org.bukkit.entity.Player")) {
+                this.player = (Player) o;
+                this.craftPlayer = o;
+                return;
+            }
+            if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) {
+                this.player = (Player) o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
+                this.craftPlayer = o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
+                return;
+            }
+            throw new IllegalArgumentException("Illegal object: " + o);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if ((o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer"))
-                || o.getClass().getCanonicalName().equals("org.bukkit.entity.Player")) {
-            this.player = (Player) o;
-            this.craftPlayer = o;
-            return;
-        }
-        if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) {
-            this.player = (Player) o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
-            this.craftPlayer = o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
+    }
+
+    public static CraftPlayer getInstance(Object o) {
+        try {
+            return new CraftPlayer(o);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -67,13 +82,13 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     public EntityPlayer getHandle() {
-        return EntityPlayer.fromCraftPlayer(this);
+        return new EntityPlayer(this);
     }
 
     @Override
     @NotNull
     public org.bukkit.entity.Player.Spigot spigot() {
-        throw new UnsupportedOperationException();
+        return player.spigot();
     }
 
     public void swingOffHand() {

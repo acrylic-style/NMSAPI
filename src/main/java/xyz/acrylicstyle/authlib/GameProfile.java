@@ -5,6 +5,7 @@ import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
 import xyz.acrylicstyle.craftbukkit.CraftUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
@@ -21,6 +22,8 @@ public class GameProfile {
     public PropertyMap getProperties() {
         return new PropertyMap(getField("properties"));
     }
+
+    public void setProperties(PropertyMap properties) { setField("properties", properties.getPropertyMap()); }
 
     public boolean isComplete() {
         return (boolean) invoke("isComplete");
@@ -68,16 +71,26 @@ public class GameProfile {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(Class.forName("org.mojang.authlib.GameProfile"), getGameProfile(), field);
+            return ReflectionHelper.getField(Class.forName("com.mojang.authlib.GameProfile"), getGameProfile(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    public void setField(String field, Object value) {
+        try {
+            Field f = Class.forName("com.mojang.authlib.GameProfile").getDeclaredField(field);
+            f.setAccessible(true);
+            f.set(getGameProfile(), value);
+        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Object invoke(String method) {
         try {
-            return Class.forName("org.mojang.authlib.GameProfile")
+            return Class.forName("com.mojang.authlib.GameProfile")
                     .getMethod(method)
                     .invoke(getGameProfile());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
@@ -90,7 +103,7 @@ public class GameProfile {
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(o1.getClass());
-            return Class.forName("org.mojang.authlib.GameProfile")
+            return Class.forName("com.mojang.authlib.GameProfile")
                     .getMethod(method, classes.toArray(new Class[0]))
                     .invoke(getGameProfile(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
