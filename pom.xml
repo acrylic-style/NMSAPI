@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>xyz.xyz.acrylicstyle</groupId>
+    <groupId>xyz.acrylicstyle</groupId>
     <artifactId>NMSAPI-1.15.2</artifactId>
     <version>0.0.35</version>
     <build>
