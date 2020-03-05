@@ -26,13 +26,13 @@ public class CraftScoreboard implements Handler<xyz.acrylicstyle.minecraft.Score
     }
 
     @Override
-    public @NotNull Objective registerNewObjective(@NotNull String name, @NotNull String criteria, @NotNull String displayName) throws IllegalArgumentException {
-        return scoreboard.registerNewObjective(name, criteria, displayName);
+    public @NotNull Objective registerNewObjective(@NotNull String s, @NotNull String s1, @NotNull String s2) throws IllegalArgumentException {
+        return scoreboard.registerNewObjective(s, s1, s2);
     }
 
     @Override
-    public @NotNull Objective registerNewObjective(@NotNull String name, @NotNull String criteria, @NotNull String displayName, @NotNull RenderType renderType) throws IllegalArgumentException {
-        return scoreboard.registerNewObjective(name, criteria, displayName, renderType);
+    public @NotNull Objective registerNewObjective(@NotNull String s, @NotNull String s1, @NotNull String s2, @NotNull RenderType renderType) throws IllegalArgumentException {
+        return scoreboard.registerNewObjective(s, s1, s2, renderType);
     }
 
     @Override

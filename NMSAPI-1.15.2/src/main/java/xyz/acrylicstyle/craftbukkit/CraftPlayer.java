@@ -1,23 +1,34 @@
 package xyz.acrylicstyle.craftbukkit;
 
 import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.PistonMoveReaction;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.*;
+import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.map.MapView;
+import org.bukkit.util.Vector;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.util.Vector;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
@@ -76,8 +87,20 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
 
     @Override
     @NotNull
-    public Player.Spigot spigot() {
+    public org.bukkit.entity.Player.Spigot spigot() {
         return player.spigot();
+    }
+
+    public void swingOffHand() {
+        player.swingOffHand();
+    }
+
+    public void swingMainHand() {
+        player.swingMainHand();
+    }
+
+    public void attack(@NotNull Entity entity) {
+        player.attack(entity);
     }
 
     @Override
@@ -98,6 +121,31 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     @Override
     public void setPlayerListName(@Nullable String s) {
         player.setPlayerListName(s);
+    }
+
+    @Override
+    public @Nullable String getPlayerListHeader() {
+        return player.getPlayerListHeader();
+    }
+
+    @Override
+    public @Nullable String getPlayerListFooter() {
+        return player.getPlayerListFooter();
+    }
+
+    @Override
+    public void setPlayerListHeader(@Nullable String s) {
+        player.setPlayerListHeader(s);
+    }
+
+    @Override
+    public void setPlayerListFooter(@Nullable String s) {
+        player.setPlayerListFooter(s);
+    }
+
+    @Override
+    public void setPlayerListHeaderFooter(@Nullable String s, @Nullable String s1) {
+        player.setPlayerListHeaderFooter(s, s1);
     }
 
     @Override
@@ -222,6 +270,36 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory soundCategory, float v, float v1) {
+        player.playSound(location, sound, soundCategory, v, v1);
+    }
+
+    @Override
+    public void playSound(@NotNull Location location, @NotNull String s, @NotNull SoundCategory soundCategory, float v, float v1) {
+        player.playSound(location, s, soundCategory, v, v1);
+    }
+
+    @Override
+    public void stopSound(@NotNull Sound sound) {
+        player.stopSound(sound);
+    }
+
+    @Override
+    public void stopSound(@NotNull String s) {
+        player.stopSound(s);
+    }
+
+    @Override
+    public void stopSound(@NotNull Sound sound, @Nullable SoundCategory soundCategory) {
+        player.stopSound(sound, soundCategory);
+    }
+
+    @Override
+    public void stopSound(@NotNull String s, @Nullable SoundCategory soundCategory) {
+        player.stopSound(s, soundCategory);
+    }
+
+    @Override
     @Deprecated
     public void playEffect(@NotNull Location location, @NotNull Effect effect, int i) {
         player.playEffect(location, effect, i);
@@ -239,20 +317,24 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public void sendBlockChange(@NotNull Location location, @NotNull BlockData blockData) {
+        player.sendBlockChange(location, blockData);
+    }
+
+    @Override
     @Deprecated
     public boolean sendChunkChange(@NotNull Location location, int i, int i1, int i2, @NotNull byte[] bytes) {
         return player.sendChunkChange(location, i, i1, i2, bytes);
     }
 
     @Override
-    @Deprecated
-    public void sendBlockChange(Location loc, int material, byte data) {
-        player.sendBlockChange(loc, material, data);
+    public void sendSignChange(@NotNull Location location, @Nullable String[] strings) throws IllegalArgumentException {
+        player.sendSignChange(location, strings);
     }
 
     @Override
-    public void sendSignChange(@NotNull Location location, @Nullable String[] strings) throws IllegalArgumentException {
-        player.sendSignChange(location, strings);
+    public void sendSignChange(@NotNull Location location, @Nullable String[] strings, @NotNull DyeColor dyeColor) throws IllegalArgumentException {
+        player.sendSignChange(location, strings, dyeColor);
     }
 
     @Override
@@ -263,21 +345,6 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     @Override
     public void updateInventory() {
         player.updateInventory();
-    }
-
-    @Override
-    public void awardAchievement(Achievement achievement) {
-
-    }
-
-    @Override
-    public void removeAchievement(Achievement achievement) {
-
-    }
-
-    @Override
-    public boolean hasAchievement(Achievement achievement) {
-        return false;
     }
 
     @Override
@@ -451,6 +518,16 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public void sendExperienceChange(float progress) {
+        player.sendExperienceChange(progress);
+    }
+
+    @Override
+    public void sendExperienceChange(float progress, int level) {
+        player.sendExperienceChange(progress, level);
+    }
+
+    @Override
     public float getExhaustion() {
         return player.getExhaustion();
     }
@@ -491,13 +568,25 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    @Deprecated
     public void hidePlayer(@NotNull Player player) {
         player.hidePlayer(player);
     }
 
     @Override
+    public void hidePlayer(@NotNull Plugin plugin, @NotNull Player player) {
+        player.hidePlayer(plugin, player);
+    }
+
+    @Override
+    @Deprecated
     public void showPlayer(@NotNull Player player) {
         player.showPlayer(player);
+    }
+
+    @Override
+    public void showPlayer(@NotNull Plugin plugin, @NotNull Player player) {
+        player.showPlayer(plugin, player);
     }
 
     @Override
@@ -547,6 +636,11 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public void setResourcePack(@NotNull String s, @NotNull byte[] bytes) {
+        player.setResourcePack(s, bytes);
+    }
+
+    @Override
     public @NotNull Scoreboard getScoreboard() {
         return player.getScoreboard();
     }
@@ -593,9 +687,98 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
-    @Deprecated
+    public void sendTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+    @Override
     public void resetTitle() {
         player.resetTitle();
+    }
+
+    @Override
+    public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i) {
+        player.spawnParticle(particle, location, i);
+    }
+
+    @Override
+    public void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count) {
+        player.spawnParticle(particle, x, y, z, count);
+    }
+
+    @Override
+    public <T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, @Nullable T t) {
+        player.spawnParticle(particle, location, i, t);
+    }
+
+    @Override
+    public <T> void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, @Nullable T t) {
+        player.spawnParticle(particle, v, v1, v2, i, t);
+    }
+
+    @Override
+    public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double offsetX, double offsetY, double offsetZ) {
+        player.spawnParticle(particle, location, i, offsetX, offsetY, offsetZ);
+    }
+
+    @Override
+    public void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5) {
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5);
+    }
+
+    @Override
+    public <T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double v, double v1, double v2, @Nullable T t) {
+        player.spawnParticle(particle, location, i, v, v1, v2, t);
+    }
+
+    @Override
+    public <T> void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, @Nullable T t) {
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, t);
+    }
+
+    @Override
+    public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double v, double v1, double v2, double v3) {
+        player.spawnParticle(particle, location, i, v, v1, v2, v3);
+    }
+
+    @Override
+    public void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6) {
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, v6);
+    }
+
+    @Override
+    public <T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int i, double v, double v1, double v2, double v3, @Nullable T t) {
+        player.spawnParticle(particle, location, i, v, v1, v2, v3, t);
+    }
+
+    @Override
+    public <T> void spawnParticle(@NotNull Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6, @Nullable T t) {
+        player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, v6, t);
+    }
+
+    @Override
+    public @NotNull AdvancementProgress getAdvancementProgress(@NotNull Advancement advancement) {
+        return player.getAdvancementProgress(advancement);
+    }
+
+    @Override
+    public int getClientViewDistance() {
+        return player.getClientViewDistance();
+    }
+
+    @Override
+    public @NotNull String getLocale() {
+        return player.getLocale();
+    }
+
+    @Override
+    public void updateCommands() {
+        player.updateCommands();
+    }
+
+    @Override
+    public void openBook(@NotNull ItemStack itemStack) {
+        player.openBook(itemStack);
     }
 
     @Override
@@ -619,7 +802,21 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
-    @Deprecated
+    public double getHeight() {
+        return player.getHeight();
+    }
+
+    @Override
+    public double getWidth() {
+        return player.getWidth();
+    }
+
+    @Override
+    public @NotNull BoundingBox getBoundingBox() {
+        return player.getBoundingBox();
+    }
+
+    @Override
     public boolean isOnGround() {
         return player.isOnGround();
     }
@@ -627,6 +824,11 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     @Override
     public @NotNull World getWorld() {
         return player.getWorld();
+    }
+
+    @Override
+    public void setRotation(float yaw, float pitch) {
+        player.setRotation(yaw, pitch);
     }
 
     @Override
@@ -705,13 +907,42 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    @Deprecated
+    public boolean isPersistent() {
+        return player.isPersistent();
+    }
+
+    @Override
+    @Deprecated
+    public void setPersistent(boolean b) {
+        player.setPersistent(b);
+    }
+
+    @Override
+    @Deprecated
     public @Nullable Entity getPassenger() {
         return player.getPassenger();
     }
 
     @Override
+    @Deprecated
     public boolean setPassenger(@NotNull Entity entity) {
         return player.setPassenger(entity);
+    }
+
+    @Override
+    public @NotNull List<Entity> getPassengers() {
+        return player.getPassengers();
+    }
+
+    @Override
+    public boolean addPassenger(@NotNull Entity entity) {
+        return player.addPassenger(entity);
+    }
+
+    @Override
+    public boolean removePassenger(@NotNull Entity entity) {
+        return player.removePassenger(entity);
     }
 
     @Override
@@ -795,6 +1026,86 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public void setGlowing(boolean b) {
+        player.setGlowing(b);
+    }
+
+    @Override
+    public boolean isGlowing() {
+        return player.isGlowing();
+    }
+
+    @Override
+    public void setInvulnerable(boolean b) {
+        player.setInvulnerable(b);
+    }
+
+    @Override
+    public boolean isInvulnerable() {
+        return player.isInvulnerable();
+    }
+
+    @Override
+    public boolean isSilent() {
+        return player.isSilent();
+    }
+
+    @Override
+    public void setSilent(boolean b) {
+        player.setSilent(b);
+    }
+
+    @Override
+    public boolean hasGravity() {
+        return player.hasGravity();
+    }
+
+    @Override
+    public void setGravity(boolean b) {
+        player.setGravity(b);
+    }
+
+    @Override
+    public int getPortalCooldown() {
+        return player.getPortalCooldown();
+    }
+
+    @Override
+    public void setPortalCooldown(int i) {
+        player.setPortalCooldown(i);
+    }
+
+    @Override
+    public @NotNull Set<String> getScoreboardTags() {
+        return player.getScoreboardTags();
+    }
+
+    @Override
+    public boolean addScoreboardTag(@NotNull String s) {
+        return player.addScoreboardTag(s);
+    }
+
+    @Override
+    public boolean removeScoreboardTag(@NotNull String s) {
+        return player.removeScoreboardTag(s);
+    }
+
+    @Override
+    public @NotNull PistonMoveReaction getPistonMoveReaction() {
+        return player.getPistonMoveReaction();
+    }
+
+    @Override
+    public @NotNull BlockFace getFacing() {
+        return player.getFacing();
+    }
+
+    @Override
+    public @NotNull Pose getPose() {
+        return player.getPose();
+    }
+
+    @Override
     public boolean isOnline() {
         return player.isOnline();
     }
@@ -802,11 +1113,6 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     @Override
     public boolean isBanned() {
         return player.isBanned();
-    }
-
-    @Override
-    public void setBanned(boolean banned) {
-
     }
 
     @Override
@@ -860,6 +1166,11 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public @NotNull MainHand getMainHand() {
+        return player.getMainHand();
+    }
+
+    @Override
     public boolean setWindowProperty(InventoryView.@NotNull Property property, int i) {
         return player.setWindowProperty(property, i);
     }
@@ -890,6 +1201,16 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public @Nullable InventoryView openMerchant(@NotNull Villager villager, boolean b) {
+        return player.openMerchant(villager, b);
+    }
+
+    @Override
+    public @Nullable InventoryView openMerchant(@NotNull Merchant merchant, boolean b) {
+        return player.openMerchant(merchant, b);
+    }
+
+    @Override
     public void closeInventory() {
         player.closeInventory();
     }
@@ -917,6 +1238,21 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public boolean hasCooldown(@NotNull Material material) {
+        return player.hasCooldown(material);
+    }
+
+    @Override
+    public int getCooldown(@NotNull Material material) {
+        return player.getCooldown(material);
+    }
+
+    @Override
+    public void setCooldown(@NotNull Material material, int i) {
+        player.setCooldown(material, i);
+    }
+
+    @Override
     public int getSleepTicks() {
         return player.getSleepTicks();
     }
@@ -937,6 +1273,21 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public boolean sleep(@NotNull Location location, boolean b) {
+        return player.sleep(location, b);
+    }
+
+    @Override
+    public void wakeup(boolean b) {
+        player.wakeup(b);
+    }
+
+    @Override
+    public @NotNull Location getBedLocation() {
+        return player.getBedLocation();
+    }
+
+    @Override
     public @NotNull GameMode getGameMode() {
         return player.getGameMode();
     }
@@ -952,8 +1303,57 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public boolean isHandRaised() {
+        return player.isHandRaised();
+    }
+
+    @Override
     public int getExpToLevel() {
         return player.getExpToLevel();
+    }
+
+    @Override
+    public boolean discoverRecipe(@NotNull NamespacedKey namespacedKey) {
+        return player.discoverRecipe(namespacedKey);
+    }
+
+    @Override
+    public int discoverRecipes(@NotNull Collection<NamespacedKey> collection) {
+        return player.discoverRecipes(collection);
+    }
+
+    @Override
+    public boolean undiscoverRecipe(@NotNull NamespacedKey namespacedKey) {
+        return player.undiscoverRecipe(namespacedKey);
+    }
+
+    @Override
+    public int undiscoverRecipes(@NotNull Collection<NamespacedKey> collection) {
+        return player.undiscoverRecipes(collection);
+    }
+
+    @Override
+    @Deprecated
+    public @Nullable Entity getShoulderEntityLeft() {
+        return player.getShoulderEntityLeft();
+    }
+
+    @Override
+    @Deprecated
+    public void setShoulderEntityLeft(@Nullable Entity entity) {
+        player.setShoulderEntityLeft(entity);
+    }
+
+    @Override
+    @Deprecated
+    public @Nullable Entity getShoulderEntityRight() {
+        return player.getShoulderEntityRight();
+    }
+
+    @Override
+    @Deprecated
+    public void setShoulderEntityRight(@Nullable Entity entity) {
+        player.setShoulderEntityRight(entity);
     }
 
     @Override
@@ -972,18 +1372,8 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
-    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
-        return null;
-    }
-
-    @Override
     public @NotNull List<Block> getLineOfSight(@Nullable Set<Material> set, int i) {
         return player.getLineOfSight(set, i);
-    }
-
-    @Override
-    public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
-        return null;
     }
 
     @Override
@@ -992,31 +1382,28 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
-        return null;
-    }
-
-    @Override
     public @NotNull List<Block> getLastTwoTargetBlocks(@Nullable Set<Material> set, int i) {
         return player.getLastTwoTargetBlocks(set, i);
     }
 
     @Override
-    @Deprecated
-    public Egg throwEgg() {
-        return player.throwEgg();
+    public @Nullable Block getTargetBlockExact(int maxDistance) {
+        return player.getTargetBlockExact(maxDistance);
     }
 
     @Override
-    @Deprecated
-    public Snowball throwSnowball() {
-        return player.throwSnowball();
+    public @Nullable Block getTargetBlockExact(int maxDistance, @NotNull FluidCollisionMode fluidCollisionMode) {
+        return player.getTargetBlockExact(maxDistance, fluidCollisionMode);
     }
 
     @Override
-    @Deprecated
-    public Arrow shootArrow() {
-        return player.shootArrow();
+    public @Nullable RayTraceResult rayTraceBlocks(double maxDistance) {
+        return player.rayTraceBlocks(maxDistance);
+    }
+
+    @Override
+    public @Nullable RayTraceResult rayTraceBlocks(double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode) {
+        return player.rayTraceBlocks(maxDistance, fluidCollisionMode);
     }
 
     @Override
@@ -1055,18 +1442,8 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
-    public int _INVALID_getLastDamage() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void setLastDamage(double damage) {
         player.setLastDamage(damage);
-    }
-
-    @Override
-    public void _INVALID_setLastDamage(int damage) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1103,6 +1480,11 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     @Override
     public boolean hasPotionEffect(@NotNull PotionEffectType potionEffectType) {
         return player.hasPotionEffect(potionEffectType);
+    }
+
+    @Override
+    public @Nullable PotionEffect getPotionEffect(@NotNull PotionEffectType potionEffectType) {
+        return player.getPotionEffect(potionEffectType);
     }
 
     @Override
@@ -1161,8 +1543,68 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public boolean isGliding() {
+        return player.isGliding();
+    }
+
+    @Override
+    public void setGliding(boolean b) {
+        player.setGliding(b);
+    }
+
+    @Override
+    public boolean isSwimming() {
+        return player.isSwimming();
+    }
+
+    @Override
+    public void setSwimming(boolean b) {
+        player.setSwimming(b);
+    }
+
+    @Override
+    public boolean isRiptiding() {
+        return player.isRiptiding();
+    }
+
+    @Override
     public boolean isSleeping() {
         return player.isSleeping();
+    }
+
+    @Override
+    public void setAI(boolean b) {
+        player.setAI(b);
+    }
+
+    @Override
+    public boolean hasAI() {
+        return player.hasAI();
+    }
+
+    @Override
+    public void setCollidable(boolean b) {
+        player.setCollidable(b);
+    }
+
+    @Override
+    public boolean isCollidable() {
+        return player.isCollidable();
+    }
+
+    @Override
+    public <T> @Nullable T getMemory(@NotNull MemoryKey<T> memoryKey) {
+        return player.getMemory(memoryKey);
+    }
+
+    @Override
+    public <T> void setMemory(@NotNull MemoryKey<T> memoryKey, @Nullable T t) {
+        player.setMemory(memoryKey, t);
+    }
+
+    @Override
+    public @Nullable AttributeInstance getAttribute(@NotNull Attribute attribute) {
+        return player.getAttribute(attribute);
     }
 
     @Override
@@ -1171,18 +1613,8 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
-    public void _INVALID_damage(int amount) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void damage(double v, @Nullable Entity entity) {
         player.damage(v, entity);
-    }
-
-    @Override
-    public void _INVALID_damage(int amount, Entity source) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1191,41 +1623,34 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
-    public int _INVALID_getHealth() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void setHealth(double v) {
         player.setHealth(v);
     }
 
     @Override
-    public void _INVALID_setHealth(int health) {
-        throw new UnsupportedOperationException();
+    public double getAbsorptionAmount() {
+        return player.getAbsorptionAmount();
     }
 
     @Override
+    public void setAbsorptionAmount(double v) {
+        player.setAbsorptionAmount(v);
+    }
+
+    @Override
+    @Deprecated
     public double getMaxHealth() {
         return player.getMaxHealth();
     }
 
     @Override
-    public int _INVALID_getMaxHealth() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
+    @Deprecated
     public void setMaxHealth(double v) {
         player.setMaxHealth(v);
     }
 
     @Override
-    public void _INVALID_setMaxHealth(int health) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
+    @Deprecated
     public void resetMaxHealth() {
         player.resetMaxHealth();
     }
@@ -1323,6 +1748,11 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     @Override
     public void setOp(boolean b) {
         player.setOp(b);
+    }
+
+    @Override
+    public @NotNull PersistentDataContainer getPersistentDataContainer() {
+        return player.getPersistentDataContainer();
     }
 
     @Override
