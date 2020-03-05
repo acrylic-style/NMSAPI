@@ -1,5 +1,6 @@
 package xyz.acrylicstyle.authlib;
 
+import org.jetbrains.annotations.NotNull;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
@@ -31,7 +32,7 @@ public class GameProfile {
         return new PropertyMap(getField("properties"));
     }
 
-    public void setProperties(PropertyMap properties) { setField("properties", properties.getPropertyMap()); }
+    public void setProperties(@NotNull PropertyMap properties) { setField("properties", properties.getPropertyMap()); }
 
     public boolean isComplete() {
         return (boolean) invoke("isComplete");
@@ -107,7 +108,7 @@ public class GameProfile {
         }
     }
 
-    public Object invoke(String method, Object... o) {
+    public Object invoke(String method, @NotNull Object... o) {
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(o1.getClass());

@@ -8,23 +8,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.security.*;
 
 public class Property {
-    private final String name;
+    public String getName() { return (String) invoke("getName"); }
 
-    private final String value;
+    public String getValue() { return (String) invoke("getValue"); }
 
-    private final String signature;
-
-    public String getName() {
-        return name == null ? (String) getField("name") : name;
-    }
-
-    public String getValue() {
-        return value == null ? (String) getField("value") : value;
-    }
-
-    public String getSignature() {
-        return signature == null && name == null && value == null ? (String) getField("signature") : signature;
-    }
+    public String getSignature() { return (String) invoke("getSignature"); }
 
     public boolean hasSignature() {
         return getSignature() != null;
@@ -43,13 +31,10 @@ public class Property {
     }
 
     // NMSAPI start
-    private Object o = null;
+    private Object o;
 
     public Property(Object o) {
         this.o = o;
-        this.name = null;
-        this.value = null;
-        this.signature = null;
     }
 
     public Property(String name, String value) {
@@ -57,19 +42,16 @@ public class Property {
     }
 
     public Property(String name, String value, String signature) {
-        this.name = name;
-        this.value = value;
-        this.signature = signature;
+        try {
+            o = Class.forName("com.mojang.authlib.properties.Property").getConstructor(String.class, String.class, String.class).newInstance(name, value, signature);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Object getProperty() {
         if (o != null && o.getClass().getCanonicalName().equals("com.mojang.authlib.properties.Property")) return o;
-        try {
-            return Class.forName("com.mojang.authlib.properties.Property").getConstructor(String.class, String.class, String.class).newInstance(this.name, this.value, this.signature);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return null;
     }
 
     public Object getField(String field) {
