@@ -79,6 +79,10 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
         invoke("write", paramDataOutput);
     }
 
+    public CrashReport a(String paramString, int paramInt, ClassCastException paramClassCastException) {
+        return new CrashReport(invoke("a", paramString, paramInt, paramClassCastException));
+    }
+
     @Override
     public void load(DataInput paramDataInput, int paramInt, NBTReadLimiter paramNBTReadLimiter) {
         invoke("load", paramDataInput, paramInt, paramNBTReadLimiter);
