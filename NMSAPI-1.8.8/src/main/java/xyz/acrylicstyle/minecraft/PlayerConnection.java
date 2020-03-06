@@ -4,6 +4,7 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ReflectionHelper;
@@ -19,7 +20,7 @@ public class PlayerConnection {
     private final MinecraftServer minecraftServer;
     public NetworkManager networkManager = null;
 
-    public PlayerConnection(EntityPlayer player) {
+    public PlayerConnection(@NotNull EntityPlayer player) {
         this.player = player;
         minecraftServer = player.server;
         try {
@@ -68,13 +69,18 @@ public class PlayerConnection {
         }
     }
 
-    public void sendPacket(Packet packet) {
-        invoke("sendPacket", packet.toNMSPacket());
+    public void sendPacket(@NotNull Packet packet) {
+        try {
+            ReflectionUtil
+                    .getNMSClass("PlayerConnection")
+                    .getMethod("sendPacket", ReflectionUtil.getNMSClass("Packet"))
+                    .invoke(getPlayerConnection(), packet.toNMSPacket());
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void disconnect(String s) {
-        invoke("disconnect", s);
-    }
+    public void disconnect(String s) { invoke("disconnect", s); }
 
     public void a(Object packetPlayInSteerVehicle) {
         try {
@@ -421,17 +427,6 @@ public class PlayerConnection {
         }
     }
 
-    public void sendPacket(Object packet) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("a", ReflectionUtil.getNMSClass("Packet"))
-                    .invoke(getPlayerConnection(), packet);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void a(Object packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
         try {
             ReflectionUtil
@@ -694,7 +689,7 @@ public class PlayerConnection {
         }
     }
 
-    public Object invoke(String method, Object... o) {
+    public Object invoke(String method, @NotNull Object... o) {
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(o1.getClass());

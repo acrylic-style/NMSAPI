@@ -1,24 +1,27 @@
 package xyz.acrylicstyle.minecraft;
 
+import org.jetbrains.annotations.NotNull;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 public class PacketPlayOutNamedEntitySpawn implements Packet {
     private Object o;
 
-    public PacketPlayOutNamedEntitySpawn(Object o) {
-        if (o instanceof EntityPlayer) {
-            try {
-                this.o = ReflectionUtil.getNMSClass("PacketPlayOutNamedEntitySpawn")
-                        .getConstructor(ReflectionUtil.getNMSClass("EntityHuman"))
-                        .newInstance(((EntityPlayer) o).getEntityHuman());
-            } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+    public PacketPlayOutNamedEntitySpawn(@NotNull EntityPlayer entityPlayer) {
+        try {
+            this.o = ReflectionUtil.getNMSClass("PacketPlayOutNamedEntitySpawn")
+                    .getConstructor(ReflectionUtil.getNMSClass("EntityHuman"))
+                    .newInstance(entityPlayer.getEntityHuman());
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public PacketPlayOutNamedEntitySpawn(@NotNull Object o) {
         this.o = o;
     }
 
@@ -89,6 +92,24 @@ public class PacketPlayOutNamedEntitySpawn implements Packet {
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void setField(String field, Object value) {
+        try {
+            Field f = ReflectionUtil.getNMSClass("PacketPlayOutNamedEntitySpawn").getDeclaredField(field);
+            f.setAccessible(true);
+            f.set(getPacketPlayOutNamedEntitySpawn(), value);
+        } catch (NoSuchFieldException e) {
+            try {
+                Field f = ReflectionUtil.getNMSClass("PacketPlayOutNamedEntitySpawn").getSuperclass().getDeclaredField(field);
+                f.setAccessible(true);
+                f.set(getPacketPlayOutNamedEntitySpawn(), value);
+            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        } catch (ClassNotFoundException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
     // NMSAPI end

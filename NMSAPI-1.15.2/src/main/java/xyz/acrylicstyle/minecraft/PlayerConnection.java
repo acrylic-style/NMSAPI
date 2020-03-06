@@ -69,7 +69,14 @@ public class PlayerConnection {
     }
 
     public void sendPacket(Packet packet) {
-        invoke("sendPacket", packet.toNMSPacket());
+        try {
+            ReflectionUtil
+                    .getNMSClass("PlayerConnection")
+                    .getMethod("sendPacket", ReflectionUtil.getNMSClass("Packet"))
+                    .invoke(getPlayerConnection(), packet.toNMSPacket());
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void disconnect(String s) {
