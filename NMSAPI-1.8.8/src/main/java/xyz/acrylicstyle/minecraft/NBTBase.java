@@ -1,5 +1,7 @@
 package xyz.acrylicstyle.minecraft;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.io.DataInput;
@@ -19,7 +21,8 @@ public abstract class NBTBase {
 
     public abstract byte getTypeId();
 
-    protected static NBTBase createTag(byte paramByte) {
+    @Nullable
+    public static NBTBase createTag(byte paramByte) {
         switch (paramByte) {
             case 0:
                 return new NBTTagEnd();
@@ -87,10 +90,33 @@ public abstract class NBTBase {
     }
 
     // NMSAPI start
-    protected final NBTBase getInstance(Object o) {
+    @Nullable
+    protected final NBTBase getInstance(@NotNull Object o) {
         try {
             if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagCompound"))) {
                 return new NBTTagCompound(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagList"))) {
+                return new NBTTagList(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagByte"))) {
+                return new NBTTagByte(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagByteArray"))) {
+                return new NBTTagByteArray(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagString"))) {
+                return new NBTTagString(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagShort"))) {
+                return new NBTTagShort(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagEnd"))) {
+                return new NBTTagEnd(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagFloat"))) {
+                return new NBTTagFloat(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagLong"))) {
+                return new NBTTagLong(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagInt"))) {
+                return new NBTTagInt(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagIntArray"))) {
+                return new NBTTagIntArray(o);
+            } else if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagDouble"))) {
+                return new NBTTagDouble(o);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
