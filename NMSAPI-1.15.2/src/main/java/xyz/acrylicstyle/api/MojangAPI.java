@@ -50,4 +50,24 @@ public class MojangAPI {
         profile.setProperties(propertyMap);
         return profile;
     }
+
+    @NotNull
+    public static String getSkin(@NotNull UUID uuid) {
+        return (String) getProperty(uuid, "value");
+    }
+
+    @NotNull
+    public static String getSkinSignature(@NotNull UUID uuid) {
+        return (String) getProperty(uuid, "signature");
+    }
+
+    @NotNull
+    public static Object getProperty(@NotNull UUID uuid, @NotNull String s) {
+        JSONAPI.Response response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call();
+        if (response.getResponseCode() != 200) throw new RuntimeException("Response code isn't 200! (" + response.getResponseCode() + ")");
+        JSONObject json = response.getResponse();
+        JSONArray properties = json.getJSONArray("properties");
+        JSONObject property = (JSONObject) properties.get(0);
+        return property.getString(s);
+    }
 }
