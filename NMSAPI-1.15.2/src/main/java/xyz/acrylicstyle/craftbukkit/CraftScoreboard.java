@@ -4,7 +4,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import util.Serializer;
 
+import java.io.IOException;
 import java.util.Set;
 
 public class CraftScoreboard implements Handler<xyz.acrylicstyle.minecraft.Scoreboard>, Scoreboard {
@@ -117,5 +119,14 @@ public class CraftScoreboard implements Handler<xyz.acrylicstyle.minecraft.Score
     @Override
     public void clearSlot(@NotNull DisplaySlot slot) throws IllegalArgumentException {
         scoreboard.clearSlot(slot);
+    }
+
+    public CraftScoreboard cloneScoreboard() {
+        try {
+            String s = new Serializer(this).asString();
+            return (CraftScoreboard) Serializer.fromString(s).getObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
