@@ -18,7 +18,7 @@
         <repository>
             <id>xyz.acrylicstyle-repo</id>
             <name>Acrylic Style's Repository2</name>
-            <url>https://repo.xyz.acrylicstyle.xyz/</url>
+            <url>https://repo.acrylicstyle.xyz/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
