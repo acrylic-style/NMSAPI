@@ -100,12 +100,6 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-shared</artifactId>
-            <version>0.0.46</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>xyz.acrylicstyle</groupId>
-            <artifactId>NMSAPI-shared</artifactId>
             <version>0.0.47</version>
             <scope>compile</scope>
         </dependency>

@@ -49,13 +49,6 @@
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>tomeito_lib</artifactId>
             <version>0.1.34</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>xyz.acrylicstyle</groupId>
-                    <artifactId>Util</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>

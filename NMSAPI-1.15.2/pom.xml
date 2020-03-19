@@ -12,13 +12,13 @@
     <artifactId>NMSAPI-1.15.2</artifactId>
     <repositories>
         <repository>
-            <id>dmulloy2-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
-        </repository>
-        <repository>
-            <id>xyz.acrylicstyle-repo</id>
+            <id>acrylicstyle-repo</id>
             <name>Acrylic Style's Repository2</name>
             <url>https://repo.acrylicstyle.xyz/</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-shared</artifactId>
-            <version>0.0.46</version>
+            <version>0.0.47</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
