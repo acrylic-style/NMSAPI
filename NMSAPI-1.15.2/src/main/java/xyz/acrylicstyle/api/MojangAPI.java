@@ -1,5 +1,8 @@
 package xyz.acrylicstyle.api;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -7,25 +10,13 @@ import util.JSONAPI;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.authlib.properties.Property;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
+import xyz.acrylicstyle.craftbukkit.CraftPlayer;
+import xyz.acrylicstyle.shared.BaseMojangAPI;
 
 import java.util.UUID;
 
-public class MojangAPI {
+public class MojangAPI extends BaseMojangAPI {
     private MojangAPI() {}
-
-    /**
-     * Calls mojang API and lookups player uuid from name.<br />
-     * Throws RuntimeException when rate limit exceeded.
-     * @param name Name of the player.
-     * @return Player's uuid.
-     */
-    @NotNull
-    public static UUID getUniqueId(@NotNull String name) {
-        JSONAPI.Response response = new JSONAPI("https://api.mojang.com/users/profiles/minecraft/" + name).call();
-        if (response.getResponseCode() != 200) throw new RuntimeException("Response code isn't 200! (" + response.getResponseCode() + ")");
-        JSONObject json = response.getResponse();
-        return UUID.fromString(json.getString("id").replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"));
-    }
 
     @NotNull
     public static GameProfile getGameProfile(@NotNull String name) {
@@ -51,27 +42,29 @@ public class MojangAPI {
         return profile;
     }
 
-    @NotNull
-    public static String getSkin(@NotNull UUID uuid) {
-        return (String) getProperty(uuid, "value");
+    public static Player changeSkin(@NotNull Plugin plugin, @NotNull Player player, @NotNull UUID uuid) {
+        CraftPlayer craftPlayer = new CraftPlayer(player);
+        craftPlayer.getProfile().setProperties(getGameProfile(uuid).getProperties());
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (player.getUniqueId().equals(p.getUniqueId())) continue;
+            p.hidePlayer(plugin, player);
+            p.showPlayer(plugin, player);
+        }
+        return craftPlayer.getPlayer();
     }
 
-    @NotNull
-    public static String getSkinSignature(@NotNull UUID uuid) {
-        return (String) getProperty(uuid, "signature");
-    }
-
-    @NotNull
-    public static JSONObject getProperty(@NotNull UUID uuid) {
-        JSONAPI.Response response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call();
-        if (response.getResponseCode() != 200) throw new RuntimeException("Response code isn't 200! (" + response.getResponseCode() + ")");
-        JSONObject json = response.getResponse();
-        JSONArray properties = json.getJSONArray("properties");
-        return (JSONObject) properties.get(0);
-    }
-
-    @NotNull
-    public static Object getProperty(@NotNull UUID uuid, @NotNull String s) {
-        return getProperty(uuid).getString(s);
+    /**
+     * @deprecated Uses deprecated API, use {@link MojangAPI#changeSkin(Plugin, Player, UUID)} instead.
+     */
+    @Deprecated
+    public static Player changeSkin(@NotNull Player player, @NotNull UUID uuid) {
+        CraftPlayer craftPlayer = new CraftPlayer(player);
+        craftPlayer.getProfile().setProperties(getGameProfile(uuid).getProperties());
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (player.getUniqueId().equals(p.getUniqueId())) continue;
+            p.hidePlayer(player);
+            p.showPlayer(player);
+        }
+        return craftPlayer.getPlayer();
     }
 }

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>NMSAPI-1.8.8</artifactId>
+    <artifactId>NMSAPI-1.12.2</artifactId>
     <build>
         <plugins>
             <plugin>
@@ -77,13 +77,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -101,6 +101,12 @@
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-shared</artifactId>
             <version>0.0.46</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.acrylicstyle</groupId>
+            <artifactId>NMSAPI-shared</artifactId>
+            <version>0.0.47</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
