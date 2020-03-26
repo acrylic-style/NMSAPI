@@ -34,7 +34,7 @@ public class NBTTagDouble extends NBTBase.NBTNumber {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("NBTTagDouble"), toNMSObject(), field);
+            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("NBTTagDouble"), getNMSClass(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -45,7 +45,7 @@ public class NBTTagDouble extends NBTBase.NBTNumber {
         try {
             return ReflectionUtil.getNMSClass("NBTTagDouble")
                     .getMethod(method)
-                    .invoke(toNMSObject());
+                    .invoke(getNMSClass());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -53,7 +53,7 @@ public class NBTTagDouble extends NBTBase.NBTNumber {
     }
 
     @Override
-    public Object toNMSObject() {
+    public Object getNMSClass() {
         try {
             if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("NBTTagDouble").getCanonicalName())) return o;
         } catch (ClassNotFoundException e) {
@@ -68,7 +68,7 @@ public class NBTTagDouble extends NBTBase.NBTNumber {
             for (Object o1 : o) classes.add(o1.getClass());
             return ReflectionUtil.getNMSClass("NBTTagDouble")
                     .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(toNMSObject(), o);
+                    .invoke(getNMSClass(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
-import xyz.acrylicstyle.craftbukkit.CraftUtils;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

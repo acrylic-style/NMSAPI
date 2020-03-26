@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
-import xyz.acrylicstyle.craftbukkit.CraftUtils;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.io.File;
@@ -119,6 +119,10 @@ public class MinecraftServer {
 
     public void b(Runnable runnable) {
         invoke("b", runnable);
+    }
+
+    public static void main() {
+        main(null);
     }
 
     public static void main(Object optionSet) {

@@ -7,7 +7,7 @@
     <groupId>xyz.acrylicstyle</groupId>
     <artifactId>NMSAPI</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.48</version>
+    <version>0.1.1</version>
     <build>
         <plugins>
             <plugin>

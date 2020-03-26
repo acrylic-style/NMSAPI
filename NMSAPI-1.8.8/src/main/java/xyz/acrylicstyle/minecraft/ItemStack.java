@@ -1,19 +1,16 @@
 package xyz.acrylicstyle.minecraft;
 
-import util.CollectionList;
-import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.shared.NMSAPI;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
-public class ItemStack {
+public class ItemStack extends NMSAPI {
     public NBTTagCompound save(NBTTagCompound nbtTagCompound) {
-        return new NBTTagCompound(invoke("save", nbtTagCompound.getNBTTagCompound()));
+        return new NBTTagCompound(invoke("save", nbtTagCompound.getNMSClass()));
     }
 
     public void c(NBTTagCompound nbtTagCompound) {
-        invoke("c", nbtTagCompound.getNBTTagCompound());
+        invoke("c", nbtTagCompound.getNMSClass());
     }
 
     public ItemStack cloneItemStack() {
@@ -37,7 +34,7 @@ public class ItemStack {
     }
 
     public void setTag(NBTTagCompound nbtTagCompound) {
-        invoke("setTag", nbtTagCompound.getNBTTagCompound());
+        invoke("setTag", nbtTagCompound.getNMSClass());
     }
 
     public String getName() {
@@ -65,7 +62,7 @@ public class ItemStack {
     }
 
     public void a(String s, NBTBase nbtBase) {
-        invoke("a", s, nbtBase.toNMSObject());
+        invoke("a", s, nbtBase.getNMSClass());
     }
 
     public boolean x() {
@@ -143,60 +140,11 @@ public class ItemStack {
     }
 
     public ItemStack() {
-        try {
-            this.o = ReflectionUtil.getNMSClass("ItemStack").getConstructor().newInstance();
-        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        super("ItemStack");
     }
 
     // NMSAPI start
-    private Object o;
-
     public ItemStack(Object o) {
-        this.o = o;
+        super(o, "ItemStack");
     }
-
-    public Object getNMSClass() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("ItemStack").getCanonicalName())) return o;
-        } catch (ClassNotFoundException | NullPointerException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("ItemStack"), getNMSClass(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("ItemStack")
-                    .getMethod(method)
-                    .invoke(getNMSClass());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("ItemStack")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getNMSClass(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 }

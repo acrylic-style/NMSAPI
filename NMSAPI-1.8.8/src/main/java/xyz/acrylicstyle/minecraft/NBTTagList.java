@@ -7,6 +7,7 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class NBTTagList extends NBTBase {
     // NMSAPI start
@@ -26,7 +27,7 @@ public class NBTTagList extends NBTBase {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("NBTTagList"), toNMSObject(), field);
+            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("NBTTagList"), getNMSClass(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -37,7 +38,7 @@ public class NBTTagList extends NBTBase {
         try {
             return ReflectionUtil.getNMSClass("NBTTagList")
                     .getMethod(method)
-                    .invoke(toNMSObject());
+                    .invoke(getNMSClass());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -50,7 +51,7 @@ public class NBTTagList extends NBTBase {
             for (Object o1 : o) classes.add(o1.getClass());
             return ReflectionUtil.getNMSClass("NBTTagList")
                     .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(toNMSObject(), o);
+                    .invoke(getNMSClass(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -78,7 +79,7 @@ public class NBTTagList extends NBTBase {
     }
 
     @Override
-    public Object toNMSObject() {
+    public Object getNMSClass() {
         try {
             if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("NBTTagList").getCanonicalName())) return o;
         } catch (ClassNotFoundException e) {
@@ -87,6 +88,15 @@ public class NBTTagList extends NBTBase {
         return null;
     }
     // NMSAPI end
+
+    public void add(NBTBase nbtBase) {
+        invoke("add", nbtBase.getNMSClass());
+    }
+
+    public NBTTagList addAllString(List<String> list) {
+        list.forEach(s -> this.add(new NBTTagString(s)));
+        return this;
+    }
 
     public NBTBase a(int i) {
         return super.getInstance(invoke("a", i));

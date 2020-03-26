@@ -9,8 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.GameProfile;
-import xyz.acrylicstyle.craftbukkit.CraftPlayer;
-import xyz.acrylicstyle.craftbukkit.CraftUtils;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class EntityPlayer {
+public class EntityPlayer implements ICommandListener {
     private static boolean doPolling = false;
     private boolean disposed = false;
     private Plugin plugin = null;
@@ -288,5 +288,60 @@ public class EntityPlayer {
 
     public CraftPlayer getBukkitEntity() {
         return new CraftPlayer(invoke("getBukkitEntity", getEntityPlayer()));
+    }
+
+    @Override
+    public String getName() {
+        return getDisplayName();
+    }
+
+    @Override
+    public IChatBaseComponent getScoreboardDisplayName() {
+        return new ChatComponentText(getDisplayName());
+    }
+
+    @Override
+    public void sendMessage(IChatBaseComponent paramIChatBaseComponent) {
+        invoke("sendMessage", paramIChatBaseComponent.getIChatBaseComponent());
+    }
+
+    @Override
+    public boolean a(int paramInt, String paramString) {
+        return (boolean) invoke("a", paramInt, paramString);
+    }
+
+    @Override
+    public BlockPosition getChunkCoordinates() {
+        return new BlockPosition(invoke("getChunkCoordinates"));
+    }
+
+    @Override
+    public Object d() {
+        return invoke("d");
+    }
+
+    @Override
+    public World getWorld() {
+        return World.newInstance(invoke("getWorld"));
+    }
+
+    @Override
+    public Object f() {
+        return invoke("f");
+    }
+
+    @Override
+    public boolean getSendCommandFeedback() {
+        return (boolean) invoke("getSendCommandFeedback");
+    }
+
+    @Override
+    public void a(Object paramEnumCommandResult, int paramInt) {
+        invoke("a", paramEnumCommandResult, paramInt);
+    }
+
+    @Override
+    public Object getNMSClass() {
+        return getEntityPlayer();
     }
 }

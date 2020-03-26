@@ -27,11 +27,11 @@ public class TileEntity extends NMSAPI {
     }
 
     public void a(NBTTagCompound nbtTagCompound) {
-        invoke("a", nbtTagCompound.getNBTTagCompound());
+        invoke("a", nbtTagCompound.getNMSClass());
     }
 
     public void b(NBTTagCompound nbtTagCompound) {
-        invoke("b", nbtTagCompound.getNBTTagCompound());
+        invoke("b", nbtTagCompound.getNMSClass());
     }
 
     public static TileEntity c(NBTTagCompound nbtTagCompound) {
@@ -39,7 +39,7 @@ public class TileEntity extends NMSAPI {
             return new TileEntity(ReflectionUtil
                     .getNMSClass("TileEntity")
                     .getMethod("c", ReflectionUtil.getNMSClass("NBTTagCompound"))
-                    .invoke(null, nbtTagCompound.getNBTTagCompound()));
+                    .invoke(null, nbtTagCompound.getNMSClass()));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;

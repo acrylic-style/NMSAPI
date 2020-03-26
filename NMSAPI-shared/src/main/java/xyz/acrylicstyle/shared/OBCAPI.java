@@ -8,33 +8,29 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class NMSAPI {
-    private String nmsClassName;
-
-    //protected NMSAPI(String nmsClassName) {
-    //    this.nmsClassName = nmsClassName;
-    //}
+public class OBCAPI {
+    private String obcClassName;
 
     /**
-     * Set NMS object. This does not call constructor and it doesn't check types.
+     * Set OBC (org.bukkit.craftbukkit) object. This does not call constructor and it doesn't check types.
      * @param o Object
-     * @param nmsClassName NMS Class name
+     * @param obcClassName NMS Class name
      */
-    protected NMSAPI(Object o, String nmsClassName) {
+    protected OBCAPI(Object o, String obcClassName) {
         this.o = o;
-        this.nmsClassName = nmsClassName;
+        this.obcClassName = obcClassName;
     }
 
     /**
-     * Constructs NMSAPI and calls NMS class's constructor.
-     * @param nmsClassName NMS class name (target)
+     * Constructs OBCAPI and calls OBC class's constructor.
+     * @param obcClassName OBC class name (target)
      * @param o Constructor args
      */
-    protected NMSAPI(String nmsClassName, Object... o) {
+    protected OBCAPI(String obcClassName, Object... o) {
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(o1.getClass());
-            this.o = ReflectionUtil.getNMSClass(nmsClassName)
+            this.o = ReflectionUtil.getOBCClass(obcClassName)
                     .getConstructor(classes.toArray(new Class[0]))
                     .newInstance(o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | InstantiationException e) {
@@ -44,9 +40,9 @@ public class NMSAPI {
 
     private Object o;
 
-    public Object getNMSClass() {
+    public Object getOBCClass() {
         try {
-            if (o.getClass().getCanonicalName().equalsIgnoreCase(ReflectionUtil.getNMSClass(nmsClassName).getCanonicalName())) return o;
+            if (o.getClass().getCanonicalName().equalsIgnoreCase(ReflectionUtil.getOBCClass(obcClassName).getCanonicalName())) return o;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -55,7 +51,7 @@ public class NMSAPI {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName), getNMSClass(), field);
+            return ReflectionHelper.getField(ReflectionUtil.getOBCClass(obcClassName), getOBCClass(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -64,14 +60,14 @@ public class NMSAPI {
 
     public void setField(String field, Object value) {
         try {
-            Field f = ReflectionUtil.getNMSClass(nmsClassName).getDeclaredField(field);
+            Field f = ReflectionUtil.getOBCClass(obcClassName).getDeclaredField(field);
             f.setAccessible(true);
-            f.set(getNMSClass(), value);
+            f.set(getOBCClass(), value);
         } catch (NoSuchFieldException e) {
             try {
-                Field f = ReflectionUtil.getNMSClass(nmsClassName).getSuperclass().getDeclaredField(field);
+                Field f = ReflectionUtil.getOBCClass(obcClassName).getSuperclass().getDeclaredField(field);
                 f.setAccessible(true);
-                f.set(getNMSClass(), value);
+                f.set(getOBCClass(), value);
             } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -82,9 +78,9 @@ public class NMSAPI {
 
     public Object invoke(String method) {
         try {
-            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method);
+            Method m = ReflectionUtil.getOBCClass(obcClassName).getDeclaredMethod(method);
             m.setAccessible(true);
-            return m.invoke(getNMSClass());
+            return m.invoke(getOBCClass());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -95,12 +91,13 @@ public class NMSAPI {
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(o1.getClass());
-            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, classes.toArray(new Class[0]));
+            Method m = ReflectionUtil.getOBCClass(obcClassName).getMethod(method, classes.toArray(new Class[0]));
             m.setAccessible(true);
-            return m.invoke(getNMSClass(), o);
+            return m.invoke(getOBCClass(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
     }
 }
+

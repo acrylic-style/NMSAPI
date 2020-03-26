@@ -1,12 +1,11 @@
 package xyz.acrylicstyle.minecraft;
 
-import util.CollectionList;
-import util.ReflectionHelper;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class Item {
+public class Item extends NMSAPI {
     public static int getId(Item paramItem) {
         try {
             ReflectionUtil.getNMSClass("Item").getMethod("getId", ReflectionUtil.getNMSClass("Item")).invoke(null, paramItem.getNMSClass());
@@ -44,7 +43,7 @@ public class Item {
     }
 
     public boolean a(NBTTagCompound paramNBTTagCompound) {
-        return (boolean) invoke("a", paramNBTTagCompound.getNBTTagCompound());
+        return (boolean) invoke("a", paramNBTTagCompound.getNMSClass());
     }
 
     public enum EnumToolMaterial {
@@ -150,60 +149,11 @@ public class Item {
     }
 
     // NMSAPI start
-    private Object o;
-
     public Item() {
-        try {
-            this.o = ReflectionUtil.getNMSClass("Item").newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        super("Item");
     }
 
     public Item(Object o) {
-        this.o = o;
+        super(o, "Item");
     }
-
-    public Object getNMSClass() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("Item").getCanonicalName())) return o;
-        } catch (ClassNotFoundException | NullPointerException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("Item"), getNMSClass(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("Item")
-                    .getMethod(method)
-                    .invoke(getNMSClass());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("Item")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getNMSClass(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 }

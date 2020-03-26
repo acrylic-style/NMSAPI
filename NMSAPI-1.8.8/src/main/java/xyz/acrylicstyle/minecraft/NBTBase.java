@@ -2,16 +2,33 @@ package xyz.acrylicstyle.minecraft;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public abstract class NBTBase {
+public abstract class NBTBase extends NMSAPI {
     public static final String[] a = new String[] {
             "END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST",
             "COMPOUND", "INT[]" };
+
+    public NBTBase(Object o, String nms) {
+        super(o, nms);
+    }
+
+    public NBTBase(Object o) {
+        super(o, "NBTBase");
+    }
+
+    public NBTBase(String nms) {
+        super(nms);
+    }
+
+    public NBTBase() {
+        super("NBTBase");
+    }
 
     public abstract void write(DataOutput paramDataOutput) throws IOException;
 
@@ -52,7 +69,7 @@ public abstract class NBTBase {
         return null;
     }
 
-    public abstract Object toNMSObject(); // NMSAPI
+    public abstract Object getNMSClass(); // NMSAPI
 
     public abstract NBTBase clone();
 

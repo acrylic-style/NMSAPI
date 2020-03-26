@@ -1,12 +1,7 @@
 package xyz.acrylicstyle.minecraft;
 
-import util.CollectionList;
-import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
-
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -18,61 +13,12 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     private Object o;
 
     public NBTTagCompound() {
-        try {
-            this.o = ReflectionUtil.getNMSClass("NBTTagCompound").newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        super("NBTTagCompound");
     }
 
     public NBTTagCompound(Object o) {
-        this.o = o;
+        super(o, "NBTTagCompound");
     }
-
-    public Object getNBTTagCompound() {
-        if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getSimpleName().equals("NBTTagCompound")) return o;
-        try {
-            return o.getClass().getField("tag").get(o);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("NBTTagCompound"), getNBTTagCompound(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("NBTTagCompound")
-                    .getMethod(method)
-                    .invoke(getNBTTagCompound());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("NBTTagCompound")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getNBTTagCompound(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    // NMSAPI end
 
     @Override
     public void write(DataOutput paramDataOutput) {
@@ -99,8 +45,8 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     }
 
     @Override
-    public Object toNMSObject() {
-        return getNBTTagCompound();
+    public Object getNMSClass() {
+        return getNMSClass();
     }
 
     @Override
@@ -114,7 +60,7 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     }
 
     public void set(String key, NBTBase nbtBase) {
-        invoke("set", key, nbtBase.toNMSObject());
+        invoke("set", key, nbtBase.getNMSClass());
     }
 
     public void setByte(String key, byte paramByte) {
@@ -241,6 +187,6 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     }
 
     public void a(NBTTagCompound nbtTagCompound) {
-        invoke("a", nbtTagCompound.getNBTTagCompound());
+        invoke("a", nbtTagCompound.getNMSClass());
     }
 }
