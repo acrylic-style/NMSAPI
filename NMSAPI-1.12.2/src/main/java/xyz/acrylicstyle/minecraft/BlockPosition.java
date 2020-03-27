@@ -1,19 +1,24 @@
 package xyz.acrylicstyle.minecraft;
 
+import org.jetbrains.annotations.NotNull;
 import util.CollectionList;
-import util.ICollectionList;
-import util.ReflectionHelper;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("unused")
 public class BlockPosition extends BaseBlockPosition {
     public static final BlockPosition ZERO = new BlockPosition(0, 0, 0);
 
-    // public BlockPosition(Entity paramEntity)
-    // public BlockPosition(Vec3D paramVec3D)
+    public BlockPosition(Entity paramEntity) {
+        super("BlockPosition", paramEntity.getNMSClass());
+    }
+
+    public BlockPosition(Vec3D paramVec3D) {
+        super("BlockPosition", paramVec3D.getNMSClass());
+    }
+
+    public BlockPosition(String s, Object... o) {
+        super(s, o);
+    }
 
     public BlockPosition a(double d1, double d2, double d3) {
         return new BlockPosition(invoke("a", d1, d2, d3));
@@ -103,23 +108,25 @@ public class BlockPosition extends BaseBlockPosition {
         }
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     public static Iterable<BlockPosition> a(BlockPosition blockPosition1, BlockPosition blockPosition2) {
         try {
             Iterable<?> iterable = (Iterable<?>) ReflectionUtil.getNMSClass("BlockPosition")
                     .getMethod("a", ReflectionUtil.getNMSClass("BlockPosition"), ReflectionUtil.getNMSClass("BlockPosition"))
                     .invoke(null, blockPosition1, blockPosition2);
-            return new CollectionList<>(iterable).map(BlockPosition::new);
+            return new CollectionList<>(iterable).map(o -> new BlockPosition(o));
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     public static Iterable<BlockPosition> b(BlockPosition blockPosition1, BlockPosition blockPosition2) {
         try {
             Iterable<?> iterable = (Iterable<?>) ReflectionUtil.getNMSClass("BlockPosition")
                     .getMethod("b", ReflectionUtil.getNMSClass("BlockPosition"), ReflectionUtil.getNMSClass("BlockPosition"))
                     .invoke(null, blockPosition1, blockPosition2);
-            return new CollectionList<>(iterable).map(BlockPosition::new);
+            return new CollectionList<>(iterable).map(o -> new BlockPosition(o));
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
@@ -135,7 +142,7 @@ public class BlockPosition extends BaseBlockPosition {
         }
 
         public MutableBlockPosition(int i1, int i2, int i3) {
-            super(0, 0, 0);
+            super("BlockPosition.MutableBlockPosition", 0, 0, 0);
             this.c = i1;
             this.d = i2;
             this.e = i3;
@@ -159,119 +166,21 @@ public class BlockPosition extends BaseBlockPosition {
             this.e = i3;
             return this;
         }
-
-        public Object getNMSClass() {
-            try {
-                return ReflectionUtil
-                        .getNMSClass("BlockPosition.MutableBlockPosition")
-                        .getConstructor(int.class, int.class, int.class)
-                        .newInstance(this.c, this.d, this.e);
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
-    public BlockPosition(BaseBlockPosition baseBlockPosition) {
+    public BlockPosition(@NotNull BaseBlockPosition baseBlockPosition) {
         this(baseBlockPosition.getX(), baseBlockPosition.getY(), baseBlockPosition.getZ());
     }
 
-    // NMSAPI start
-    private Object o;
-
     public BlockPosition(Object o) {
-        super(o);
-        this.o = o;
+        super(o, "BlockPosition");
     }
 
     public BlockPosition(int i1, int i2, int i3) {
-        super(i1, i2, i3);
-        try {
-            this.o = ReflectionUtil.getNMSClass("BlockPosition")
-                    .getConstructor(int.class, int.class, int.class)
-                    .newInstance(i1, i2, i3);
-        } catch (InstantiationException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        super("BlockPosition", i1, i2, i3);
     }
 
     public BlockPosition(double double1, double double2, double double3) {
-        super(double1, double2, double3);
-        try {
-            this.o = ReflectionUtil.getNMSClass("BlockPosition")
-                    .getConstructor(double.class, double.class, double.class)
-                    .newInstance(double1, double2, double3);
-        } catch (InstantiationException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        super("BlockPosition", double1, double2, double3);
     }
-
-    public Object getNMSClass() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("BlockPosition").getCanonicalName())) return o;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("BlockPosition"), getNMSClass(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("BlockPosition")
-                    .getMethod(method)
-                    .invoke(getNMSClass());
-        } catch (NoSuchMethodException e) {
-            try {
-                return ReflectionUtil.getNMSClass("BlockPosition")
-                        .getSuperclass()
-                        .getMethod(method)
-                        .invoke(getNMSClass());
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = ICollectionList.asList(o).map(Object::getClass);
-            return ReflectionUtil.getNMSClass("BlockPosition")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getNMSClass(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void setField(String field, Object value) {
-        try {
-            Field f = ReflectionUtil.getNMSClass("BlockPosition").getDeclaredField(field);
-            f.setAccessible(true);
-            f.set(getNMSClass(), value);
-        } catch (NoSuchFieldException e) {
-            try {
-                Field f = ReflectionUtil.getNMSClass("BlockPosition").getSuperclass().getDeclaredField(field);
-                f.setAccessible(true);
-                f.set(getNMSClass(), value);
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (ClassNotFoundException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-    // NMSAPI end
 }

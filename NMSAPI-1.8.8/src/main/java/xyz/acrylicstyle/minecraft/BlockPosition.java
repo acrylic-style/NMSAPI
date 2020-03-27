@@ -12,8 +12,17 @@ import java.lang.reflect.InvocationTargetException;
 public class BlockPosition extends BaseBlockPosition {
     public static final BlockPosition ZERO = new BlockPosition(0, 0, 0);
 
-    // public BlockPosition(Entity paramEntity)
-    // public BlockPosition(Vec3D paramVec3D)
+    //public BlockPosition(Entity paramEntity) {
+    //    super("BlockPosition", paramEntity.getNMSClass());
+    //}
+
+    public BlockPosition(Vec3D paramVec3D) {
+        super("BlockPosition", paramVec3D.getNMSClass());
+    }
+
+    public BlockPosition(String s, Object... o) {
+        super(s, o);
+    }
 
     public BlockPosition a(double d1, double d2, double d3) {
         return new BlockPosition(invoke("a", d1, d2, d3));
@@ -24,11 +33,11 @@ public class BlockPosition extends BaseBlockPosition {
     }
 
     public BlockPosition a(BaseBlockPosition baseBlockPosition) {
-        return new BlockPosition(invoke("a", baseBlockPosition.toNMSClass()));
+        return new BlockPosition(invoke("a", baseBlockPosition.getNMSClass()));
     }
 
     public BlockPosition b(BaseBlockPosition baseBlockPosition) {
-        return new BlockPosition(invoke("b", baseBlockPosition.toNMSClass()));
+        return new BlockPosition(invoke("b", baseBlockPosition.getNMSClass()));
     }
 
     public BlockPosition up() {
@@ -88,7 +97,7 @@ public class BlockPosition extends BaseBlockPosition {
     }
 
     public BlockPosition c(BaseBlockPosition baseBlockPosition) {
-        return new BlockPosition(invoke("c", baseBlockPosition.toNMSClass()));
+        return new BlockPosition(invoke("c", baseBlockPosition.getNMSClass()));
     }
 
     public long asLong() {
@@ -103,23 +112,25 @@ public class BlockPosition extends BaseBlockPosition {
         }
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     public static Iterable<BlockPosition> a(BlockPosition blockPosition1, BlockPosition blockPosition2) {
         try {
             Iterable<?> iterable = (Iterable<?>) ReflectionUtil.getNMSClass("BlockPosition")
                     .getMethod("a", ReflectionUtil.getNMSClass("BlockPosition"), ReflectionUtil.getNMSClass("BlockPosition"))
                     .invoke(null, blockPosition1, blockPosition2);
-            return new CollectionList<>(iterable).map(BlockPosition::new);
+            return new CollectionList<>(iterable).map(o -> new BlockPosition(o));
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     public static Iterable<BlockPosition> b(BlockPosition blockPosition1, BlockPosition blockPosition2) {
         try {
             Iterable<?> iterable = (Iterable<?>) ReflectionUtil.getNMSClass("BlockPosition")
                     .getMethod("b", ReflectionUtil.getNMSClass("BlockPosition"), ReflectionUtil.getNMSClass("BlockPosition"))
                     .invoke(null, blockPosition1, blockPosition2);
-            return new CollectionList<>(iterable).map(BlockPosition::new);
+            return new CollectionList<>(iterable).map(o -> new BlockPosition(o));
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
@@ -160,7 +171,7 @@ public class BlockPosition extends BaseBlockPosition {
             return this;
         }
 
-        public Object toNMSClass() {
+        public Object getNMSClass() {
             try {
                 return ReflectionUtil
                         .getNMSClass("BlockPosition.MutableBlockPosition")
@@ -206,7 +217,7 @@ public class BlockPosition extends BaseBlockPosition {
         }
     }
 
-    public Object toNMSClass() {
+    public Object getNMSClass() {
         try {
             if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("BlockPosition").getCanonicalName())) return o;
         } catch (ClassNotFoundException e) {
@@ -217,7 +228,7 @@ public class BlockPosition extends BaseBlockPosition {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("BlockPosition"), toNMSClass(), field);
+            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("BlockPosition"), getNMSClass(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -228,13 +239,13 @@ public class BlockPosition extends BaseBlockPosition {
         try {
             return ReflectionUtil.getNMSClass("BlockPosition")
                     .getMethod(method)
-                    .invoke(toNMSClass());
+                    .invoke(getNMSClass());
         } catch (NoSuchMethodException e) {
             try {
                 return ReflectionUtil.getNMSClass("BlockPosition")
                         .getSuperclass()
                         .getMethod(method)
-                        .invoke(toNMSClass());
+                        .invoke(getNMSClass());
             } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -249,7 +260,7 @@ public class BlockPosition extends BaseBlockPosition {
             CollectionList<Class<?>> classes = ICollectionList.asList(o).map(Object::getClass);
             return ReflectionUtil.getNMSClass("BlockPosition")
                     .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(toNMSClass(), o);
+                    .invoke(getNMSClass(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -260,12 +271,12 @@ public class BlockPosition extends BaseBlockPosition {
         try {
             Field f = ReflectionUtil.getNMSClass("BlockPosition").getDeclaredField(field);
             f.setAccessible(true);
-            f.set(toNMSClass(), value);
+            f.set(getNMSClass(), value);
         } catch (NoSuchFieldException e) {
             try {
                 Field f = ReflectionUtil.getNMSClass("BlockPosition").getSuperclass().getDeclaredField(field);
                 f.setAccessible(true);
-                f.set(toNMSClass(), value);
+                f.set(getNMSClass(), value);
             } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
