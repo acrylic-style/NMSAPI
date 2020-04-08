@@ -257,7 +257,7 @@ public class MinecraftServer {
     }
 
     public void a(EntityPlayer entityPlayer) {
-        invoke("a", entityPlayer.getEntityPlayer());
+        invoke("a", entityPlayer.getNMSClass());
     }
 
     public boolean getSpawnMonsters() {

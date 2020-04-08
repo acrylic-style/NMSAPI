@@ -1,6 +1,6 @@
 package xyz.acrylicstyle.minecraft;
 
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Versioning;
+import org.jetbrains.annotations.Nullable;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class Vec3D extends NMSAPI {
@@ -27,6 +27,10 @@ public class Vec3D extends NMSAPI {
         this.x = (double) getField("a");
         this.y = (double) getField("b");
         this.z = (double) getField("c");
+    }
+
+    public static Vec3D newInstance(@Nullable Object o) {
+        return o == null ? new Vec3D(0, 0, 0) : new Vec3D(o);
     }
 
     public Vec3D a() {

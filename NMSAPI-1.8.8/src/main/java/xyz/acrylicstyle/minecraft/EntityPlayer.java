@@ -6,8 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import util.CollectionList;
-import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
@@ -18,11 +16,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class EntityPlayer implements ICommandListener {
+public class EntityPlayer extends Entity implements ICommandListener {
     private static boolean doPolling = false;
     private boolean disposed = false;
     private Plugin plugin = null;
-    private Object o;
     public PlayerConnection playerConnection;
     public int ping = -1;
     public final MinecraftServer server;
@@ -45,7 +42,7 @@ public class EntityPlayer implements ICommandListener {
     public int containerCounter;
 
     public EntityPlayer(Object o) {
-        this.o = o;
+        super(o, "EntityPlayer");
         this.playerConnection = new PlayerConnection(this);
         this.server = MinecraftServer.getMinecraftServer(getField("server"));
     }
@@ -102,7 +99,7 @@ public class EntityPlayer implements ICommandListener {
         }
         f.setAccessible(true);
         try {
-            f.set(getEntityPlayer(), profile.getGameProfile());
+            f.set(getNMSClass(), profile.getGameProfile());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -152,20 +149,8 @@ public class EntityPlayer implements ICommandListener {
         }.runTaskTimer(plugin, 0, 2);
     }
 
-    public Object getEntityPlayer() {
-        try {
-            if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) return o;
-            if (o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer")) return CraftUtils.getHandle(o);
-            if (o.getClass().getCanonicalName().equals(CraftPlayer.class.getCanonicalName())) return CraftUtils.getHandle(((CraftPlayer) o).getOBCCraftPlayer());
-            return CraftUtils.getHandle(o).getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") ? CraftUtils.getHandle(o) : null;
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public Object getEntityHuman() {
-        return getEntityPlayer().getClass().getSuperclass().cast(getEntityPlayer());
+        return getNMSClass().getClass().getSuperclass().cast(getNMSClass());
     }
 
     public String getLocale() {
@@ -225,69 +210,8 @@ public class EntityPlayer implements ICommandListener {
         return (float) getField("pluginRainPositionPrevious");
     }
 
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("EntityPlayer"), getEntityPlayer(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void setField(String field, Object value) {
-        try {
-            Field f = ReflectionUtil.getNMSClass("EntityPlayer").getDeclaredField(field);
-            f.setAccessible(true);
-            f.set(getEntityPlayer(), value);
-        } catch (NoSuchFieldException e) {
-            try {
-                Field f = ReflectionUtil.getNMSClass("EntityPlayer").getSuperclass().getDeclaredField(field);
-                f.setAccessible(true);
-                f.set(getEntityPlayer(), value);
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (ClassNotFoundException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("EntityPlayer")
-                    .getMethod(method)
-                    .invoke(getEntityPlayer());
-        } catch (NoSuchMethodException e) {
-            try {
-                return ReflectionUtil.getNMSClass("EntityPlayer")
-                        .getSuperclass()
-                        .getMethod(method)
-                        .invoke(getEntityPlayer());
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("EntityPlayer")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getEntityPlayer(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
-
     public CraftPlayer getBukkitEntity() {
-        return new CraftPlayer(invoke("getBukkitEntity", getEntityPlayer()));
+        return new CraftPlayer(invoke("getBukkitEntity", getNMSClass()));
     }
 
     @Override
@@ -316,8 +240,8 @@ public class EntityPlayer implements ICommandListener {
     }
 
     @Override
-    public Object d() {
-        return invoke("d");
+    public Vec3D d() {
+        return new Vec3D(invoke("d"));
     }
 
     @Override
@@ -326,8 +250,8 @@ public class EntityPlayer implements ICommandListener {
     }
 
     @Override
-    public Object f() {
-        return invoke("f");
+    public Entity f() {
+        return new Entity(invoke("f"));
     }
 
     @Override
@@ -338,10 +262,5 @@ public class EntityPlayer implements ICommandListener {
     @Override
     public void a(Object paramEnumCommandResult, int paramInt) {
         invoke("a", paramEnumCommandResult, paramInt);
-    }
-
-    @Override
-    public Object getNMSClass() {
-        return getEntityPlayer();
     }
 }

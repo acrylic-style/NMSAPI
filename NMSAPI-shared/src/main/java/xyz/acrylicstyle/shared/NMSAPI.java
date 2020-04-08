@@ -53,6 +53,8 @@ public class NMSAPI {
         return null;
     }
 
+    public final Object getHandle() { return getNMSClass(); }
+
     public Object getField(String field) {
         try {
             return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName), getNMSClass(), field);
@@ -60,6 +62,11 @@ public class NMSAPI {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public final <T> T field(String f) {
+        return (T) getField(f);
     }
 
     public void setField(String field, Object value) {

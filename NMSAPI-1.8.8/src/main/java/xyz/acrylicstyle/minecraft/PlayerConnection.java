@@ -662,7 +662,7 @@ public class PlayerConnection {
     // NMSAPI start
     public Object getPlayerConnection() {
         try {
-            return player.getEntityPlayer().getClass().getField("playerConnection").get(player.getEntityPlayer());
+            return player.getNMSClass().getClass().getField("playerConnection").get(player.getNMSClass());
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
