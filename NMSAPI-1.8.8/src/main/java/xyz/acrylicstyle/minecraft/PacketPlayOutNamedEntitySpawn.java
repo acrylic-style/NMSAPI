@@ -27,11 +27,11 @@ public class PacketPlayOutNamedEntitySpawn implements Packet {
     }
 
     public void a(PacketDataSerializer packetDataSerializer) {
-        invoke("a", packetDataSerializer.getPacketDataSerializer());
+        invoke("a", packetDataSerializer.getNMSClass());
     }
 
     public void b(PacketDataSerializer packetDataSerializer) {
-        invoke("b", packetDataSerializer.getPacketDataSerializer());
+        invoke("b", packetDataSerializer.getNMSClass());
     }
 
     @Override

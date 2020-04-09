@@ -7,7 +7,7 @@
     <groupId>xyz.acrylicstyle</groupId>
     <artifactId>NMSAPI</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <build>
         <plugins>
             <plugin>
@@ -44,16 +44,22 @@
         <module>NMSAPI-1.8.8</module>
         <module>NMSAPI-shared</module>
     </modules>
+    <repositories>
+        <repository>
+            <id>acrylic-repo</id>
+            <url>https://repo.acrylicstyle.xyz/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>tomeito_lib</artifactId>
-            <version>0.1.46</version>
+            <version>0.1.51</version>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>Util</artifactId>
-            <version>0.8.24</version>
+            <version>0.9.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -5,4 +5,5 @@ public interface Packet {
     void b(PacketDataSerializer packetDataSerializer);
     void a(PacketListener packetListener);
     Object toNMSPacket();
+    default Object getHandle() { return toNMSPacket(); }
 }

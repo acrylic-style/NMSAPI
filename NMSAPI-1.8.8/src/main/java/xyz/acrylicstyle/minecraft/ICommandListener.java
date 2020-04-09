@@ -11,11 +11,11 @@ public interface ICommandListener {
 
     BlockPosition getChunkCoordinates();
 
-    Object d(); // todo: Vec3D
+    Vec3D d();
 
     World getWorld();
 
-    Object f(); // todo: nms.Entity
+    Entity f();
 
     boolean getSendCommandFeedback();
 

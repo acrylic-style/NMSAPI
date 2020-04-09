@@ -9,6 +9,7 @@ import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.craftbukkit.CraftUtils;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.io.File;
@@ -22,7 +23,7 @@ import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 
 @SuppressWarnings("unused")
-public class MinecraftServer {
+public class MinecraftServer extends NMSAPI {
     public void convertWorld(String s) {
         invoke("convertWorld", s);
     }
@@ -43,9 +44,10 @@ public class MinecraftServer {
         invoke("stop");
     }
 
-    /**
-     * @implNote Original Method name: MinecraftServer#b(String)
-     */
+    public void b(String s) {
+        invoke("s");
+    }
+
     public void setServerIp(String s) {
         try {
             ReflectionHelper.setField(ReflectionUtil.getNMSClass("MinecraftServer"), getMinecraftServer(), "serverIp", s);
@@ -692,11 +694,8 @@ public class MinecraftServer {
         return (boolean) invoke("isMainThread");
     }
 
-    // NMSAPI start
-    private Object o;
-
     public MinecraftServer(Object o) {
-        this.o = o;
+        super(o, "MinecraftServer");
     }
 
     public CollectionList<String> getPlayersList() {
@@ -789,11 +788,8 @@ public class MinecraftServer {
         return (long) getField("lastOverloadTime");
     }
 
-    /**
-     * @implNote Actual type is IChatBaseComponent.
-     */
-    public Object getS() {
-        return getField("S");
+    public IChatBaseComponent getS() {
+        return new ChatComponentText(getField("S"));
     }
 
     public boolean getT() {
@@ -849,9 +845,6 @@ public class MinecraftServer {
         return (String) getField("ax");
     }
 
-    /**
-     * @implNote Actual type is CraftServer.
-     */
     public Object getServer() {
         return getField("server");
     }

@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import xyz.acrylicstyle.authlib.GameProfile;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Handler;
 import xyz.acrylicstyle.minecraft.EntityPlayer;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
@@ -30,11 +29,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.*;
 
-public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity {
+public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     private Player player;
     public Object craftPlayer;
 
     public CraftPlayer(Object o) {
+        super(o, "CraftPlayer");
         try {
             if (o.getClass().isAssignableFrom(Player.class)) {
                 this.player = (Player) o;
@@ -71,6 +71,7 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
         return getHandle().getProfile();
     }
 
+    @NotNull
     public EntityPlayer getHandle() {
         return new EntityPlayer(this);
     }
@@ -1360,9 +1361,7 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
         return this;
     }
 
-    public Object getOBCCraftPlayer() {
-        return craftPlayer;
-    }
+    public Object getOBCCraftPlayer() { return craftPlayer; } // NMSAPI
 
     public String toString() {
         return "CraftPlayer{name=" + getName() + "}";

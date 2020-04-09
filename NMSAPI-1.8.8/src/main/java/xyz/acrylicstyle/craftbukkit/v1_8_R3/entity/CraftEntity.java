@@ -27,4 +27,8 @@ public class CraftEntity extends OBCAPI implements Handler<xyz.acrylicstyle.mine
     public CraftEntity(@NotNull Object o) {
         super(o, "CraftEntity");
     }
+
+    protected CraftEntity(Object o, String clazz) {
+        super(o, clazz);
+    }
 }

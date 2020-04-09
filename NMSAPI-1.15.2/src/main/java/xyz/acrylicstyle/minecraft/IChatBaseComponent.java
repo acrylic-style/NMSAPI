@@ -70,6 +70,8 @@ public interface IChatBaseComponent extends Cloneable {
         return null;
     }
 
+    default Object getNMSClass() { return getIChatBaseComponent(); }
+
     default Object getField(String field) {
         try {
             return ReflectionHelper.getField(ReflectionUtil.getNMSClass("IChatBaseComponent"), getIChatBaseComponent(), field);

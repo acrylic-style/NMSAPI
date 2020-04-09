@@ -42,7 +42,7 @@ public class NMSAPI {
         }
     }
 
-    private Object o;
+    protected Object o;
 
     public Object getNMSClass() {
         try {

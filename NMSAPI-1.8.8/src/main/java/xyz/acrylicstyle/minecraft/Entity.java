@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.CustomTimingsHandler;
 import util.ICollectionList;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftEntity;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 import java.util.Random;
@@ -443,7 +444,9 @@ public class Entity extends NMSAPI {
         return (double) invoke("an");
     }
 
-    // public CraftEntity getBukkitEntity() {} // todo
+    public CraftEntity getBukkitEntity() {
+        return new CraftEntity(invoke("getBukkitEntity"));
+    }
 
     public void mount(Entity entity) {
         invoke("mount", entity.getHandle());

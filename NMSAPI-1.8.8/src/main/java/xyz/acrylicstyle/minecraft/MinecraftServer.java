@@ -8,7 +8,9 @@ import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
+import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.io.File;
@@ -22,7 +24,7 @@ import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 
 @SuppressWarnings("unused")
-public class MinecraftServer {
+public class MinecraftServer extends NMSAPI {
     public void convertWorld(String s) {
         invoke("convertWorld", s);
     }
@@ -636,21 +638,8 @@ public class MinecraftServer {
         return getAv();
     }
 
-    /**
-     * @apiNote Original method name: MinecraftServer#b(GameProfile)
-     * @deprecated Not completed yet
-     */
-    @Deprecated
-    public int b2(Object gameProfile) {
-        try {
-            return (int) ReflectionUtil
-                    .getNMSClass("MinecraftServer")
-                    .getMethod("b", ReflectionUtil.getNMSClass("GameProfile"))
-                    .invoke(o, gameProfile);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return 0;
-        }
+    public int b(GameProfile gameProfile) {
+        return (int) invoke("b", gameProfile.getGameProfile());
     }
 
     /**
@@ -696,11 +685,8 @@ public class MinecraftServer {
         return (boolean) invoke("isMainThread");
     }
 
-    // NMSAPI start
-    private Object o;
-
     public MinecraftServer(Object o) {
-        this.o = o;
+        super(o, "MinecraftServer");
     }
 
     public CollectionList<String> getPlayersList() {

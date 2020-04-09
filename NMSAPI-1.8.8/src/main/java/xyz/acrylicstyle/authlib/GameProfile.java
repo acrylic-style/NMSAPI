@@ -1,6 +1,7 @@
 package xyz.acrylicstyle.authlib;
 
-import org.jetbrains.annotations.NotNull;
+import
+        org.jetbrains.annotations.NotNull;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
@@ -77,6 +78,8 @@ public class GameProfile {
             return null;
         }
     }
+
+    public Object getHandle() { return getGameProfile(); }
 
     public Object getField(String field) {
         try {

@@ -57,12 +57,12 @@ public class PlayerConnection {
         return (boolean) invoke("isExemptPlayer");
     }
 
-    public void disconnect(Object iChatBaseComponent) {
+    public void disconnect(IChatBaseComponent iChatBaseComponent) {
         try {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("disconnect", ReflectionUtil.getNMSClass("IChatBaseComponent"))
-                    .invoke(getPlayerConnection(), iChatBaseComponent);
+                    .invoke(getPlayerConnection(), iChatBaseComponent.getIChatBaseComponent());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -336,7 +336,7 @@ public class PlayerConnection {
     }
 
     public void a(double d0, double d1, double d2, float f, float f1, Set<Object> packetPlayOutPositionEnumPlayerTeleportFlagsSet, PlayerTeleportEvent.TeleportCause cause) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(); // todo: not implemented
     }
 
     public void teleport(Location dest) {
