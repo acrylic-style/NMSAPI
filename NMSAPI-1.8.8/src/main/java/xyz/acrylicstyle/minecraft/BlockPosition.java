@@ -1,20 +1,17 @@
 package xyz.acrylicstyle.minecraft;
 
 import util.CollectionList;
-import util.ICollectionList;
-import util.ReflectionHelper;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("unused")
 public class BlockPosition extends BaseBlockPosition {
     public static final BlockPosition ZERO = new BlockPosition(0, 0, 0);
 
-    //public BlockPosition(Entity paramEntity) {
-    //    super("BlockPosition", paramEntity.getNMSClass());
-    //}
+    public BlockPosition(Entity paramEntity) {
+        super("BlockPosition", paramEntity.getNMSClass());
+    }
 
     public BlockPosition(Vec3D paramVec3D) {
         super("BlockPosition", paramVec3D.getNMSClass());
@@ -187,16 +184,12 @@ public class BlockPosition extends BaseBlockPosition {
         this(baseBlockPosition.getX(), baseBlockPosition.getY(), baseBlockPosition.getZ());
     }
 
-    // NMSAPI start
-    private Object o;
-
     public BlockPosition(Object o) {
-        super(o);
-        this.o = o;
+        super(o, "BlockPosition");
     }
 
     public BlockPosition(int i1, int i2, int i3) {
-        super(i1, i2, i3);
+        super("BlockPosition", i1, i2, i3);
         try {
             this.o = ReflectionUtil.getNMSClass("BlockPosition")
                     .getConstructor(int.class, int.class, int.class)
@@ -207,82 +200,6 @@ public class BlockPosition extends BaseBlockPosition {
     }
 
     public BlockPosition(double double1, double double2, double double3) {
-        super(double1, double2, double3);
-        try {
-            this.o = ReflectionUtil.getNMSClass("BlockPosition")
-                    .getConstructor(double.class, double.class, double.class)
-                    .newInstance(double1, double2, double3);
-        } catch (InstantiationException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        super("BlockPosition", double1, double2, double3);
     }
-
-    public Object getNMSClass() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("BlockPosition").getCanonicalName())) return o;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("BlockPosition"), getNMSClass(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("BlockPosition")
-                    .getMethod(method)
-                    .invoke(getNMSClass());
-        } catch (NoSuchMethodException e) {
-            try {
-                return ReflectionUtil.getNMSClass("BlockPosition")
-                        .getSuperclass()
-                        .getMethod(method)
-                        .invoke(getNMSClass());
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = ICollectionList.asList(o).map(Object::getClass);
-            return ReflectionUtil.getNMSClass("BlockPosition")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getNMSClass(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void setField(String field, Object value) {
-        try {
-            Field f = ReflectionUtil.getNMSClass("BlockPosition").getDeclaredField(field);
-            f.setAccessible(true);
-            f.set(getNMSClass(), value);
-        } catch (NoSuchFieldException e) {
-            try {
-                Field f = ReflectionUtil.getNMSClass("BlockPosition").getSuperclass().getDeclaredField(field);
-                f.setAccessible(true);
-                f.set(getNMSClass(), value);
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (ClassNotFoundException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-    // NMSAPI end
 }
