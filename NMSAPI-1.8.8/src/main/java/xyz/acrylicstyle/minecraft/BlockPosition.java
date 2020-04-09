@@ -3,11 +3,9 @@ package xyz.acrylicstyle.minecraft;
 import util.CollectionList;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
-import java.lang.reflect.InvocationTargetException;
-
 @SuppressWarnings("unused")
 public class BlockPosition extends BaseBlockPosition {
-    public static final BlockPosition ZERO = new BlockPosition(0, 0, 0);
+    public static final BlockPosition ZERO = new BlockPosition(0D, 0D, 0D);
 
     public BlockPosition(Entity paramEntity) {
         super("BlockPosition", paramEntity.getNMSClass());
@@ -190,13 +188,6 @@ public class BlockPosition extends BaseBlockPosition {
 
     public BlockPosition(int i1, int i2, int i3) {
         super("BlockPosition", i1, i2, i3);
-        try {
-            this.o = ReflectionUtil.getNMSClass("BlockPosition")
-                    .getConstructor(int.class, int.class, int.class)
-                    .newInstance(i1, i2, i3);
-        } catch (InstantiationException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public BlockPosition(double double1, double double2, double double3) {

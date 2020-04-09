@@ -1,17 +1,10 @@
 package xyz.acrylicstyle.minecraft;
 
 import org.jetbrains.annotations.NotNull;
-import util.CollectionList;
-import util.ICollectionList;
-import util.ReflectionHelper;
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 public class BaseBlockPosition extends NMSAPI implements Comparable<BaseBlockPosition> {
-    public static final BaseBlockPosition ZERO = new BaseBlockPosition(0, 0, 0);
+    public static final BaseBlockPosition ZERO = new BaseBlockPosition(0D, 0D, 0D);
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object o) {
