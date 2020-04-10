@@ -26,21 +26,13 @@ public class MinecraftKey extends NMSAPI {
         return arrayOfString;
     }
 
-    public String getA() {
-        return (String) getField("a");
-    }
+    public String getA() { return field("a"); }
 
-    public String getB() {
-        return (String) getField("b");
-    }
+    public String getB() { return field("b"); }
 
-    public String a() {
-        return getA() + ':' + getB();
-    }
+    public String a() { return getA() + ':' + getB(); }
 
-    public String toString() {
-        return (String) invoke("toString");
-    }
+    public String toString() { return (String) invoke("toString"); }
 
     public boolean equals(Object paramObject) {
         if (this == paramObject)
@@ -52,11 +44,7 @@ public class MinecraftKey extends NMSAPI {
         return false;
     }
 
-    public int hashCode() {
-        return 31 * getA().hashCode() + getB().hashCode();
-    }
+    public int hashCode() { return 31 * getA().hashCode() + getB().hashCode(); }
 
-    public int a(MinecraftKey minecraftKey) {
-        return (int) invoke("a", minecraftKey.getNMSClass());
-    }
+    public int a(MinecraftKey minecraftKey) { return (int) invoke("a", minecraftKey.getNMSClass()); }
 }

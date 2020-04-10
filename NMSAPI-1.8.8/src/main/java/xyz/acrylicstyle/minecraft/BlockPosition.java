@@ -141,7 +141,7 @@ public class BlockPosition extends BaseBlockPosition {
         }
 
         public MutableBlockPosition(int i1, int i2, int i3) {
-            super(0, 0, 0);
+            super("BlockPosition.MutableBlockPosition", 0, 0, 0);
             this.c = i1;
             this.d = i2;
             this.e = i3;
@@ -160,21 +160,11 @@ public class BlockPosition extends BaseBlockPosition {
         }
 
         public MutableBlockPosition c(int i1, int i2, int i3) {
+            invoke("c", i1, i2, i3);
             this.c = i1;
             this.d = i2;
             this.e = i3;
             return this;
-        }
-
-        public Object getNMSClass() {
-            try {
-                return ReflectionUtil
-                        .getNMSClass("BlockPosition.MutableBlockPosition")
-                        .getConstructor(int.class, int.class, int.class)
-                        .newInstance(this.c, this.d, this.e);
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 

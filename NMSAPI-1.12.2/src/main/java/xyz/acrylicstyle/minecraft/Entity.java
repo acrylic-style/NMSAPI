@@ -841,7 +841,7 @@ public class Entity extends NMSAPI implements ICommandListener {
         return (int) invoke("getMaxFireTicks");
     }
 
-    // these methods are abstract and needs to be extended
+    // these methods are abstract and needs to be overridden
 
     public void i() {}
 
