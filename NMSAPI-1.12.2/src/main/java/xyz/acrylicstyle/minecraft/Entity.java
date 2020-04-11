@@ -11,8 +11,12 @@ import xyz.acrylicstyle.shared.NMSAPI;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "Convert2MethodRef"})
 public class Entity extends NMSAPI implements ICommandListener {
+    protected Entity(Object o, String clazz) { super(o, clazz); }
+
+    protected Entity(String clazz, Object... args) { super(clazz, args); }
+
     public Entity(@NotNull Object o) {
         super(o, "Entity");
     }
@@ -621,7 +625,7 @@ public class Entity extends NMSAPI implements ICommandListener {
     }
 
     public void appendEntityCrashDetails(CrashReportSystemDetails crashReportSystemDetails) {
-        invoke("appendEntityCrashDetails", crashReportSystemDetails.toNMSClass());
+        invoke("appendEntityCrashDetails", crashReportSystemDetails.getNMSClass());
     }
 
     public void a(UUID uuid) {
@@ -629,11 +633,11 @@ public class Entity extends NMSAPI implements ICommandListener {
     }
 
     public UUID getUniqueId() {
-        return (UUID) getField("uniqueID");
+        return field("uniqueID");
     }
 
     public String bn() {
-        return (String) getField("ar");
+        return field("ar");
     }
 
     public boolean bo() {
@@ -786,7 +790,7 @@ public class Entity extends NMSAPI implements ICommandListener {
     }
 
     public List<Entity> bF() {
-        return ICollectionList.asList((List<?>) invoke("bF")).map(Entity::new);
+        return ICollectionList.asList((List<?>) invoke("bF")).map(o -> new Entity(o));
     }
 
     public boolean w(Entity entity) {
@@ -794,7 +798,7 @@ public class Entity extends NMSAPI implements ICommandListener {
     }
 
     public Collection<Entity> bG() {
-        return ICollectionList.asList((List<?>) invoke("bG")).map(Entity::new);
+        return ICollectionList.asList((List<?>) invoke("bG")).map(o -> new Entity(o));
     }
 
     public <T extends Entity> Collection<T> b(Class<T> oClass) {

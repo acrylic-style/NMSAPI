@@ -20,6 +20,7 @@ public class MojangAPI extends BaseMojangAPI {
     @NotNull
     public static GameProfile getGameProfile(@NotNull String name) {
         UUID uuid = getUniqueId(name);
+        if (uuid == null) throw new RuntimeException("UUID is null (rate limit?)");
         return getGameProfile(uuid);
     }
 

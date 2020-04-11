@@ -6,8 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import util.CollectionList;
-import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.CraftPlayer;
 import xyz.acrylicstyle.craftbukkit.CraftUtils;
@@ -18,11 +16,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class EntityPlayer {
+public class EntityPlayer extends EntityLiving {
     private static boolean doPolling = false;
     private boolean disposed = false;
     private Plugin plugin = null;
-    private Object o;
     public PlayerConnection playerConnection;
     public int ping = -1;
     public final MinecraftServer server;
@@ -45,7 +42,7 @@ public class EntityPlayer {
     public int containerCounter;
 
     public EntityPlayer(Object o) {
-        this.o = o;
+        super(o, "EntityPlayer");
         this.playerConnection = new PlayerConnection(this);
         this.server = MinecraftServer.getMinecraftServer(getField("server"));
     }
@@ -224,67 +221,6 @@ public class EntityPlayer {
     public float getPluginRainPositionPrevious() {
         return (float) getField("pluginRainPositionPrevious");
     }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("EntityPlayer"), getEntityPlayer(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void setField(String field, Object value) {
-        try {
-            Field f = ReflectionUtil.getNMSClass("EntityPlayer").getDeclaredField(field);
-            f.setAccessible(true);
-            f.set(getEntityPlayer(), value);
-        } catch (NoSuchFieldException e) {
-            try {
-                Field f = ReflectionUtil.getNMSClass("EntityPlayer").getSuperclass().getDeclaredField(field);
-                f.setAccessible(true);
-                f.set(getEntityPlayer(), value);
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (ClassNotFoundException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("EntityPlayer")
-                    .getMethod(method)
-                    .invoke(getEntityPlayer());
-        } catch (NoSuchMethodException e) {
-            try {
-                return ReflectionUtil.getNMSClass("EntityPlayer")
-                        .getSuperclass()
-                        .getMethod(method)
-                        .invoke(getEntityPlayer());
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("EntityPlayer")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getEntityPlayer(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 
     public CraftPlayer getBukkitEntity() {
         return new CraftPlayer(invoke("getBukkitEntity", getEntityPlayer()));

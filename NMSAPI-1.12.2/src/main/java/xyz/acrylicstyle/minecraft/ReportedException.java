@@ -18,7 +18,7 @@ public class ReportedException extends RuntimeException {
 
     public ReportedException(CrashReport crashReport) {
         try {
-            this.o = ReflectionUtil.getNMSClass("ReportedException").getConstructor(ReflectionUtil.getNMSClass("CrashReport")).newInstance(crashReport.toNMSClass());
+            this.o = ReflectionUtil.getNMSClass("ReportedException").getConstructor(ReflectionUtil.getNMSClass("CrashReport")).newInstance(crashReport.getHandle());
         } catch (InstantiationException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
