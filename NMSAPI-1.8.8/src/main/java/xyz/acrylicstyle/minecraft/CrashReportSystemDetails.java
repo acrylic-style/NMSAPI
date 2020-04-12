@@ -6,6 +6,8 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 import java.util.concurrent.Callable;
 
 public class CrashReportSystemDetails extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("CrashReportSystemDetails");
+
     public static String a(double paramDouble1, double paramDouble2, double paramDouble3) {
         return String.format("%.2f,%.2f,%.2f - %s", paramDouble1, paramDouble2, paramDouble3, a(new BlockPosition(paramDouble1, paramDouble2, paramDouble3)));
     }
@@ -154,6 +156,6 @@ public class CrashReportSystemDetails extends NMSAPI {
     }
 
     public CrashReportSystemDetails(CrashReport crashReport, String string) {
-        super("CrashReportSystemDetails", crashReport.toNMSClass(), string);
+        super("CrashReportSystemDetails", crashReport.getHandle(), string);
     }
 }

@@ -12,6 +12,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public class CraftScheduler extends OBCAPI implements BukkitScheduler {
+    public static final Class<?> CLASS = getClassWithoutException("CraftScheduler");
+
     public CraftScheduler() {
         super("CraftScheduler");
     }

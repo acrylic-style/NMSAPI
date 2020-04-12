@@ -6,6 +6,8 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 import java.lang.reflect.InvocationTargetException;
 
 public class Item extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("Item");
+
     public static int getId(Item paramItem) {
         try {
             ReflectionUtil.getNMSClass("Item").getMethod("getId", ReflectionUtil.getNMSClass("Item")).invoke(null, paramItem.getNMSClass());

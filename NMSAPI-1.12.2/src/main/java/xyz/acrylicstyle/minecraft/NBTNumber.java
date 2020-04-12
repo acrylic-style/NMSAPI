@@ -1,6 +1,14 @@
 package xyz.acrylicstyle.minecraft;
 
 public abstract class NBTNumber extends NBTBase {
+    protected NBTNumber(Object o, String clazz) {
+        super(o, clazz);
+    }
+
+    protected NBTNumber(String clazz, Object... args) {
+        super(clazz, args);
+    }
+
     public abstract long d();
     public final long asLong() { return d(); }
     public abstract int e();

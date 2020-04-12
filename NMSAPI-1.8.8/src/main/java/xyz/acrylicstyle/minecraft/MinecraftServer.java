@@ -25,6 +25,8 @@ import java.util.function.BooleanSupplier;
 
 @SuppressWarnings("unused")
 public class MinecraftServer extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("MinecraftServer");
+
     public void convertWorld(String s) {
         invoke("convertWorld", s);
     }

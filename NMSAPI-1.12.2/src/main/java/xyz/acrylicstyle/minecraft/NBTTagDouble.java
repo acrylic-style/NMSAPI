@@ -1,80 +1,25 @@
 package xyz.acrylicstyle.minecraft;
 
-import util.CollectionList;
-import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
-
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.lang.reflect.InvocationTargetException;
 
 public class NBTTagDouble extends NBTNumber {
-    // NMSAPI start
-    private Object o;
-
     public NBTTagDouble() {
-        try {
-            this.o = ReflectionUtil.getNMSClass("NBTTagDouble").newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        super("NBTTagDouble");
     }
 
     public NBTTagDouble(double data) {
-        try {
-            this.o = ReflectionUtil.getNMSClass("NBTTagDouble").getConstructor(double.class).newInstance(data);
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        super("NBTTagDouble", data);
     }
 
     public NBTTagDouble(Object o) {
-        this.o = o;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("NBTTagDouble"), toNMSObject(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("NBTTagDouble")
-                    .getMethod(method)
-                    .invoke(toNMSObject());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        super(o, "NBTTagDouble");
     }
 
     @Override
     public Object toNMSObject() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("NBTTagDouble").getCanonicalName())) return o;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return getHandle();
     }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("NBTTagDouble")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(toNMSObject(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 
     @Override
     public void write(DataOutput paramDataOutput) {

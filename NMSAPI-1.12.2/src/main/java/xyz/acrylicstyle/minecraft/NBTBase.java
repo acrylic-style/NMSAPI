@@ -3,12 +3,21 @@ package xyz.acrylicstyle.minecraft;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 
-public abstract class NBTBase {
+public abstract class NBTBase extends NMSAPI {
+    protected NBTBase(Object o, String clazz) {
+        super(o, clazz);
+    }
+
+    protected NBTBase(String clazz, Object... args) {
+        super(clazz, args);
+    }
+
     public static final String[] a = new String[] {
             "END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST",
             "COMPOUND", "INT[]", "LONG[]" };

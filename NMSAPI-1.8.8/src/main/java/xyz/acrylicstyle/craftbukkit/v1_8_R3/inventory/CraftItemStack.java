@@ -3,12 +3,15 @@ package xyz.acrylicstyle.craftbukkit.v1_8_R3.inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Handler;
 import xyz.acrylicstyle.minecraft.NBTTagCompound;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("unused")
 public class CraftItemStack extends ItemStack implements Handler<xyz.acrylicstyle.minecraft.ItemStack> {
+    public static final Class<?> CLASS = NMSAPI.getClassWithoutException("CraftItemStack");
+
     public static xyz.acrylicstyle.minecraft.ItemStack asNMSCopy(ItemStack original) {
         try {
             return new xyz.acrylicstyle.minecraft.ItemStack(ReflectionUtil.getOBCClass("inventory.CraftItemStack")

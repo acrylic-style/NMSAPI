@@ -21,9 +21,9 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class PacketDataSerializer extends NMSAPI {
-    private Object o = null;
+    public static final Class<?> CLASS = getClassWithoutException("PacketDataSerializer");
 
-    private PacketDataSerializer() {
+    public PacketDataSerializer() {
         super("PacketDataSerializer");
     }
 

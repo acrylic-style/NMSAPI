@@ -2,6 +2,8 @@ package xyz.acrylicstyle.minecraft;
 
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
+import static xyz.acrylicstyle.shared.NMSAPI.getClassWithoutException;
+
 public enum EnumDirection {
     DOWN,
     UP,
@@ -9,6 +11,8 @@ public enum EnumDirection {
     SOUTH,
     WEST,
     EAST;
+
+    public static final Class<?> CLASS = getClassWithoutException("EnumDirection");
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Enum toNMSEnum() {

@@ -10,6 +10,8 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 public abstract class NBTBase extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("NBTBase");
+
     public static final String[] a = new String[] {
             "END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST",
             "COMPOUND", "INT[]" };
@@ -22,8 +24,8 @@ public abstract class NBTBase extends NMSAPI {
         super(o, "NBTBase");
     }
 
-    public NBTBase(String nms) {
-        super(nms);
+    public NBTBase(String nms, Object... args) {
+        super(nms, args);
     }
 
     public NBTBase() {
@@ -69,8 +71,6 @@ public abstract class NBTBase extends NMSAPI {
         return null;
     }
 
-    public abstract Object getNMSClass(); // NMSAPI
-
     public abstract NBTBase clone();
 
     public boolean isEmpty() {
@@ -93,6 +93,18 @@ public abstract class NBTBase extends NMSAPI {
     }
 
     public static abstract class NBTNumber extends NBTBase {
+        public NBTNumber(Object o, String nms) {
+            super(o, nms);
+        }
+
+        public NBTNumber(Object o) {
+            super(o, "NBTNumber");
+        }
+
+        public NBTNumber(String nms, Object... args) {
+            super(nms, args);
+        }
+
         public abstract long c();
 
         public abstract int d();

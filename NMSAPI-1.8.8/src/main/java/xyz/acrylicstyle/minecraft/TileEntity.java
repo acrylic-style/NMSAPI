@@ -6,6 +6,8 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 import java.lang.reflect.InvocationTargetException;
 
 public class TileEntity extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("TileEntity");
+
     public TileEntity(Object o) {
         super(o, "TileEntity");
     }

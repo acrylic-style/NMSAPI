@@ -38,7 +38,7 @@ public class OBCAPI {
         }
     }
 
-    private Object o;
+    protected Object o;
 
     public Object getOBCClass() {
         try {
@@ -98,6 +98,12 @@ public class OBCAPI {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Class<?> getClassWithoutException(String clazz) {
+        try {
+            return ReflectionUtil.getOBCClass(clazz);
+        } catch (ClassNotFoundException e) { throw new ExceptionInInitializerError(e); }
     }
 }
 

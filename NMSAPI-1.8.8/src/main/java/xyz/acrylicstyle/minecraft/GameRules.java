@@ -2,7 +2,11 @@ package xyz.acrylicstyle.minecraft;
 
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
+import static xyz.acrylicstyle.shared.NMSAPI.getClassWithoutException;
+
 public class GameRules {
+    public static final Class<?> CLASS = getClassWithoutException("GameRules");
+
     public static final GameRules DO_FIRE_TICK = new GameRules("DO_FIRE_TICK");
     public static final GameRules MOB_GRIEFING = new GameRules("MOB_GRIEFING");
     public static final GameRules KEEP_INVENTORY = new GameRules("KEEP_INVENTORY");

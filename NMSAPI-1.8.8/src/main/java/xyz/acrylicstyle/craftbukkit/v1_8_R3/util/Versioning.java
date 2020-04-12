@@ -1,6 +1,7 @@
 package xyz.acrylicstyle.craftbukkit.v1_8_R3.util;
 
 import org.bukkit.Bukkit;
+import xyz.acrylicstyle.shared.OBCAPI;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class Versioning {
+    public static final Class<?> CLASS = OBCAPI.getClassWithoutException("BaseBlockPosition");
+
     public static String getBukkitVersion() {
         String result = "Unknown-Version";
         InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.spigotmc/spigot-api/pom.properties");

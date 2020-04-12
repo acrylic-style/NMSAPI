@@ -322,21 +322,21 @@ public class Entity extends NMSAPI implements ICommandListener {
     // public void a(Entity entity, int i, DamageSource damageSource) {}
 
     public boolean c(NBTTagCompound nbtTagCompound) {
-        return (boolean) invoke("c", nbtTagCompound.getNBTTagCompound());
+        return (boolean) invoke("c", nbtTagCompound.getHandle());
     }
 
     public boolean d(NBTTagCompound nbtTagCompound) {
-        return (boolean) invoke("d", nbtTagCompound.getNBTTagCompound());
+        return (boolean) invoke("d", nbtTagCompound.getHandle());
     }
 
     // public static void d(DataConverterManager dataConverterManager) {}
 
     public NBTTagCompound save(NBTTagCompound nbtTagCompound) {
-        return new NBTTagCompound(invoke("save", nbtTagCompound.getNBTTagCompound()));
+        return new NBTTagCompound(invoke("save", nbtTagCompound.getHandle()));
     }
 
     public void f(NBTTagCompound nbtTagCompound) {
-        invoke("f", nbtTagCompound.getNBTTagCompound());
+        invoke("f", nbtTagCompound.getHandle());
     }
 
     public boolean aA() {

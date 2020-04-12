@@ -3,6 +3,8 @@ package xyz.acrylicstyle.minecraft;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class ServerCommand extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("ServerCommand");
+
     public ServerCommand(Object o) {
         super(o, "ServerCommand");
         this.command = (String) getField("command");

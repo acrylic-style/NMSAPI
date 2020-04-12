@@ -4,6 +4,8 @@ import org.jetbrains.annotations.Nullable;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class Vec3D extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("Vec3D");
+
     public final double x;
     public final double y;
     public final double z;

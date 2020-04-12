@@ -15,6 +15,8 @@ import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class Entity extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("Entity");
+
     public Entity(String clazz) {
         super(clazz);
     }

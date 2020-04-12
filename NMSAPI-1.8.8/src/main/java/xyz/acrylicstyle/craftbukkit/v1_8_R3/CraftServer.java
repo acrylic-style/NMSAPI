@@ -34,6 +34,8 @@ import java.util.logging.Logger;
 
 @SuppressWarnings("unused")
 public class CraftServer extends OBCAPI implements Server {
+    public static final Class<?> CLASS = getClassWithoutException("CraftServer");
+
     public static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];
 
     public final String serverName = "CraftBukkit";

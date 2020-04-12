@@ -5,6 +5,8 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 @SuppressWarnings("unused")
 public class BlockPosition extends BaseBlockPosition {
+    public static final Class<?> CLASS = getClassWithoutException("BlockPosition");
+
     public static final BlockPosition ZERO = new BlockPosition(0D, 0D, 0D);
 
     public BlockPosition(Entity paramEntity) {

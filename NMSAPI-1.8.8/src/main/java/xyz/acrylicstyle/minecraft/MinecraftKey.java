@@ -3,6 +3,8 @@ package xyz.acrylicstyle.minecraft;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class MinecraftKey extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("MinecraftKey");
+
     public MinecraftKey(Object o) {
         super(o, "MinecraftKey");
     }

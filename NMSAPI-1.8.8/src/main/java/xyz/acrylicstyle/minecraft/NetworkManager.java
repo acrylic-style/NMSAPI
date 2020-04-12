@@ -13,6 +13,8 @@ import java.util.concurrent.Future;
 
 @SuppressWarnings("unused")
 public class NetworkManager extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("NetworkManager");
+
     public void channelActive(ChannelHandlerContext channelHandlerContext) {
         invoke("channelActive", channelHandlerContext);
     }

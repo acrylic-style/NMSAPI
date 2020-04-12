@@ -21,6 +21,8 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class CraftMetaItem extends NMSAPI implements ItemMeta, Repairable {
+    public static final Class<?> CLASS = getClassWithoutException("CraftMetaItem");
+
     public static class ItemMetaKey extends NMSAPI {
         final String BUKKIT;
 

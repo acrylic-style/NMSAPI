@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 public class SimpleHelpMap extends OBCAPI {
+    public static final Class<?> CLASS = getClassWithoutException("SimpleHelpMap");
+
     /**
      * Read-only.
      */

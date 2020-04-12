@@ -5,6 +5,8 @@ import xyz.acrylicstyle.shared.NMSAPI;
 import java.util.Random;
 
 public class ItemStack extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("ItemStack");
+
     public NBTTagCompound save(NBTTagCompound nbtTagCompound) {
         return new NBTTagCompound(invoke("save", nbtTagCompound.getNMSClass()));
     }

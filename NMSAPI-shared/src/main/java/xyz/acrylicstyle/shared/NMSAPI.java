@@ -110,4 +110,10 @@ public class NMSAPI {
             return null;
         }
     }
+
+    public static Class<?> getClassWithoutException(String clazz) {
+        try {
+            return ReflectionUtil.getNMSClass(clazz);
+        } catch (ClassNotFoundException e) { throw new ExceptionInInitializerError(e); }
+    }
 }

@@ -4,7 +4,11 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Collection;
 
+import static xyz.acrylicstyle.shared.NMSAPI.getClassWithoutException;
+
 public interface IBlockData {
+    Class<?> CLASS = getClassWithoutException("IBlockData");
+
     @SuppressWarnings("rawtypes")
     Collection<IBlockState> a();
 

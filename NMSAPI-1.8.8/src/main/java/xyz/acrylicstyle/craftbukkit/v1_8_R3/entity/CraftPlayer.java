@@ -20,16 +20,17 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import util.CollectionList;
 import xyz.acrylicstyle.authlib.GameProfile;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.scoreboard.CraftScoreboard;
 import xyz.acrylicstyle.minecraft.EntityPlayer;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.*;
 
 public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
+    public static final Class<?> CLASS = getClassWithoutException("CraftPlayer");
+
     private Player player;
     public Object craftPlayer;
 
@@ -62,8 +63,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
         try {
             return new CraftPlayer(o);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -549,8 +549,8 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
-    public @NotNull Scoreboard getScoreboard() {
-        return player.getScoreboard();
+    public @NotNull CraftScoreboard getScoreboard() {
+        return new CraftScoreboard(player.getScoreboard());
     }
 
     @Override
@@ -652,7 +652,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
-    public @NotNull List<Entity> getNearbyEntities(double x, double y, double z) {
+    public List<Entity> getNearbyEntities(double x, double y, double z) {
         return player.getNearbyEntities(x, y, z);
     }
 
@@ -702,13 +702,13 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
-    public @NotNull Server getServer() {
-        return player.getServer();
+    public @NotNull CraftServer getServer() {
+        return new CraftServer(player.getServer());
     }
 
     @Override
-    public @Nullable Entity getPassenger() {
-        return player.getPassenger();
+    public @Nullable CraftEntity getPassenger() {
+        return new CraftEntity(player.getPassenger());
     }
 
     @Override
@@ -782,8 +782,8 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
-    public @Nullable Entity getVehicle() {
-        return player.getVehicle();
+    public @Nullable CraftEntity getVehicle() {
+        return new CraftEntity(player.getVehicle());
     }
 
     @Override
@@ -807,8 +807,9 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public void setBanned(boolean banned) {
-
+        player.setBanned(banned);
     }
 
     @Override
@@ -822,8 +823,8 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
-    public @Nullable Player getPlayer() {
-        return player.getPlayer();
+    public @Nullable CraftPlayer getPlayer() {
+        return new CraftPlayer(player.getPlayer());
     }
 
     @Override
@@ -1057,6 +1058,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public int _INVALID_getLastDamage() {
         throw new UnsupportedOperationException();
     }
@@ -1067,6 +1069,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public void _INVALID_setLastDamage(int damage) {
         throw new UnsupportedOperationException();
     }
@@ -1082,8 +1085,8 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
-    public @Nullable Player getKiller() {
-        return player.getKiller();
+    public @Nullable CraftPlayer getKiller() {
+        return new CraftPlayer(player.getKiller());
     }
 
     @Override
@@ -1153,8 +1156,8 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
-    public @NotNull Entity getLeashHolder() throws IllegalStateException {
-        return player.getLeashHolder();
+    public @NotNull CraftEntity getLeashHolder() throws IllegalStateException {
+        return new CraftEntity(player.getLeashHolder());
     }
 
     @Override
@@ -1173,6 +1176,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public void _INVALID_damage(int amount) {
         throw new UnsupportedOperationException();
     }
@@ -1183,6 +1187,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public void _INVALID_damage(int amount, Entity source) {
         throw new UnsupportedOperationException();
     }
@@ -1193,6 +1198,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public int _INVALID_getHealth() {
         throw new UnsupportedOperationException();
     }
@@ -1203,6 +1209,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public void _INVALID_setHealth(int health) {
         throw new UnsupportedOperationException();
     }
@@ -1213,6 +1220,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public int _INVALID_getMaxHealth() {
         throw new UnsupportedOperationException();
     }
@@ -1223,6 +1231,7 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     @Override
+    @Deprecated
     public void _INVALID_setMaxHealth(int health) {
         throw new UnsupportedOperationException();
     }
@@ -1366,30 +1375,4 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     public String toString() {
         return "CraftPlayer{name=" + getName() + "}";
     }
-
-    // NMSAPI start
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getOBCClass("CraftPlayer")
-                    .getMethod(method)
-                    .invoke(craftPlayer);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getOBCClass("CraftPlayer")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(craftPlayer, o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 }

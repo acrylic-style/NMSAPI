@@ -1,61 +1,18 @@
 package xyz.acrylicstyle.minecraft;
 
-import util.CollectionList;
-import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
-
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class NBTTagList extends NBTBase {
-    // NMSAPI start
-    private Object o;
+    public static final Class<?> CLASS = getClassWithoutException("NBTTagList");
 
     public NBTTagList() {
-        try {
-            this.o = ReflectionUtil.getNMSClass("NBTTagList").newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        super("NBTTagList");
     }
 
     public NBTTagList(Object o) {
-        this.o = o;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("NBTTagList"), getNMSClass(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("NBTTagList")
-                    .getMethod(method)
-                    .invoke(getNMSClass());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("NBTTagList")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getNMSClass(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        super(o, "NBTTagList");
     }
 
     @Override
@@ -77,17 +34,6 @@ public class NBTTagList extends NBTBase {
     public byte getTypeId() {
         return 9;
     }
-
-    @Override
-    public Object getNMSClass() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("NBTTagList").getCanonicalName())) return o;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    // NMSAPI end
 
     public void add(NBTBase nbtBase) {
         invoke("add", nbtBase.getNMSClass());

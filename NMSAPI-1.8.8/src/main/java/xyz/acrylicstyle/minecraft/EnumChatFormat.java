@@ -7,6 +7,8 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
+import static xyz.acrylicstyle.shared.NMSAPI.getClassWithoutException;
+
 public enum EnumChatFormat {
     BLACK,
     DARK_BLUE,
@@ -30,6 +32,8 @@ public enum EnumChatFormat {
     UNDERLINE,
     ITALIC,
     RESET;
+
+    public static final Class<?> CLASS = getClassWithoutException("EnumChatFormat");
 
     public static String d(String s) {
         return s.toLowerCase(Locale.ROOT).replaceAll("[^a-z]", "");

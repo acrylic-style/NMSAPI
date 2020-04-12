@@ -7,10 +7,9 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class NBTTagCompound extends NBTBase implements Cloneable {
-    public static final Pattern c = Pattern.compile("[A-Za-z0-9._+-]+");
+    public static final Class<?> CLASS = getClassWithoutException("NBTTagCompound");
 
-    // NMSAPI start
-    private Object o;
+    public static final Pattern c = Pattern.compile("[A-Za-z0-9._+-]+");
 
     public NBTTagCompound() {
         super("NBTTagCompound");
@@ -42,11 +41,6 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     @Override
     public byte getTypeId() {
         return 10;
-    }
-
-    @Override
-    public Object getNMSClass() {
-        return getNMSClass();
     }
 
     @Override

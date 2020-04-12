@@ -10,7 +10,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
+import static xyz.acrylicstyle.shared.NMSAPI.getClassWithoutException;
+
 public interface IChatBaseComponent extends Cloneable {
+    Class<?> CLASS = getClassWithoutException("IChatBaseComponent");
+
     default IChatBaseComponent a(String s) {
         IChatBaseComponent c = this;
         c.setO(invoke("a", s));

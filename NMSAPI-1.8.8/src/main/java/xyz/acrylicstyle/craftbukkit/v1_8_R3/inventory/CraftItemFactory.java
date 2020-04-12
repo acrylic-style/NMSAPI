@@ -10,6 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class CraftItemFactory extends NMSAPI implements ItemFactory {
+    public static final Class<?> CLASS = getClassWithoutException("CraftItemFactory");
+
     public static final Color DEFAULT_LEATHER_COLOR = Color.fromRGB(10511680);
 
     public static final ImmutableSet<Object> KNOWN_NBT_ATTRIBUTE_NAMES;

@@ -1,6 +1,10 @@
 package xyz.acrylicstyle.minecraft;
 
+import xyz.acrylicstyle.shared.NMSAPI;
+
 public interface ICommandListener {
+    Class<?> CLASS = NMSAPI.getClassWithoutException("ICommandListener");
+
     String getName();
 
     IChatBaseComponent getScoreboardDisplayName();

@@ -104,7 +104,7 @@ public class PacketDataSerializer {
     }
 
     public void a(NBTTagCompound nbtTagCompound) {
-        invoke("a", nbtTagCompound.getNBTTagCompound());
+        invoke("a", nbtTagCompound.getHandle());
     }
 
     public NBTTagCompound h() {

@@ -4,6 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class BaseBlockPosition extends NMSAPI implements Comparable<BaseBlockPosition> {
+    public static final Class<?> CLASS = getClassWithoutException("BaseBlockPosition");
+
     public static final BaseBlockPosition ZERO = new BaseBlockPosition(0D, 0D, 0D);
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

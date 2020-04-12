@@ -44,7 +44,7 @@ public class Item {
     }
 
     public boolean a(NBTTagCompound paramNBTTagCompound) {
-        return (boolean) invoke("a", paramNBTTagCompound.getNBTTagCompound());
+        return (boolean) invoke("a", paramNBTTagCompound.getHandle());
     }
 
     public enum EnumToolMaterial {

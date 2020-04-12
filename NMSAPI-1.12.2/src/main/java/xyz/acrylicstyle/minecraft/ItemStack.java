@@ -9,11 +9,11 @@ import java.util.Random;
 
 public class ItemStack {
     public NBTTagCompound save(NBTTagCompound nbtTagCompound) {
-        return new NBTTagCompound(invoke("save", nbtTagCompound.getNBTTagCompound()));
+        return new NBTTagCompound(invoke("save", nbtTagCompound.getHandle()));
     }
 
     public void c(NBTTagCompound nbtTagCompound) {
-        invoke("c", nbtTagCompound.getNBTTagCompound());
+        invoke("c", nbtTagCompound.getHandle());
     }
 
     public ItemStack cloneItemStack() {
@@ -37,7 +37,7 @@ public class ItemStack {
     }
 
     public void setTag(NBTTagCompound nbtTagCompound) {
-        invoke("setTag", nbtTagCompound.getNBTTagCompound());
+        invoke("setTag", nbtTagCompound.getHandle());
     }
 
     public String getName() {

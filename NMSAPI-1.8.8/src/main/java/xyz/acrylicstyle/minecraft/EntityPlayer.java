@@ -17,9 +17,12 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class EntityPlayer extends Entity implements ICommandListener {
+    public static final Class<?> CLASS = getClassWithoutException("EntityPlayer");
+
     private static boolean doPolling = false;
     private boolean disposed = false;
     private Plugin plugin = null;
+    Object __playerConnection;
     public PlayerConnection playerConnection;
     public int ping = -1;
     public final MinecraftServer server;
@@ -43,6 +46,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
 
     public EntityPlayer(Object o) {
         super(o, "EntityPlayer");
+        this.__playerConnection = getField("playerConnection");
         this.playerConnection = new PlayerConnection(this);
         this.server = MinecraftServer.getMinecraftServer(getField("server"));
     }
