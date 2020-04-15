@@ -39,95 +39,94 @@ public class Entity extends NMSAPI {
 
     public static final int CURRENT_LEVEL = 2;
 
-    public int id = field("id");
-    public double j = field("j");
-    public boolean k = field("k");
+    public int id() { return field("id"); }
+    public double j() { return field("j"); }
+    public boolean k() { return field("k"); }
     public Entity passenger = new Entity(getField("passenger"));
     public Entity vehicle = new Entity(getField("vehicle"));
-    public boolean attachedToPlayer = field("attachedToPlayer");
+    public boolean attachedToPlayer() { return field("attachedToPlayer"); }
     public World world = World.newInstance(getField("world"));
-    public double lastX = field("lastX");
-    public double lastY = field("lastY");
-    public double lastZ = field("lastZ");
-    public double locX = field("locX");
-    public double locY = field("locY");
-    public double locZ = field("locZ");
-    public double motX = field("motX");
-    public double motY = field("motY");
-    public double motZ = field("motZ");
-    public float yaw = field("yaw");
-    public float pitch = field("pitch");
-    public float lastYaw = field("lastYaw");
-    public float lastPitch = field("lastPitch");
-    public boolean onGround = field("onGround");
-    public boolean positionChanged = field("positionChanged");
-    public boolean E = field("E");
-    public boolean F = field("F");
-    public boolean velocityChanged = field("velocityChanged");
-    public boolean H = field("H");
-    public boolean g = field("g");
-    public boolean dead = field("dead");
-    public float width = field("width");
-    public float length = field("length");
-    public float L = field("L");
-    public float M = field("M");
-    public float N = field("N");
-    public float fallDistance = field("fallDistance");
-    public int h = field("h");
-    public double P = field("P");
-    public double Q = field("Q");
-    public double R = field("R");
-    public float S = field("S");
-    public boolean noclip = field("noclip");
-    public float U = field("U");
-    public Random random = field("random");
-    public int ticksLived = field("ticksLived");
-    public int maxFireTicks = field("maxFireTicks");
-    public int fireTicks = field("fireTicks");
-    public boolean inWater = field("inWater");
-    public int noDamageTicks = field("noDamageTicks");
-    public boolean justCreated = field("justCreated");
-    public boolean fireProof = field("fireProof");
-    public double ar = field("ar");
-    public double as = field("as");
-    public boolean ad = field("ad");
-    public int ae = field("ae");
-    public int af = field("af");
-    public int ag = field("ag");
-    public boolean ah = field("ah");
-    public boolean ai = field("ai");
-    public int portalCooldown = field("portalCooldown");
-    public boolean ak = field("ak");
-    public int al = field("al");
-    public int dimension = field("dimension");
+    public double lastX() { return field("lastX"); }
+    public double lastY() { return field("lastY"); }
+    public double lastZ() { return field("lastZ"); }
+    public double locX() { return field("locX"); }
+    public double locY() { return field("locY"); }
+    public double locZ() { return field("locZ"); }
+    public double motX() { return field("motX"); }
+    public double motY() { return field("motY"); }
+    public double motZ() { return field("motZ"); }
+    public float yaw() { return field("yaw"); }
+    public float pitch() { return field("pitch"); }
+    public float lastYaw() { return field("lastYaw"); }
+    public float lastPitch() { return field("lastPitch"); }
+    public boolean onGround() { return field("onGround"); }
+    public boolean positionChanged() { return field("positionChanged"); }
+    public boolean E() { return field("E"); }
+    public boolean F() { return field("F"); }
+    public boolean velocityChanged() { return field("velocityChanged"); }
+    public boolean H() { return field("H"); }
+    public boolean g() { return field("g"); }
+    public boolean dead() { return field("dead"); }
+    public float width() { return field("width"); }
+    public float length() { return field("length"); }
+    public float getL() { return field("L"); }
+    public float M() { return field("M"); }
+    public float N() { return field("N"); }
+    public float fallDistance() { return field("fallDistance"); }
+    public int getH() { return field("h"); }
+    public double getP() { return field("P"); }
+    public double getQ() { return field("Q"); }
+    public double getR() { return field("R"); }
+    public float S() { return field("S"); }
+    public boolean noclip() { return field("noclip"); }
+    public float getU() { return field("U"); }
+    public Random random() { return field("random"); }
+    public int ticksLived() { return field("ticksLived"); }
+    public int maxFireTicks() { return field("maxFireTicks"); }
+    public int fireTicks() { return field("fireTicks"); }
+    public boolean inWater() { return field("inWater"); }
+    public int noDamageTicks() { return field("noDamageTicks"); }
+    public boolean justCreated() { return field("justCreated"); }
+    public boolean fireProof() { return field("fireProof"); }
+    public double ar() { return field("ar"); }
+    public double as() { return field("as"); }
+    public boolean isAd() { return field("ad"); }
+    public int getAe() { return field("ae"); }
+    public int getAf() { return field("af"); }
+    public int getAg() { return field("ag"); }
+    public boolean getAh() { return field("ah"); }
+    public boolean ai() { return field("ai"); }
+    public int portalCooldown() { return field("portalCooldown"); }
+    public boolean isAk() { return field("ak"); }
+    public int getAl() { return field("al"); }
+    public int dimension() { return field("dimension"); }
     public BlockPosition an = new BlockPosition(getField("an"));
     public Vec3D ao = new Vec3D(getField("ao"));
     public EnumDirection ap = EnumDirection.valueOf(((Enum<?>) getField("ap")).name());
-    public boolean invulnerable = field("invulnerable");
-    public UUID uniqueID = field("uniqueID");
-    public boolean valid = field("valid");
-    public ProjectileSource projectileSource = field("projectileSource");
-    public boolean forceExplosionKnockback = field("forceExplosionKnockback");
+    public boolean invulnerable() { return field("invulnerable"); }
+    public UUID uniqueID() { return field("uniqueID"); }
+    public boolean valid() { return field("valid"); }
+    public ProjectileSource projectileSource() { return field("projectileSource"); }
+    public boolean forceExplosionKnockback() { return field("forceExplosionKnockback"); }
 
     public boolean isAddedToChunk() {
-        return ad;
+        return ad();
     }
 
-    public CustomTimingsHandler tickTimer = field("tickTimer");
-    public final byte activationType = field("activationType");
-    public final boolean defaultActivationState = field("defaultActivationState");
-    public long activatedTick = field("activatedTick");
-    public boolean fromMobSpawner = field("fromMobSpawner");
-    public int numCollisions = field("numCollisions");
+    public CustomTimingsHandler tickTimer() { return field("tickTimer"); }
+    public final byte activationType() { return field("activationType"); }
+    public final boolean defaultActivationState() { return field("defaultActivationState"); }
+    public long activatedTick() { return field("activatedTick"); }
+    public boolean fromMobSpawner() { return field("fromMobSpawner"); }
+    public int numCollisions() { return field("numCollisions"); }
 
     public void inactiveTick() { invoke("inactiveTick"); }
 
     public int getId() {
-        return this.id;
+        return this.id();
     }
 
     public void d(int i) {
-        this.id = i;
         invoke("d", i);
     }
 
@@ -136,15 +135,14 @@ public class Entity extends NMSAPI {
     }
 
     public boolean equals(Object o) {
-        return (o instanceof Entity) && ((((Entity) o).id == this.id));
+        return (o instanceof Entity) && ((((Entity) o).id() == this.id()));
     }
 
     public int hashCode() {
-        return this.id;
+        return this.id();
     }
 
     public void die() {
-        this.dead = true;
         invoke("die");
     }
 
@@ -182,7 +180,6 @@ public class Entity extends NMSAPI {
 
     public void extinguish() {
         invoke("extinguish");
-        this.fireTicks = 0;
     }
 
     public void O() {
@@ -232,9 +229,7 @@ public class Entity extends NMSAPI {
     }
 
     public boolean isFireProof() {
-        boolean b = field("fireProof");
-        this.fireProof = b;
-        return b;
+        return field("fireProof");
     }
 
     public void e(float f, float f1) {
@@ -246,15 +241,11 @@ public class Entity extends NMSAPI {
     }
 
     public boolean V() {
-        boolean b = field("inWater");
-        this.inWater = b;
-        return b;
+        return field("inWater");
     }
 
     public boolean W() {
-        boolean b = (boolean) invoke("W");
-        this.inWater = b;
-        return b;
+        return (boolean) invoke("W");
     }
 
     public void X() {
@@ -342,7 +333,6 @@ public class Entity extends NMSAPI {
     }
 
     public void ac() {
-        this.velocityChanged = true;
         setField("velocityChanged", true);
     }
 
