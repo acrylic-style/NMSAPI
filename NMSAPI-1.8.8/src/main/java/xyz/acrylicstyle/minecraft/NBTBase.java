@@ -20,10 +20,6 @@ public abstract class NBTBase extends NMSAPI {
         super(o, nms);
     }
 
-    public NBTBase(Object o) {
-        super(o, "NBTBase");
-    }
-
     public NBTBase(String nms, Object... args) {
         super(nms, args);
     }
