@@ -19,7 +19,6 @@ import java.util.List;
 public class EntityPlayer extends Entity implements ICommandListener {
     public static final Class<?> CLASS = getClassWithoutException("EntityPlayer");
 
-    private static boolean doPolling = false;
     private boolean disposed = false;
     private Plugin plugin = null;
     Object __playerConnection;

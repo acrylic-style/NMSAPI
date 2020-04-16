@@ -5,9 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class NameHistory {
     @NotNull
-    private String name;
+    private final String name;
     @Nullable
-    private Long changedToAt;
+    private final Long changedToAt;
 
     NameHistory(@NotNull String name, @Nullable Long changedToAt) {
         this.name = name;

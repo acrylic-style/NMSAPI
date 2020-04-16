@@ -3,7 +3,7 @@ package xyz.acrylicstyle.shared;
 import java.util.UUID;
 
 class Player {
-    private Object player;
+    private final Object player;
 
     Player(Object o) {
         this.player = o;

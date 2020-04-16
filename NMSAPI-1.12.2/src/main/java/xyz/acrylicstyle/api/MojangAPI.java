@@ -17,17 +17,17 @@ import java.util.UUID;
 public class MojangAPI extends BaseMojangAPI {
     private MojangAPI() {}
 
-    @NotNull
     public static GameProfile getGameProfile(@NotNull String name) {
         UUID uuid = getUniqueId(name);
+        if (uuid == null) return null;
         return getGameProfile(uuid);
     }
 
     @NotNull
     public static GameProfile getGameProfile(@NotNull UUID uuid) {
-        JSONAPI.Response response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call();
+        JSONAPI.Response response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call(JSONObject.class);
         if (response.getResponseCode() != 200) throw new RuntimeException("Response code isn't 200! (" + response.getResponseCode() + ")");
-        JSONObject json = response.getResponse();
+        JSONObject json = (JSONObject) response.getResponse();
         UUID id = UUID.fromString(json.getString("id").replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"));
         String name = json.getString("name");
         JSONArray properties = json.getJSONArray("properties");
@@ -41,6 +41,7 @@ public class MojangAPI extends BaseMojangAPI {
         return profile;
     }
 
+    @Deprecated
     public static Player changeSkin(@NotNull Player player, @NotNull UUID uuid) {
         CraftPlayer craftPlayer = new CraftPlayer(player);
         craftPlayer.getProfile().setProperties(getGameProfile(uuid).getProperties());

@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public class PlayerProfile {
     @NotNull
-    private String name;
+    private final String name;
     @NotNull
-    private UUID uuid;
+    private final UUID uuid;
 
     PlayerProfile(@NotNull String name, @NotNull String uuid) {
         this.name = name;
