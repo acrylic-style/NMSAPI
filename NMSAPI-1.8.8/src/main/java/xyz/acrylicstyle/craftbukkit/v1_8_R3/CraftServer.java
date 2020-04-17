@@ -291,7 +291,7 @@ public class CraftServer extends OBCAPI implements Server {
         return (boolean) invoke("dispatchCommand", sender, commandLine);
     }
 
-    public Object getHandle() {
+    public Object getOBCClass() {
         return invoke("getHandle");
     }
 

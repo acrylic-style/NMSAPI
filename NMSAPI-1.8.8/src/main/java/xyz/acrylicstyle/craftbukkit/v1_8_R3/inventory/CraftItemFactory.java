@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class CraftItemFactory extends NMSAPI implements ItemFactory {
-    public static final Class<?> CLASS = getClassWithoutException("CraftItemFactory");
+    public static final Class<?> CLASS = getClassWithoutException("inventory.CraftItemFactory");
 
     public static final Color DEFAULT_LEATHER_COLOR = Color.fromRGB(10511680);
 
@@ -65,11 +65,11 @@ public class CraftItemFactory extends NMSAPI implements ItemFactory {
     }
 
     public CraftItemFactory(Object o) {
-        super(o, "CraftItemFactory");
+        super(o, "inventory.CraftItemFactory");
     }
 
     public CraftItemFactory() {
-        super("CraftItemFactory");
+        super("inventory.CraftItemFactory");
     }
 
     public static CraftItemFactory instance() {

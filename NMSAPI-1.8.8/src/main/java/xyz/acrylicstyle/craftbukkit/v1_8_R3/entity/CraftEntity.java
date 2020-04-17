@@ -15,8 +15,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Handler;
-import xyz.acrylicstyle.minecraft.Entity;
 import xyz.acrylicstyle.shared.OBCAPI;
 
 import java.util.List;
@@ -26,14 +24,14 @@ import java.util.UUID;
 /**
  * Placeholder class(for now) to make easier to get nms instance
  */
-public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity, Handler<Entity> {
-    public static final Class<?> CLASS = getClassWithoutException("CraftEntity");
+public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
+    public static final Class<?> CLASS = getClassWithoutException("entity.CraftEntity");
 
     @NotNull
     @Override
     @Contract(value = "-> new", pure = true)
-    public xyz.acrylicstyle.minecraft.Entity getHandle() {
-        return new xyz.acrylicstyle.minecraft.Entity(getOBCClass());
+    public xyz.acrylicstyle.minecraft.Entity getOBCClass() {
+        return new xyz.acrylicstyle.minecraft.Entity(super.getOBCClass());
     }
 
     private org.bukkit.entity.Entity entity;
@@ -47,7 +45,7 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity, Han
      *          </ul>
      */
     public CraftEntity(@NotNull Object o) {
-        super(o, "CraftEntity");
+        super(o, "entity.CraftEntity");
         this.entity = (org.bukkit.entity.Entity) o;
     }
 

@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("unused")
 public class CraftItemStack extends ItemStack implements Handler<xyz.acrylicstyle.minecraft.ItemStack> {
-    public static final Class<?> CLASS = NMSAPI.getClassWithoutException("CraftItemStack");
+    public static final Class<?> CLASS = NMSAPI.getClassWithoutException("inventory.CraftItemStack");
 
     public static xyz.acrylicstyle.minecraft.ItemStack asNMSCopy(ItemStack original) {
         try {

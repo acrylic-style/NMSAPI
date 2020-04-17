@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 public class SimpleHelpMap extends OBCAPI {
-    public static final Class<?> CLASS = getClassWithoutException("SimpleHelpMap");
+    public static final Class<?> CLASS = getClassWithoutException("help.SimpleHelpMap");
 
     /**
      * Read-only.
@@ -22,12 +22,12 @@ public class SimpleHelpMap extends OBCAPI {
     public Map<String, HelpTopic> helpTopics;
 
     public SimpleHelpMap(Object o) {
-        super(o, "SimpleHelpMap");
+        super(o, "help.SimpleHelpMap");
         sync();
     }
 
     public SimpleHelpMap(CraftServer server) {
-        super("SimpleHelpMap", server.getOBCClass());
+        super("help.SimpleHelpMap", server.getOBCClass());
         sync();
     }
 
@@ -81,6 +81,7 @@ public class SimpleHelpMap extends OBCAPI {
 
     public static class IsCommandTopicPredicate implements Predicate<HelpTopic> {
         public boolean apply(HelpTopic topic) {
+            assert topic != null;
             return (topic.getName().charAt(0) == '/');
         }
     }

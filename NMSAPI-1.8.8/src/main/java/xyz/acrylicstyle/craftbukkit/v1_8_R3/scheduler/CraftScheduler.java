@@ -12,14 +12,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public class CraftScheduler extends OBCAPI implements BukkitScheduler {
-    public static final Class<?> CLASS = getClassWithoutException("CraftScheduler");
+    public static final Class<?> CLASS = getClassWithoutException("scheduler.CraftScheduler");
 
     public CraftScheduler() {
-        super("CraftScheduler");
+        super("scheduler.CraftScheduler");
     }
 
     public CraftScheduler(BukkitScheduler scheduler) {
-        super(scheduler, "CraftScheduler");
+        super(scheduler, "scheduler.CraftScheduler");
     }
 
     @Override

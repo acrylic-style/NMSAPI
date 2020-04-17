@@ -42,10 +42,10 @@ public class Entity extends NMSAPI {
     public int id() { return field("id"); }
     public double j() { return field("j"); }
     public boolean k() { return field("k"); }
-    public Entity passenger = new Entity(getField("passenger"));
-    public Entity vehicle = new Entity(getField("vehicle"));
+    public Entity passenger() { return new Entity(getField("passenger")); }
+    public Entity vehicle() { return new Entity(getField("vehicle")); }
     public boolean attachedToPlayer() { return field("attachedToPlayer"); }
-    public World world = World.newInstance(getField("world"));
+    public World world() { return World.newInstance(getField("world")); }
     public double lastX() { return field("lastX"); }
     public double lastY() { return field("lastY"); }
     public double lastZ() { return field("lastZ"); }
@@ -100,9 +100,9 @@ public class Entity extends NMSAPI {
     public boolean isAk() { return field("ak"); }
     public int getAl() { return field("al"); }
     public int dimension() { return field("dimension"); }
-    public BlockPosition an = new BlockPosition(getField("an"));
-    public Vec3D ao = new Vec3D(getField("ao"));
-    public EnumDirection ap = EnumDirection.valueOf(((Enum<?>) getField("ap")).name());
+    public BlockPosition getAn() { return new BlockPosition(getField("an")); }
+    public Vec3D getAo() { return new Vec3D(getField("ao")); }
+    public EnumDirection getAp() { return EnumDirection.valueOf(((Enum<?>) getField("ap")).name()); }
     public boolean invulnerable() { return field("invulnerable"); }
     public UUID uniqueID() { return field("uniqueID"); }
     public boolean valid() { return field("valid"); }

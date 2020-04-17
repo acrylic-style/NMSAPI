@@ -29,13 +29,13 @@ import java.net.InetSocketAddress;
 import java.util.*;
 
 public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
-    public static final Class<?> CLASS = getClassWithoutException("CraftPlayer");
+    public static final Class<?> CLASS = getClassWithoutException("entity.CraftPlayer");
 
     private Player player;
     public Object craftPlayer;
 
     public CraftPlayer(Object o) {
-        super(o, "CraftPlayer");
+        super(o, "entity.CraftPlayer");
         try {
             if (o.getClass().isAssignableFrom(Player.class)) {
                 this.player = (Player) o;
@@ -68,11 +68,11 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     public GameProfile getProfile() {
-        return getHandle().getProfile();
+        return getOBCClass().getProfile();
     }
 
     @NotNull
-    public EntityPlayer getHandle() {
+    public EntityPlayer getOBCClass() {
         return new EntityPlayer(this);
     }
 

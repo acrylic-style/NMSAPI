@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class Versioning {
-    public static final Class<?> CLASS = OBCAPI.getClassWithoutException("BaseBlockPosition");
+    public static final Class<?> CLASS = OBCAPI.getClassWithoutException("util.Versioning");
 
     public static String getBukkitVersion() {
         String result = "Unknown-Version";

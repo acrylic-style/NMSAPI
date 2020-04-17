@@ -4,20 +4,19 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Handler;
 import xyz.acrylicstyle.shared.OBCAPI;
 
 import java.util.Set;
 
-public class CraftScoreboard extends OBCAPI implements Handler<xyz.acrylicstyle.minecraft.Scoreboard>, Scoreboard {
-    public static final Class<?> CLASS = getClassWithoutException("CraftScoreboard");
+public class CraftScoreboard extends OBCAPI implements Scoreboard {
+    public static final Class<?> CLASS = getClassWithoutException("scoreboard.CraftScoreboard");
 
     public CraftScoreboard(Scoreboard scoreboard) {
-        super(scoreboard, "CraftScoreboard");
+        super(scoreboard, "scoreboard.CraftScoreboard");
     }
 
     @Override
-    public xyz.acrylicstyle.minecraft.Scoreboard getHandle() {
+    public xyz.acrylicstyle.minecraft.Scoreboard getOBCClass() {
         return new xyz.acrylicstyle.minecraft.Scoreboard(o);
     }
 

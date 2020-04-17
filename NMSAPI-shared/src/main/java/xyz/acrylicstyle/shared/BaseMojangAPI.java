@@ -32,7 +32,7 @@ public class BaseMojangAPI {
      * @return Name histories
      */
     public static CollectionList<NameHistory> getNameChanges(@NotNull UUID uuid) {
-        JSONAPI.Response response = new JSONAPI("https://api.mojang.com/user/profiles/minecraft/" + uuid.toString().replaceAll("-", "") + "/names").call();
+        JSONAPI.Response response = new JSONAPI("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names").call();
         if (response.getResponseCode() != 200) return null;
         JSONArray json = new JSONArray(response.getRawResponse());
         CollectionList<NameHistory> histories = new CollectionList<>();
@@ -47,7 +47,7 @@ public class BaseMojangAPI {
 
     public static String getName(@NotNull UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
-        if (player != null) return player.getName();
+        if (player != null && player.getName() != null) return player.getName();
         CollectionList<NameHistory> a = getNameChanges(uuid);
         if (a == null) return null;
         return Objects.requireNonNull(a.last()).getName();

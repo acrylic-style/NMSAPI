@@ -2,13 +2,14 @@ package xyz.acrylicstyle.shared;
 
 import util.CollectionList;
 import util.ReflectionHelper;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Handler;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class OBCAPI {
+public class OBCAPI implements Handler<Object> {
     private String obcClassName;
 
     /**
@@ -48,6 +49,8 @@ public class OBCAPI {
         }
         return null;
     }
+
+    public final Object getHandle() { return getOBCClass(); }
 
     public Object getField(String field) {
         try {

@@ -12,7 +12,7 @@ class Bukkit {
             if (o == null) return null;
             return new Player(o);
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            return null;
         }
     }
 
@@ -23,7 +23,7 @@ class Bukkit {
             if (o == null) return null;
             return new Player(o);
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            return null;
         }
     }
 }

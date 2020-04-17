@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.Repairable;
 import xyz.acrylicstyle.minecraft.NBTBase;
 import xyz.acrylicstyle.minecraft.NBTTagCompound;
 import xyz.acrylicstyle.minecraft.NBTTagList;
-import xyz.acrylicstyle.shared.NMSAPI;
+import xyz.acrylicstyle.shared.OBCAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.annotation.ElementType;
@@ -20,10 +20,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class CraftMetaItem extends NMSAPI implements ItemMeta, Repairable {
-    public static final Class<?> CLASS = getClassWithoutException("CraftMetaItem");
+public class CraftMetaItem extends OBCAPI implements ItemMeta, Repairable {
+    public static final Class<?> CLASS = getClassWithoutException("inventory.CraftMetaItem");
 
-    public static class ItemMetaKey extends NMSAPI {
+    public static class ItemMetaKey extends OBCAPI {
         final String BUKKIT;
 
         final String NBT;
@@ -43,7 +43,7 @@ public class CraftMetaItem extends NMSAPI implements ItemMeta, Repairable {
         }
 
         ItemMetaKey(String nbt, String bukkit) {
-            super("ItemMetaKey", nbt, bukkit);
+            super("inventory.CraftMetaItem.ItemMetaKey", nbt, bukkit);
             this.NBT = (String) getField("NBT");
             this.BUKKIT = (String) getField("BUKKIT");
         }
@@ -100,8 +100,8 @@ public class CraftMetaItem extends NMSAPI implements ItemMeta, Repairable {
         try {
             return (Map<Enchantment, Integer>) ReflectionUtil
                     .getOBCClass("inventory.CraftMetaItem")
-                    .getMethod("buildEnchantments", map.getClass(), key.getNMSClass().getClass())
-                    .invoke(null, map, key.getNMSClass());
+                    .getMethod("buildEnchantments", map.getClass(), key.getHandle().getClass())
+                    .invoke(null, map, key.getHandle());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -277,11 +277,11 @@ public class CraftMetaItem extends NMSAPI implements ItemMeta, Repairable {
     }
 
     public boolean equalsCommon(CraftMetaItem that) {
-        return (boolean) invoke("equalsCommon", that.getNMSClass());
+        return (boolean) invoke("equalsCommon", that.getHandle());
     }
 
     public boolean notUncommon(CraftMetaItem meta) {
-        return (boolean) invoke("notUncommon", meta.getNMSClass());
+        return (boolean) invoke("notUncommon", meta.getHandle());
     }
 
     public int applyHash() {
@@ -329,7 +329,7 @@ public class CraftMetaItem extends NMSAPI implements ItemMeta, Repairable {
     }
 
     public CraftMetaItem(CraftMetaItem meta) {
-        super("CraftMetaItem", meta.getNMSClass());
+        super("CraftMetaItem", meta.getHandle());
     }
 
     public CraftMetaItem(NBTTagCompound tag) {
