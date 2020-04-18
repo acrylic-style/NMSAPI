@@ -1,19 +1,18 @@
 package xyz.acrylicstyle.shared;
 
 import util.CollectionList;
+import util.ICollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 public class NMSAPI {
-    private String nmsClassName;
-
-    //protected NMSAPI(String nmsClassName) {
-    //    this.nmsClassName = nmsClassName;
-    //}
+    private static final Logger LOGGER = Logger.getLogger("NMSAPI");
+    protected final String nmsClassName;
 
     /**
      * Set NMS object. This does not call constructor and it doesn't check types.
@@ -31,6 +30,7 @@ public class NMSAPI {
      * @param o Constructor args
      */
     protected NMSAPI(String nmsClassName, Object... o) {
+        this.nmsClassName = nmsClassName;
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(o1.getClass());
@@ -46,6 +46,9 @@ public class NMSAPI {
 
     public Object getNMSClass() {
         try {
+            if (o == null) {
+                LOGGER.severe("Object is null!");
+            }
             if (o.getClass().getCanonicalName().equalsIgnoreCase(ReflectionUtil.getNMSClass(nmsClassName).getCanonicalName())) return o;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -59,6 +62,7 @@ public class NMSAPI {
         try {
             return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName), getNMSClass(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
+            LOGGER.severe("An error occurred while getting a field: " + field);
             e.printStackTrace();
             return null;
         }
@@ -93,6 +97,7 @@ public class NMSAPI {
             m.setAccessible(true);
             return m.invoke(getNMSClass());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            LOGGER.severe("An error occurred while invoking a method: " + method);
             e.printStackTrace();
             return null;
         }
@@ -106,6 +111,8 @@ public class NMSAPI {
             m.setAccessible(true);
             return m.invoke(getNMSClass(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            LOGGER.severe("An error occurred while invoking a method: " + method);
+            LOGGER.severe("With signature: " + ICollectionList.asList(o).map(Object::getClass).map(Class::getCanonicalName).join(", "));
             e.printStackTrace();
             return null;
         }

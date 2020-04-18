@@ -17,7 +17,6 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class EntityPlayer extends EntityLiving {
-    private static boolean doPolling = false;
     private boolean disposed = false;
     private Plugin plugin = null;
     public PlayerConnection playerConnection;
