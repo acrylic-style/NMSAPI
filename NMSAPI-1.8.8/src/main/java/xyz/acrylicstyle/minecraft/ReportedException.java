@@ -13,7 +13,7 @@ public class ReportedException extends RuntimeException {
     public static final Class<?> CLASS = NMSAPI.getClassWithoutException("ReportedException");
 
     // NMSAPI start
-    private Object o;
+    private final Object o;
 
     public ReportedException(Object o) {
         this.o = o;

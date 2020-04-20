@@ -1,5 +1,7 @@
 package xyz.acrylicstyle.shared;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
@@ -8,18 +10,35 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
+@SuppressWarnings("unused")
 public class NMSAPI {
+    public static final Map<Class<?>, Class<?>> PRIMITIVES = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger("NMSAPI");
     protected final String nmsClassName;
+
+    static {
+        PRIMITIVES.put(Integer.class, int.class);
+        PRIMITIVES.put(Double.class, double.class);
+        PRIMITIVES.put(Float.class, float.class);
+        PRIMITIVES.put(Void.class, void.class);
+        PRIMITIVES.put(Character.class, char.class);
+        PRIMITIVES.put(Boolean.class, boolean.class);
+        PRIMITIVES.put(Byte.class, byte.class);
+        PRIMITIVES.put(Short.class, short.class);
+    }
 
     /**
      * Set NMS object. This does not call constructor and it doesn't check types.
      * @param o Object
      * @param nmsClassName NMS Class name
      */
-    protected NMSAPI(Object o, String nmsClassName) {
+    @Contract("_, null -> fail")
+    protected NMSAPI(@NotNull Object o, String nmsClassName) {
+        if (nmsClassName == null) throw new IllegalArgumentException("NMS Class name cannot be null");
         this.o = o;
         this.nmsClassName = nmsClassName;
     }
@@ -29,11 +48,11 @@ public class NMSAPI {
      * @param nmsClassName NMS class name (target)
      * @param o Constructor args
      */
-    protected NMSAPI(String nmsClassName, Object... o) {
+    protected NMSAPI(@NotNull String nmsClassName, Object... o) {
         this.nmsClassName = nmsClassName;
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
+            for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
             this.o = ReflectionUtil.getNMSClass(nmsClassName)
                     .getConstructor(classes.toArray(new Class[0]))
                     .newInstance(o);
@@ -47,7 +66,9 @@ public class NMSAPI {
     public Object getNMSClass() {
         try {
             if (o == null) {
-                LOGGER.severe("Object is null!");
+                LOGGER.severe("Object is null! Dumping a thread stack");
+                Thread.dumpStack();
+                return null;
             }
             if (o.getClass().getCanonicalName().equalsIgnoreCase(ReflectionUtil.getNMSClass(nmsClassName).getCanonicalName())) return o;
         } catch (ClassNotFoundException e) {
@@ -60,6 +81,11 @@ public class NMSAPI {
 
     public Object getField(String field) {
         try {
+            if (nmsClassName == null) {
+                LOGGER.severe("NMS class name is null! Dumping a thread stack");
+                Thread.dumpStack();
+                return null;
+            }
             return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName), getNMSClass(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             LOGGER.severe("An error occurred while getting a field: " + field);
@@ -106,7 +132,7 @@ public class NMSAPI {
     public Object invoke(String method, Object... o) {
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
+            for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
             Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, classes.toArray(new Class[0]));
             m.setAccessible(true);
             return m.invoke(getNMSClass(), o);

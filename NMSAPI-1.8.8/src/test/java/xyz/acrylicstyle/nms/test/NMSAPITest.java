@@ -10,7 +10,7 @@ import xyz.acrylicstyle.minecraft.NBTTagCompound;
 import java.util.UUID;
 
 public class NMSAPITest {
-    static { new DummyServer(); }
+    static { DummyServer.load(); }
 
     private NBTTagCompound getNBTTagCompound() {
         ItemStack item = new ItemStack(Material.STONE);

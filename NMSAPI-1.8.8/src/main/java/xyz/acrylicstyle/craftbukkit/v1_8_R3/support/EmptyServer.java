@@ -28,17 +28,17 @@ import java.util.logging.Logger;
 public class EmptyServer implements Server {
     @Override
     public String getName() {
-        return null;
+        return "DummyServer";
     }
 
     @Override
     public String getVersion() {
-        return null;
+        return "0.0.0";
     }
 
     @Override
     public String getBukkitVersion() {
-        return null;
+        return "0.0.0";
     }
 
     @Override
