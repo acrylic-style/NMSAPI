@@ -23,8 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.scoreboard.CraftScoreboard;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 import xyz.acrylicstyle.minecraft.EntityPlayer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.*;
 
@@ -68,12 +70,15 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
     }
 
     public GameProfile getProfile() {
-        return getOBCClass().getProfile();
+        return new GameProfile(invoke("getProfile"));
     }
 
-    @NotNull
-    public EntityPlayer getOBCClass() {
-        return new EntityPlayer(this);
+    public EntityPlayer getHandle() {
+        try {
+            return new EntityPlayer(CraftUtils.getHandle(player));
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

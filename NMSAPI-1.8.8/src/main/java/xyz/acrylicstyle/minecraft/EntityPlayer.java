@@ -10,11 +10,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class EntityPlayer extends Entity implements ICommandListener {
@@ -45,14 +46,25 @@ public class EntityPlayer extends Entity implements ICommandListener {
     public int containerCounter;
 
     public EntityPlayer(Object o) {
-        super(o, "EntityPlayer");
+        super(Objects.requireNonNull(o), "EntityPlayer");
         this.__playerConnection = getField("playerConnection");
-        this.playerConnection = new PlayerConnection(this);
+        if (__playerConnection != null) {
+            this.playerConnection = new PlayerConnection(this);
+        } else System.err.println("playerConnection field is null.");
         this.server = MinecraftServer.getMinecraftServer(getField("server"));
     }
 
+    private static Object call(MinecraftServer minecraftServer, WorldServer worldServer, GameProfile gameProfile, PlayerInteractManager playerInteractManager) {
+        try {
+            return EntityPlayer.CLASS
+                    .getConstructor(MinecraftServer.CLASS, WorldServer.CLASS, Class.forName("com.mojang.authlib.GameProfile"), PlayerInteractManager.CLASS)
+                    .newInstance(minecraftServer.getHandle(), worldServer.getHandle(), gameProfile.getHandle(), playerInteractManager.getHandle());
+        } catch (ReflectiveOperationException e) { throw new RuntimeException(e); }
+    }
+
     public EntityPlayer(MinecraftServer minecraftServer, WorldServer worldServer, GameProfile gameProfile, PlayerInteractManager playerInteractManager) {
-        super("EntityPlayer", minecraftServer.getHandle(), worldServer.getHandle(), gameProfile.getHandle(), playerInteractManager.getHandle());
+        super(call(minecraftServer, worldServer, gameProfile, playerInteractManager), "EntityPlayer");
+        if (checkState()) throw new RuntimeException();
         this.__playerConnection = getField("playerConnection");
         if (__playerConnection != null) this.playerConnection = new PlayerConnection(this);
         this.server = minecraftServer;

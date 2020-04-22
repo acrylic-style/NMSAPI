@@ -6,6 +6,7 @@ import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import xyz.acrylicstyle.shared.NMSAPI;
 
+@SuppressWarnings("unused")
 public class WorldData extends NMSAPI {
     public static Class<?> CLASS = getClassWithoutException("WorldData");
 

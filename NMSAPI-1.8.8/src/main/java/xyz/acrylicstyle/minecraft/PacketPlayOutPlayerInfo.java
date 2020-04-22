@@ -4,14 +4,29 @@ import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
+import java.lang.reflect.Array;
+
+@SuppressWarnings("unused")
 public class PacketPlayOutPlayerInfo extends NMSAPI implements Packet<PacketListenerPlayOut> {
     public static final Class<?> CLASS = NMSAPI.getClassWithoutException("PacketPlayOutPlayerInfo");
 
     public EnumPlayerInfoAction a;
 
     public PacketPlayOutPlayerInfo(EnumPlayerInfoAction paramEnumPlayerInfoAction, EntityPlayer... paramVarArgs) {
-        super("PacketPlayOutPlayerInfo", paramEnumPlayerInfoAction, paramVarArgs);
+        super(callCtor(paramEnumPlayerInfoAction, paramVarArgs), "PacketPlayOutPlayerInfo");
         this.a = paramEnumPlayerInfoAction;
+    }
+
+    private static Object callCtor(EnumPlayerInfoAction paramEnumPlayerInfoAction, EntityPlayer[] players) {
+        try {
+            Object osu = Array.newInstance(ReflectionUtil.getNMSClass("EntityPlayer"), players.length);
+            for (int i = 0; i < players.length; i++) Array.set(osu, i, players[i].getHandle());
+            return ReflectionUtil.getNMSClass("PacketPlayOutPlayerInfo")
+                    .getConstructor(EnumPlayerInfoAction.CLASS, Array.newInstance(ReflectionUtil.getNMSClass("EntityPlayer"), players.length).getClass())
+                    .newInstance(paramEnumPlayerInfoAction.getHandle(), osu);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -41,12 +56,12 @@ public class PacketPlayOutPlayerInfo extends NMSAPI implements Packet<PacketList
         UPDATE_DISPLAY_NAME,
         REMOVE_PLAYER;
 
-        public static final Class<?> CLASS = getClassWithoutException("PacketPlayOutPlayerInfo.EnumPlayerInfoAction");
+        public static final Class<?> CLASS = getClassWithoutException("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
 
         @SuppressWarnings({"unchecked", "rawtypes"})
         public Enum<?> getHandle() {
             try {
-                return Enum.valueOf((Class<Enum>) ReflectionUtil.getNMSClass("PacketPlayOutPlayerInfo.EnumPlayerInfoAction"), this.name());
+                return Enum.valueOf((Class<Enum>) ReflectionUtil.getNMSClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction"), this.name());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 return null;
@@ -66,8 +81,8 @@ public class PacketPlayOutPlayerInfo extends NMSAPI implements Packet<PacketList
         private final GameProfile d = new GameProfile(getField("d"));
         private final IChatBaseComponent e = new ChatComponentText(getField("e"));
 
-        public PlayerInfoData(PacketPlayOutPlayerInfo this$0, GameProfile gameProfile, int paramInt, EnumGamemode paramEnumGamemode, IChatBaseComponent paramIChatBaseComponent) {
-            super("PlayerInfoData", this$0.getHandle(), gameProfile.getHandle(), paramInt, paramEnumGamemode.getHandle(), paramIChatBaseComponent.getHandle());
+        public PlayerInfoData(PacketPlayOutPlayerInfo this$0, GameProfile gameProfile, int paramInt, EnumGamemode paramEnumGameMode, IChatBaseComponent paramIChatBaseComponent) {
+            super("PlayerInfoData", this$0.getHandle(), gameProfile.getHandle(), paramInt, paramEnumGameMode.getHandle(), paramIChatBaseComponent.getHandle());
         }
 
         public GameProfile a() { return this.d; }

@@ -134,6 +134,8 @@ public class BlockPosition extends BaseBlockPosition {
     }
 
     public static final class MutableBlockPosition extends BlockPosition {
+        public static final Class<?> CLASS = getClassWithoutException("BlockPosition$MutableBlockPosition");
+
         private int c;
         private int d;
         private int e;

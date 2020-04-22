@@ -2,14 +2,12 @@ package xyz.acrylicstyle.shared;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +23,11 @@ public class NMSAPI {
         PRIMITIVES.put(Integer.class, int.class);
         PRIMITIVES.put(Double.class, double.class);
         PRIMITIVES.put(Float.class, float.class);
-        PRIMITIVES.put(Void.class, void.class);
         PRIMITIVES.put(Character.class, char.class);
         PRIMITIVES.put(Boolean.class, boolean.class);
         PRIMITIVES.put(Byte.class, byte.class);
         PRIMITIVES.put(Short.class, short.class);
+        PRIMITIVES.put(Object.class, Object.class);
     }
 
     /**
@@ -37,8 +35,9 @@ public class NMSAPI {
      * @param o Object
      * @param nmsClassName NMS Class name
      */
-    @Contract("_, null -> fail")
-    protected NMSAPI(@NotNull Object o, String nmsClassName) {
+    @Contract("null, _ -> fail; !null, null -> fail")
+    protected NMSAPI(Object o, String nmsClassName) {
+        if (o == null) throw new IllegalArgumentException("Object is null!");
         if (nmsClassName == null) throw new IllegalArgumentException("NMS Class name cannot be null");
         this.o = o;
         this.nmsClassName = nmsClassName;
@@ -57,8 +56,17 @@ public class NMSAPI {
             this.o = ReflectionUtil.getNMSClass(nmsClassName)
                     .getConstructor(classes.toArray(new Class[0]))
                     .newInstance(o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | InstantiationException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            try {
+                CollectionList<Class<?>> classes = new CollectionList<>();
+                for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass().getSuperclass());
+                this.o = ReflectionUtil.getNMSClass(nmsClassName)
+                        .getConstructor(classes.toArray(new Class[0]))
+                        .newInstance(o);
+            } catch (Exception ex2) {
+                e.printStackTrace();
+                ex2.printStackTrace();
+            }
         }
     }
 
@@ -69,7 +77,7 @@ public class NMSAPI {
             if (o == null) {
                 LOGGER.severe("Object is null! Dumping a thread stack");
                 Thread.dumpStack();
-                return null;
+                return true;
             }
             if (o.getClass().getCanonicalName().equalsIgnoreCase(ReflectionUtil.getNMSClass(nmsClassName).getCanonicalName())) return o;
         } catch (ClassNotFoundException e) {
@@ -81,18 +89,33 @@ public class NMSAPI {
     public final Object getHandle() { return getNMSClass(); }
 
     public Object getField(String field) {
+        if (checkState()) return null;
         try {
-            if (nmsClassName == null) {
-                LOGGER.severe("NMS class name is null! Dumping a thread stack");
-                Thread.dumpStack();
-                return null;
-            }
             return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName), getNMSClass(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
+        } catch (Exception e) {
             LOGGER.severe("An error occurred while getting a field: " + field);
             e.printStackTrace();
             return null;
         }
+    }
+
+    protected boolean checkState() {
+        if (nmsClassName == null) {
+            LOGGER.severe("NMS class name is null! Dumping a thread stack");
+            Thread.dumpStack();
+            return true;
+        }
+        if (o == null) {
+            LOGGER.severe("Object is null! Dumping a thread stack");
+            Thread.dumpStack();
+            return true;
+        }
+        if (getNMSClass() == null) {
+            LOGGER.severe("NMS object is null! Dumping a thread stack");
+            Thread.dumpStack();
+            return true;
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
@@ -101,6 +124,7 @@ public class NMSAPI {
     }
 
     public void setField(String field, Object value) {
+        if (checkState()) return;
         try {
             Field f = ReflectionUtil.getNMSClass(nmsClassName).getDeclaredField(field);
             f.setAccessible(true);
@@ -113,17 +137,18 @@ public class NMSAPI {
             } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
-        } catch (ClassNotFoundException | IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public Object invoke(String method) {
+        if (checkState()) return null;
         try {
             Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method);
             m.setAccessible(true);
             return m.invoke(getNMSClass());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
             e.printStackTrace();
             return null;
@@ -131,13 +156,14 @@ public class NMSAPI {
     }
 
     public Object invoke(String method, Object... o) {
+        if (checkState()) return null;
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
             Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, classes.toArray(new Class[0]));
             m.setAccessible(true);
             return m.invoke(getNMSClass(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
             LOGGER.severe("With signature: " + ICollectionList.asList(o).map(Object::getClass).map(Class::getCanonicalName).join(", "));
             e.printStackTrace();
@@ -155,11 +181,12 @@ public class NMSAPI {
     }
 
     private Object invoke10(String method, Object o, Class<?> clazz) {
+        if (checkState()) return null;
         try {
             Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, clazz);
             m.setAccessible(true);
             return m.invoke(getNMSClass(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
             LOGGER.severe("With signature: " + clazz.getCanonicalName());
             e.printStackTrace();
@@ -174,11 +201,12 @@ public class NMSAPI {
     }
 
     private Object invoke11(String method, Object o1, Object o2, Class<?> clazz1, Class<?> clazz2) {
+        if (checkState()) return null;
         try {
             Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, clazz1, clazz2);
             m.setAccessible(true);
             return m.invoke(getNMSClass(), o1, o2);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
             LOGGER.severe("With signature: " + clazz1.getCanonicalName() + ", " + clazz2.getCanonicalName());
             e.printStackTrace();

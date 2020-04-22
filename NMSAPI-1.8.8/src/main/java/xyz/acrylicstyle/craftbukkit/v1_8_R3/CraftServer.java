@@ -25,6 +25,7 @@ import xyz.acrylicstyle.minecraft.EntityPlayer;
 import xyz.acrylicstyle.minecraft.ICommandListener;
 import xyz.acrylicstyle.minecraft.MinecraftServer;
 import xyz.acrylicstyle.minecraft.ServerCommand;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.shared.OBCAPI;
 
 import java.awt.image.BufferedImage;
@@ -291,8 +292,11 @@ public class CraftServer extends OBCAPI implements Server {
         return (boolean) invoke("dispatchCommand", sender, commandLine);
     }
 
-    public Object getOBCClass() {
-        return invoke("getHandle");
+    /**
+     * This will always throw ClassCastException.
+     */
+    public NMSAPI getHandle() {
+        return (NMSAPI) invoke("getHandle");
     }
 
     @Override

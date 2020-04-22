@@ -18,7 +18,7 @@ public class Main {
             try {
                 MinecraftServer.main();
             } catch (Throwable t) {
-                System.err.println("Couldn't start the server. Printing a stacktrace below.");
+                System.err.println("Couldn't start the server. You might need to shade CraftBukkit or minecraft server.");
                 t.printStackTrace();
                 System.exit(1);
             }

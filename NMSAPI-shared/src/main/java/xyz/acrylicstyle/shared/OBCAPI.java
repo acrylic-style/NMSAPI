@@ -50,7 +50,7 @@ public class OBCAPI implements Handler<Object> {
         return null;
     }
 
-    public final Object getHandle() { return getOBCClass(); }
+    public Object getHandle() { return getOBCClass(); }
 
     public Object getField(String field) {
         try {

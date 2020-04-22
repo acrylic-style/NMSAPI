@@ -4,12 +4,16 @@ import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 public final class WorldSettings extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("WorldSettings");
+
     public enum EnumGamemode {
         NOT_SET(-1, ""),
         SURVIVAL(0, "survival"),
         CREATIVE(1, "creative"),
         ADVENTURE(2, "adventure"),
         SPECTATOR(3, "spectator");
+
+        public static final Class<?> CLASS = NMSAPI.getClassWithoutException("WorldSettings$EnumGamemode");
 
         int f;
         String g;

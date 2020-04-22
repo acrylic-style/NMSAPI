@@ -10,6 +10,8 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class WorldServer extends World implements IAsyncTaskHandler {
+    public static final Class<?> CLASS = getClassWithoutException("WorldServer");
+
     public WorldServer(Object o) {
         super(o, "WorldServer");
         this.server = new MinecraftServer(getField("server"));

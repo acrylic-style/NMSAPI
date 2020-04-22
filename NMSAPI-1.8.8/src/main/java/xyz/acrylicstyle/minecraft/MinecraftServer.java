@@ -11,7 +11,6 @@ import util.ICollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
@@ -905,25 +904,13 @@ public class MinecraftServer extends NMSAPI {
         return new MinecraftServer(o);
     }
 
+    @Override
+    public Object getNMSClass() {
+        return getMinecraftServer();
+    }
+
     public Object getMinecraftServer() {
-        if (o.getClass().getSimpleName().equals("MinecraftServer") || o.getClass().getSimpleName().equals("DedicatedServer")) return o;
-        try {
-            return CraftUtils.getHandle(o);
-        } catch (NoSuchMethodException e1) {
-            try {
-                return o.getClass().getDeclaredField("minecraftServer").get(o);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                try {
-                    return o.getClass().getDeclaredField("server").get(o);
-                } catch (IllegalAccessException | NoSuchFieldException ex) {
-                    ex.printStackTrace();
-                    return null;
-                }
-            }
-        } catch (InvocationTargetException | IllegalAccessException e2) {
-            e2.printStackTrace();
-            return null;
-        }
+        return o;
     }
 
     public static MinecraftServer getServer() {

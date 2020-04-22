@@ -15,6 +15,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
+import xyz.acrylicstyle.minecraft.Entity;
 import xyz.acrylicstyle.shared.OBCAPI;
 
 import java.util.List;
@@ -27,10 +28,9 @@ import java.util.UUID;
 public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     public static final Class<?> CLASS = getClassWithoutException("entity.CraftEntity");
 
-    @NotNull
     @Override
     @Contract(value = "-> new", pure = true)
-    public xyz.acrylicstyle.minecraft.Entity getOBCClass() {
+    public Entity getHandle() {
         return new xyz.acrylicstyle.minecraft.Entity(super.getOBCClass());
     }
 

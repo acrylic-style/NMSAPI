@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.function.Function;
 
+@SuppressWarnings("UnusedReturnValue")
 public class PropertyMap {
     @SuppressWarnings("rawtypes")
     public Multimap delegate() {
@@ -29,13 +30,24 @@ public class PropertyMap {
         }
     }
 
+    @SuppressWarnings("Convert2MethodRef")
+    public Collection<Property> removeAll(String key) {
+        try {
+            return new CollectionList<>((Collection<?>) ForwardingMultimap.class
+                    .getMethod("removeAll", Object.class)
+                    .invoke(o, key)).map(s -> new Property(s));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @SuppressWarnings("rawtypes")
     public Collection<Property> get(@Nullable String key) {
         return ICollectionList.asList(((Collection) invoke("get", key)).toArray()).map((Function<Object, Property>) Property::new);
     }
 
     // NMSAPI start
-    private Object o;
+    private final Object o;
 
     public PropertyMap(Object o) {
         this.o = o;

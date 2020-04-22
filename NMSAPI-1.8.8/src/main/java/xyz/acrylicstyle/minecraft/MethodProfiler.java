@@ -6,6 +6,8 @@ import xyz.acrylicstyle.shared.NMSAPI;
 import java.util.List;
 
 public class MethodProfiler extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("MethodProfiler");
+
     public MethodProfiler() {
         super("MethodProfiler");
     }
@@ -27,6 +29,8 @@ public class MethodProfiler extends NMSAPI {
     public String c() { return ""; }
 
     public static final class ProfilerInfo extends NMSAPI implements Comparable<ProfilerInfo> {
+        public static final Class<?> CLASS = getClassWithoutException("MethodProfiler$ProfilerInfo");
+
         public ProfilerInfo(Object o) {
             super(o, "ProfilerInfo");
             c = field("c");
