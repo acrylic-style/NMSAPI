@@ -7,6 +7,14 @@ import xyz.acrylicstyle.shared.NMSAPI;
 public abstract class World extends NMSAPI implements IBlockAccess {
     public static final Class<?> CLASS = getClassWithoutException("World");
 
+    protected World(String clazz, Object... o) {
+        super(clazz, o);
+    }
+
+    protected World(Object o, String clazz) {
+        super(o, clazz);
+    }
+
     public World(Object o) {
         super(o, "World");
     }

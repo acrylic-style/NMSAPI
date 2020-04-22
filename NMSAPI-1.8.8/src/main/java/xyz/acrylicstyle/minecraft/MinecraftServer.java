@@ -1,6 +1,7 @@
 package xyz.acrylicstyle.minecraft;
 
 import com.google.gson.JsonElement;
+import org.bukkit.Bukkit;
 import org.bukkit.WorldType;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
@@ -9,9 +10,10 @@ import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.GameProfile;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -394,7 +396,7 @@ public class MinecraftServer extends NMSAPI {
             ReflectionUtil
                     .getNMSClass("MinecraftServer")
                     .getMethod("setGamemode", ReflectionUtil.getNMSClass("EnumGamemode"))
-                    .invoke(o, enumGamemode.toNMSEnumGamemode());
+                    .invoke(o, enumGamemode.getHandle());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -781,11 +783,8 @@ public class MinecraftServer extends NMSAPI {
         return (long) getField("lastOverloadTime");
     }
 
-    /**
-     * @implNote Actual type is IChatBaseComponent.
-     */
-    public Object getS() {
-        return getField("S");
+    public IChatBaseComponent getS() {
+        return new ChatComponentText(getField("S"));
     }
 
     public boolean getT() {
@@ -841,11 +840,8 @@ public class MinecraftServer extends NMSAPI {
         return (String) getField("ax");
     }
 
-    /**
-     * @implNote Actual type is CraftServer.
-     */
-    public Object getServer() {
-        return getField("server");
+    public CraftServer getCraftServer() {
+        return new CraftServer(getField("server"));
     }
 
     public ConsoleCommandSender getConsole() {
@@ -930,37 +926,12 @@ public class MinecraftServer extends NMSAPI {
         }
     }
 
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("MinecraftServer"), getMinecraftServer(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
+    public static MinecraftServer getServer() {
+        Object server = ReflectionHelper.invokeMethodWithoutException(MinecraftServer.CLASS, null, "getServer");
+        if (server != null) {
+            return new MinecraftServer(server);
+        } else {
+            return new CraftServer(Bukkit.getServer()).getServer();
         }
     }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("MinecraftServer")
-                    .getMethod(method)
-                    .invoke(getMinecraftServer());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("MinecraftServer")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getMinecraftServer(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 }

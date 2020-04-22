@@ -1,7 +1,10 @@
 package xyz.acrylicstyle.minecraft;
 
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
+
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -54,7 +57,13 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     }
 
     public void set(String key, NBTBase nbtBase) {
-        invoke("set", key, nbtBase.getNMSClass());
+        try {
+            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod("set", String.class, ReflectionUtil.getNMSClass("NBTBase"));
+            m.setAccessible(true);
+            m.invoke(getNMSClass(), key, nbtBase.getHandle());
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setByte(String key, byte paramByte) {

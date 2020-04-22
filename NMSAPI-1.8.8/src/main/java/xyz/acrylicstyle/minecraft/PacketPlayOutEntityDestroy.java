@@ -3,7 +3,7 @@ package xyz.acrylicstyle.minecraft;
 import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
-public class PacketPlayOutEntityDestroy extends NMSAPI implements Packet {
+public class PacketPlayOutEntityDestroy extends NMSAPI implements Packet<PacketListenerPlayOut> {
     public static final Class<?> CLASS = getClassWithoutException("PacketPlayOutEntityDestroy");
 
     private Object o;
@@ -26,22 +26,13 @@ public class PacketPlayOutEntityDestroy extends NMSAPI implements Packet {
     }
 
     @Override
-    public void a(PacketListener packetListener) {
-        invoke("a", packetListener.getNMSPacketListener());
+    public void a(PacketListenerPlayOut packetListener) {
+        packetListener.a(this);
     }
 
     // NMSAPI start
     @Override
     public Object toNMSPacket() {
-        return getPacketPlayOutNamedEntitySpawn();
-    }
-
-    public Object getPacketPlayOutNamedEntitySpawn() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("PacketPlayOutEntityDestroy").getCanonicalName())) return o;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return getHandle();
     }
 }

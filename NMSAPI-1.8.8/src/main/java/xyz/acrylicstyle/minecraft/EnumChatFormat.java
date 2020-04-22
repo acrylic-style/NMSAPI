@@ -41,16 +41,12 @@ public enum EnumChatFormat {
 
     // NMSAPI start
 
-    private Object o = null;
-
-    public static EnumChatFormat getFromNMSEnumChatFormat(Object o) {
-        EnumChatFormat e = EnumChatFormat.RESET;
-        e.o = o;
-        return e;
+    public static EnumChatFormat valueOf(Object o) {
+        return valueOf(((Enum<?>) o).name());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public Enum toNMSEnumChatFormat() {
+    public Enum getHandle() {
         try {
             return Enum.valueOf((Class<Enum>) ReflectionUtil.getNMSClass("EnumChatFormat"), this.name());
         } catch (ClassNotFoundException e) {
@@ -61,7 +57,7 @@ public enum EnumChatFormat {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("EnumChatFormat"), toNMSEnumChatFormat(), field);
+            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("EnumChatFormat"), getHandle(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -72,7 +68,7 @@ public enum EnumChatFormat {
         try {
             return ReflectionUtil.getNMSClass("EnumChatFormat")
                     .getMethod(method)
-                    .invoke(toNMSEnumChatFormat());
+                    .invoke(getHandle());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -85,7 +81,7 @@ public enum EnumChatFormat {
             for (Object o1 : o) classes.add(o1.getClass());
             return ReflectionUtil.getNMSClass("EnumChatFormat")
                     .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(toNMSEnumChatFormat(), o);
+                    .invoke(getHandle(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;

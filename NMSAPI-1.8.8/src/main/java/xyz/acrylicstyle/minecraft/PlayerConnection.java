@@ -74,16 +74,7 @@ public class PlayerConnection extends NMSAPI {
         }
     }
 
-    public void sendPacket(@NotNull Packet packet) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("sendPacket", ReflectionUtil.getNMSClass("Packet"))
-                    .invoke(getHandle(), packet.toNMSPacket());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+    public void sendPacket(@NotNull Packet<?> packet) { invoke1("sendPacket", Packet.CLASS, packet.getHandle()); }
 
     public void disconnect(String s) { invoke("disconnect", s); }
 
@@ -421,26 +412,12 @@ public class PlayerConnection extends NMSAPI {
         }
     }
 
-    public void a26(Object iChatBaseComponent) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("a", ReflectionUtil.getNMSClass("IChatBaseComponent"))
-                    .invoke(getHandle(), iChatBaseComponent);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void a(IChatBaseComponent iChatBaseComponent) {
+        invoke1("a", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
     }
 
-    public void a(Object packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("a", ReflectionUtil.getNMSClass("Packet"), genericFutureListener == null ? null : genericFutureListener.getClass())
-                    .invoke(getHandle(), packet, genericFutureListener);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void a(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
+        invoke1("a", Packet.CLASS, GenericFutureListener.class, packet.getHandle(), genericFutureListener);
     }
 
     public void a27(Object packetPlayInHeldItemSlot) {

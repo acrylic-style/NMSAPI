@@ -15,12 +15,16 @@ public enum EnumDirection {
     public static final Class<?> CLASS = getClassWithoutException("EnumDirection");
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Enum toNMSEnum() {
+    public Enum getHandle() {
         try {
             return Enum.valueOf((Class<Enum>) ReflectionUtil.getNMSClass("EnumDirection"), this.name());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static EnumDirection valueOf(Object o) {
+        return valueOf(((Enum<?>) o).name());
     }
 }

@@ -2,6 +2,7 @@ package xyz.acrylicstyle.minecraft;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.Validate;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.plugin.Plugin;
@@ -22,7 +23,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
     private boolean disposed = false;
     private Plugin plugin = null;
     Object __playerConnection;
-    public PlayerConnection playerConnection;
+    public PlayerConnection playerConnection = null;
     public int ping = -1;
     public final MinecraftServer server;
     public List<Integer> removeQueue = Lists.newLinkedList();
@@ -48,6 +49,13 @@ public class EntityPlayer extends Entity implements ICommandListener {
         this.__playerConnection = getField("playerConnection");
         this.playerConnection = new PlayerConnection(this);
         this.server = MinecraftServer.getMinecraftServer(getField("server"));
+    }
+
+    public EntityPlayer(MinecraftServer minecraftServer, WorldServer worldServer, GameProfile gameProfile, PlayerInteractManager playerInteractManager) {
+        super("EntityPlayer", minecraftServer.getHandle(), worldServer.getHandle(), gameProfile.getHandle(), playerInteractManager.getHandle());
+        this.__playerConnection = getField("playerConnection");
+        if (__playerConnection != null) this.playerConnection = new PlayerConnection(this);
+        this.server = minecraftServer;
     }
 
     public void reset() {
@@ -229,7 +237,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
 
     @Override
     public void sendMessage(IChatBaseComponent paramIChatBaseComponent) {
-        invoke("sendMessage", paramIChatBaseComponent.getIChatBaseComponent());
+        invoke1("sendMessage", IChatBaseComponent.CLASS, paramIChatBaseComponent.getIChatBaseComponent());
     }
 
     @Override
@@ -265,5 +273,62 @@ public class EntityPlayer extends Entity implements ICommandListener {
     @Override
     public void a(Object paramEnumCommandResult, int paramInt) {
         invoke("a", paramEnumCommandResult, paramInt);
+    }
+
+    public void updateAbilities() {
+        invoke("updateAbilities");
+    }
+
+    public WorldServer u() {
+        return new WorldServer(invoke("u"));
+    }
+
+    @SuppressWarnings("deprecation")
+    public void a(WorldSettings.EnumGamemode enumGameMode) {
+        getBukkitEntity().setGameMode(GameMode.getByValue(enumGameMode.getId()));
+    }
+
+    public boolean isSpectator() {
+        return (boolean) invoke("isSpectator");
+    }
+
+    public void resetIdleTimer() {
+        invoke("resetIdleTimer");
+    }
+
+    public void d(Entity entity) {
+        invoke1("d", Entity.CLASS, entity);
+    }
+
+    protected void B() {
+        invoke("B");
+    }
+
+    public Entity C() {
+        return new Entity(invoke("C"));
+    }
+
+    public void setSpectatorTarget(Entity entity) {
+        invoke1("setSpectatorTarget", Entity.CLASS, entity);
+    }
+
+    public void attack(Entity entity) {
+        invoke1("attack", Entity.CLASS, entity);
+    }
+
+    public long D() {
+        return (long) invoke("D");
+    }
+
+    public IChatBaseComponent getPlayerListName() {
+        return new ChatComponentText(invoke("getPlayerListName"));
+    }
+
+    public long getPlayerTime() {
+        return (long) invoke("getPlayerTime");
+    }
+
+    public WeatherType getPlayerWeather() {
+        return (WeatherType) invoke("getPlayerWeather");
     }
 }

@@ -38,11 +38,11 @@ public class NetworkManager extends NMSAPI {
         invoke("exceptionCaught", channelHandlerContext, throwable);
     }
 
-    public void channelRead0(ChannelHandlerContext channelHandlerContext, Packet packet) {
+    public void channelRead0(ChannelHandlerContext channelHandlerContext, Packet<?> packet) {
         invoke("channelRead0", channelHandlerContext, packet.getHandle());
     }
 
-    public static void a(Packet packet, PacketListener packetListener) {
+    public static void a(Packet<?> packet, PacketListener packetListener) {
         try {
             ReflectionUtil
                     .getNMSClass("NetworkManager")
@@ -57,15 +57,22 @@ public class NetworkManager extends NMSAPI {
         invoke("setPacketListener", packetListener.getHandle());
     }
 
-    public void sendPacket(Packet packet) {
-        invoke("sendPacket", packet.getHandle());
+    public void sendPacket(Packet<?> packet) {
+        try {
+            ReflectionUtil
+                    .getNMSClass("NetworkManager")
+                    .getMethod("sendPacket", ReflectionUtil.getNMSClass("Packet"))
+                    .invoke(this.getHandle(), packet.toNMSPacket());
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void sendPacket(Packet packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
+    public void sendPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
         invoke("sendPacket", packet.getHandle(), genericFutureListener);
     }
 
-    public void b(Packet packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
+    public void b(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
         invoke("b", packet.getHandle(), genericFutureListener);
     }
 
@@ -82,7 +89,14 @@ public class NetworkManager extends NMSAPI {
     }
 
     public void close(IChatBaseComponent iChatBaseComponent) {
-        invoke("close", iChatBaseComponent.getHandle());
+        try {
+            ReflectionUtil
+                    .getNMSClass("NetworkManager")
+                    .getMethod("a", ReflectionUtil.getNMSClass("IChatBaseComponent"))
+                    .invoke(this.getHandle(), iChatBaseComponent.getHandle());
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isLocal() {

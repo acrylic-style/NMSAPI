@@ -1,10 +1,11 @@
 package xyz.acrylicstyle.minecraft;
 
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import static xyz.acrylicstyle.shared.NMSAPI.getClassWithoutException;
 
-public class GameRules {
+public class GameRules extends NMSAPI {
     public static final Class<?> CLASS = getClassWithoutException("GameRules");
 
     public static final GameRules DO_FIRE_TICK = new GameRules("DO_FIRE_TICK");
@@ -41,18 +42,15 @@ public class GameRules {
 
     public static GameRules getCustomGameRule(String s) { return new GameRules(s); }
 
-    private String key;
-
     private GameRules(String s) {
-        this.key = s;
+        super("GameRules", s);
     }
 
-    public Object toNMSGameRule() {
-        try {
-            return ReflectionUtil.getNMSClass("GameRules").getField(key).get(null);
-        } catch (IllegalAccessException | ClassNotFoundException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public GameRules(Object o) {
+        super(o, "GameRules");
+    }
+
+    public String getKey() {
+        return field("key");
     }
 }

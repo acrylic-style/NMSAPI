@@ -9,7 +9,7 @@ import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-public class PacketPlayOutNamedEntitySpawn extends NMSAPI implements Packet {
+public class PacketPlayOutNamedEntitySpawn extends NMSAPI implements Packet<PacketListenerPlayOut> {
     public static final Class<?> CLASS = getClassWithoutException("PacketPlayOutNamedEntitySpawn");
 
     public PacketPlayOutNamedEntitySpawn(@NotNull EntityPlayer entityPlayer) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -31,8 +31,8 @@ public class PacketPlayOutNamedEntitySpawn extends NMSAPI implements Packet {
     }
 
     @Override
-    public void a(PacketListener packetListener) {
-        invoke("a", packetListener.getNMSPacketListener());
+    public void a(PacketListenerPlayOut packetListener) {
+        packetListener.a(this);
     }
 
     @Override

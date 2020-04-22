@@ -2,6 +2,7 @@ package xyz.acrylicstyle.shared;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
@@ -142,6 +143,51 @@ public class NMSAPI {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Object invoke1(String method, Class<?> clazz, Object o) {
+        return invoke10(method, o, clazz);
+    }
+
+    public Object invoke1(String method, String sClazz, Object o) {
+        Class<?> clazz = getClassWithoutException(sClazz);
+        return invoke10(method, o, clazz);
+    }
+
+    private Object invoke10(String method, Object o, Class<?> clazz) {
+        try {
+            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, clazz);
+            m.setAccessible(true);
+            return m.invoke(getNMSClass(), o);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            LOGGER.severe("An error occurred while invoking a method: " + method);
+            LOGGER.severe("With signature: " + clazz.getCanonicalName());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Object invoke1(String method, String sClazz1, String sClazz2, Object o1, Object o2) {
+        Class<?> clazz1 = getClassWithoutException(sClazz1);
+        Class<?> clazz2 = getClassWithoutException(sClazz2);
+        return invoke11(method, o1, o2, clazz1, clazz2);
+    }
+
+    private Object invoke11(String method, Object o1, Object o2, Class<?> clazz1, Class<?> clazz2) {
+        try {
+            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, clazz1, clazz2);
+            m.setAccessible(true);
+            return m.invoke(getNMSClass(), o1, o2);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            LOGGER.severe("An error occurred while invoking a method: " + method);
+            LOGGER.severe("With signature: " + clazz1.getCanonicalName() + ", " + clazz2.getCanonicalName());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Object invoke1(String method, Class<?> clazz1, Class<?> clazz2, Object o1, Object o2) {
+        return invoke11(method, o1, o2, clazz1, clazz2);
     }
 
     public static Class<?> getClassWithoutException(String clazz) {

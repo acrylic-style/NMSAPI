@@ -1,7 +1,10 @@
 package xyz.acrylicstyle.minecraft;
 
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
+
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class NBTTagList extends NBTBase {
@@ -36,7 +39,23 @@ public class NBTTagList extends NBTBase {
     }
 
     public void add(NBTBase nbtBase) {
-        invoke("add", nbtBase.getNMSClass());
+        try {
+            Method m = ReflectionUtil.getNMSClass("NBTTagList").getMethod("add", ReflectionUtil.getNMSClass("NBTBase"));
+            m.setAccessible(true);
+            m.invoke(getNMSClass(), nbtBase.getHandle());
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void a(int i, NBTBase nbtBase) {
+        try {
+            Method m = ReflectionUtil.getNMSClass("NBTTagList").getMethod("a", int.class, ReflectionUtil.getNMSClass("NBTBase"));
+            m.setAccessible(true);
+            m.invoke(getNMSClass(), i, nbtBase.getHandle());
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     public NBTTagList addAllString(List<String> list) {

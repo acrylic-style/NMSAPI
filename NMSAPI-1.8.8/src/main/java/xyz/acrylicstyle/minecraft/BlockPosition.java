@@ -86,11 +86,11 @@ public class BlockPosition extends BaseBlockPosition {
     }
 
     public BlockPosition shift(EnumDirection enumDirection) {
-        return new BlockPosition(invoke("shift", enumDirection.toNMSEnum()));
+        return new BlockPosition(invoke("shift", enumDirection.getHandle()));
     }
 
     public BlockPosition shift(EnumDirection enumDirection, int i1) {
-        return new BlockPosition(invoke("shift", enumDirection.toNMSEnum(), i1));
+        return new BlockPosition(invoke("shift", enumDirection.getHandle(), i1));
     }
 
     public BlockPosition c(BaseBlockPosition baseBlockPosition) {
