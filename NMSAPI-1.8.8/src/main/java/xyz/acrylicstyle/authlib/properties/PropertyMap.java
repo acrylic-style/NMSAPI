@@ -9,6 +9,7 @@ import util.ReflectionHelper;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -16,14 +17,22 @@ import java.util.function.Function;
 public class PropertyMap {
     @SuppressWarnings("rawtypes")
     public Multimap delegate() {
-        return (Multimap) invoke("delegate");
+        try {
+            Method m = ForwardingMultimap.class
+                    .getDeclaredMethod("delegate");
+            m.setAccessible(true);
+            return (Multimap) m.invoke(o);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean put(String key, Property value) {
         try {
-            return (boolean) ForwardingMultimap.class
-                    .getMethod("put", Object.class, Object.class)
-                    .invoke(o, key, value.getProperty());
+            Method m = ForwardingMultimap.class
+                    .getDeclaredMethod("put", Object.class, Object.class);
+            m.setAccessible(true);
+            return (boolean) m.invoke(o, key, value.getProperty());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
             return false;
