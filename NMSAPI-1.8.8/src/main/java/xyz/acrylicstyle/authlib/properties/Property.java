@@ -56,7 +56,7 @@ public class Property {
 
     public Object getField(String field) {
         try {
-            return ReflectionHelper.getField(Class.forName("org.mojang.authlib.properties.Property"), getProperty(), field);
+            return ReflectionHelper.getField(Class.forName("com.mojang.authlib.properties.Property"), getProperty(), field);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -65,7 +65,7 @@ public class Property {
 
     public Object invoke(String method) {
         try {
-            return Class.forName("org.mojang.authlib.properties.Property")
+            return Class.forName("com.mojang.authlib.properties.Property")
                     .getMethod(method)
                     .invoke(getProperty());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
@@ -78,7 +78,7 @@ public class Property {
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(o1.getClass());
-            return Class.forName("org.mojang.authlib.properties.Property")
+            return Class.forName("com.mojang.authlib.properties.Property")
                     .getMethod(method, classes.toArray(new Class[0]))
                     .invoke(getProperty(), o);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {

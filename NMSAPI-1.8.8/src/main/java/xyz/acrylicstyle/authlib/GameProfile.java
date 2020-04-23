@@ -57,7 +57,7 @@ public class GameProfile {
     }
 
     // NMSAPI start
-    private Object o;
+    private final Object o;
 
     public GameProfile(Object o) {
         this.o = o;
