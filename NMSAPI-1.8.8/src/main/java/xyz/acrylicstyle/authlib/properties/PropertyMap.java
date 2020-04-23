@@ -2,9 +2,9 @@ package xyz.acrylicstyle.authlib.properties;
 
 import com.google.common.collect.ForwardingMultimap;
 import com.google.common.collect.Multimap;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
-import util.ICollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 
@@ -41,9 +41,16 @@ public class PropertyMap {
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    public Collection<Property> get(@Nullable String key) {
-        return ICollectionList.asList(((Collection) invoke("get", key)).toArray()).map((Function<Object, Property>) Property::new);
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public @NotNull CollectionList<Property> get(@Nullable String key) {
+        try {
+            Collection collection = (Collection) ForwardingMultimap.class
+                    .getMethod("get", Object.class)
+                    .invoke(o, key);
+            return new CollectionList<>(collection).map((Function<Object, Property>) Property::new);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // NMSAPI start
