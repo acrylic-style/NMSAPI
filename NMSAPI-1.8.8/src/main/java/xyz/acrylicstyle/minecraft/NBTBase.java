@@ -69,6 +69,10 @@ public abstract class NBTBase extends NMSAPI {
 
     public abstract NBTBase clone();
 
+    public final NBTBase copy() {
+        return this.clone();
+    }
+
     public boolean isEmpty() {
         return false;
     }
@@ -116,7 +120,7 @@ public abstract class NBTBase extends NMSAPI {
 
     // NMSAPI start
     @Nullable
-    protected final NBTBase getInstance(@NotNull Object o) {
+    public static NBTBase getInstance(@NotNull Object o) {
         try {
             if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("NBTTagCompound"))) {
                 return new NBTTagCompound(o);

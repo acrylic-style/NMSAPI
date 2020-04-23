@@ -681,7 +681,7 @@ public class Entity extends NMSAPI {
     }
 
     public void sendMessage(IChatBaseComponent iChatBaseComponent) {
-        invoke("sendMessage", iChatBaseComponent.getIChatBaseComponent());
+        invoke("sendMessage", iChatBaseComponent.getHandle());
     }
 
     public boolean a(int i, String s) {

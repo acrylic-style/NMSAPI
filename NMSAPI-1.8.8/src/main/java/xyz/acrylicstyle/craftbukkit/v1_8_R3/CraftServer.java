@@ -54,19 +54,19 @@ public class CraftServer extends OBCAPI implements Server {
     public CraftServer() {
         super("CraftServer");
         this.serverVersion = (String) getField("serverVersion");
-        this.console = new MinecraftServer(getField("console"));
+        this.console = MinecraftServer.newInstance(getField("console"));
     }
 
     public CraftServer(Object o) {
         super(o, "CraftServer");
         this.serverVersion = (String) getField("serverVersion");
-        this.console = new MinecraftServer(getField("console"));
+        this.console = MinecraftServer.newInstance(getField("console"));
     }
 
     public CraftServer(MinecraftServer console, Object playerList) {
         super("CraftServer", console, playerList);
         this.serverVersion = (String) getField("serverVersion");
-        this.console = new MinecraftServer(getField("console"));
+        this.console = MinecraftServer.newInstance(getField("console"));
     }
 
     public File getConfigFile() {

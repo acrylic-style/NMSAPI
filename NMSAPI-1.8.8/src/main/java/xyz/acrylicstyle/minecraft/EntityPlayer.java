@@ -1,12 +1,9 @@
 package xyz.acrylicstyle.minecraft;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.Validate;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
@@ -21,29 +18,27 @@ import java.util.Objects;
 public class EntityPlayer extends Entity implements ICommandListener {
     public static final Class<?> CLASS = getClassWithoutException("EntityPlayer");
 
-    private boolean disposed = false;
-    private Plugin plugin = null;
     Object __playerConnection;
     public PlayerConnection playerConnection = null;
-    public int ping = -1;
+    public int ping = field("ping");
     public final MinecraftServer server;
     public List<Integer> removeQueue = Lists.newLinkedList();
-    public String locale = "en_us";
-    public int invulnerableTicks = 60;
-    public String displayName = "";
-    public long timeOffset;
-    public boolean relativeTime;
-    public float pluginRainPosition;
-    public float pluginRainPositionPrevious;
-    public Location compassTarget = null;
-    public boolean viewingCredits;
-    public boolean joining;
-    public double maxHealthCache;
-    public boolean keepLevel;
-    public int newExp = 0;
-    public int newLevel = 0;
-    public int newTotalExp = 0;
-    public int containerCounter;
+    public String locale = field("locale");
+    public int invulnerableTicks = field("invulnerableTicks");
+    public String displayName = field("displayName");
+    public Location compassTarget = field("compassTarget");
+
+    public void setCompassTarget(Location compassTarget) {
+        setField("compassTarget", compassTarget);
+    }
+
+    public void setDisplayName(String displayName) {
+        setField("displayName", displayName);
+    }
+
+    public void setInvulnerableTicks(int ticks) {
+        setField("invulnerableTicks", ticks);
+    }
 
     public EntityPlayer(Object o) {
         super(Objects.requireNonNull(o), "EntityPlayer");
@@ -128,109 +123,65 @@ public class EntityPlayer extends Entity implements ICommandListener {
         }
     }
 
-    public EntityPlayer setPlugin(Plugin plugin) {
-        this.plugin = plugin;
-        return this;
-    }
-
-    /**
-     * Cancel the polling.
-     */
-    public void cancelPolling() { disposed = true; }
-
-    public void poll() {
-        Validate.notNull(plugin, "Plugin cannot be null");
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    if (disposed) this.cancel();
-                    EntityPlayer.this.ping = getPing();
-                    EntityPlayer.this.removeQueue = getRemoveQueue();
-                    EntityPlayer.this.locale = getLocale();
-                    EntityPlayer.this.invulnerableTicks = getInvulnerableTicks();
-                    EntityPlayer.this.displayName = getDisplayName();
-                    EntityPlayer.this.timeOffset = (long) getField("timeOffset");
-                    EntityPlayer.this.relativeTime = getRelativeTime();
-                    EntityPlayer.this.pluginRainPosition = getPluginRainPosition();
-                    EntityPlayer.this.pluginRainPositionPrevious = getPluginRainPositionPrevious();
-                    EntityPlayer.this.compassTarget = getCompassTarget();
-                    EntityPlayer.this.viewingCredits = getViewingCredits();
-                    EntityPlayer.this.joining = getJoining();
-                    EntityPlayer.this.maxHealthCache = getMaxHealthCache();
-                    EntityPlayer.this.keepLevel = getKeepLevel();
-                    EntityPlayer.this.newExp = (int) getField("newExp");
-                    EntityPlayer.this.newLevel = (int) getField("newLevel");
-                    EntityPlayer.this.newTotalExp = (int) getField("newTotalExp");
-                    EntityPlayer.this.containerCounter = (int) getField("containerCounter");
-                } catch (Throwable throwable) {
-                    System.out.println("An error occurred while polling data! Cancelling the polling.");
-                    throwable.printStackTrace();
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(plugin, 0, 2);
-    }
-
     public Object getEntityHuman() {
         return getNMSClass().getClass().getSuperclass().cast(getNMSClass());
     }
+    // NMSAPI end
 
     public String getLocale() {
-        return (String) getField("locale");
+        return field("locale");
     }
 
     public int getPing() {
-        return (int) getField("ping");
+        return field("ping");
     }
 
-    @SuppressWarnings("unchecked")
     public List<Integer> getRemoveQueue() {
-        return (List<Integer>) getField("removeQueue");
+        return field("removeQueue");
     }
 
     public int getLastSentExp() {
-        return (int) getField("lastSentExp");
+        return field("lastSentExp");
     }
 
     public int getInvulnerableTicks() {
-        return (int) getField("invulnerableTicks");
+        return field("invulnerableTicks");
     }
 
     public boolean getViewingCredits() {
-        return (boolean) getField("viewingCredits");
+        return field("viewingCredits");
     }
 
     public String getDisplayName() {
-        return (String) getField("displayName");
+        return field("displayName");
     }
 
     public Location getCompassTarget() {
-        return (Location) getField("compassTarget");
+        return field("compassTarget");
     }
 
     public boolean getKeepLevel() {
-        return (boolean) getField("keepLevel");
+        return field("keepLevel");
     }
 
     public double getMaxHealthCache() {
-        return (double) getField("maxHealthCache");
+        return field("maxHealthCache");
     }
 
     public boolean getJoining() {
-        return (boolean) getField("joining");
+        return field("joining");
     }
 
     public boolean getRelativeTime() {
-        return (boolean) getField("relativeTime");
+        return field("relativeTime");
     }
 
     public float getPluginRainPosition() {
-        return (float) getField("pluginRainPosition");
+        return field("pluginRainPosition");
     }
 
     public float getPluginRainPositionPrevious() {
-        return (float) getField("pluginRainPositionPrevious");
+        return field("pluginRainPositionPrevious");
     }
 
     public CraftPlayer getBukkitEntity() {
@@ -245,11 +196,6 @@ public class EntityPlayer extends Entity implements ICommandListener {
     @Override
     public IChatBaseComponent getScoreboardDisplayName() {
         return new ChatComponentText(getDisplayName());
-    }
-
-    @Override
-    public void sendMessage(IChatBaseComponent paramIChatBaseComponent) {
-        invoke1("sendMessage", IChatBaseComponent.CLASS, paramIChatBaseComponent.getIChatBaseComponent());
     }
 
     @Override
@@ -342,5 +288,20 @@ public class EntityPlayer extends Entity implements ICommandListener {
 
     public WeatherType getPlayerWeather() {
         return (WeatherType) invoke("getPlayerWeather");
+    }
+
+    public void sendMessage(IChatBaseComponent iChatBaseComponent) {
+        this.playerConnection.sendPacket(new PacketPlayOutChat(iChatBaseComponent));
+    }
+
+    public void sendMessage(IChatBaseComponent[] iChatBaseComponents) {
+        IChatBaseComponent[] arrayOfIChatBaseComponent;
+        int i;
+        byte b;
+        for (i = (arrayOfIChatBaseComponent = iChatBaseComponents).length, b = 0; b < i; ) {
+            IChatBaseComponent component = arrayOfIChatBaseComponent[b];
+            sendMessage(component);
+            b++;
+        }
     }
 }

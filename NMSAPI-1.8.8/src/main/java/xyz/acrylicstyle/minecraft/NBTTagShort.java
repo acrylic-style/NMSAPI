@@ -40,7 +40,7 @@ public class NBTTagShort extends NBTBase.NBTNumber {
 
     @Override
     public NBTBase clone() {
-        return super.getInstance(invoke("clone"));
+        return getInstance(invoke("clone"));
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

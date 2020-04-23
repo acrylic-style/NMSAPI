@@ -1,5 +1,6 @@
 package xyz.acrylicstyle.minecraft;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.JsonElement;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldType;
@@ -23,10 +24,19 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
+import java.util.logging.Logger;
 
 @SuppressWarnings("unused")
-public class MinecraftServer extends NMSAPI {
+public abstract class MinecraftServer extends NMSAPI implements Runnable, ICommandListener, IAsyncTaskHandler {
+    public static final Logger LOGGER;
+
+    public final Thread primaryThread = field("primaryThread");
+
     public static final Class<?> CLASS = getClassWithoutException("MinecraftServer");
+
+    static {
+        LOGGER = (Logger) ReflectionHelper.getFieldWithoutException(CLASS, null, "LOGGER");
+    }
 
     public void convertWorld(String s) {
         invoke("convertWorld", s);
@@ -48,16 +58,15 @@ public class MinecraftServer extends NMSAPI {
         invoke("stop");
     }
 
-    /**
-     * @implNote Original Method name: MinecraftServer#b(String)
-     */
-    public void setServerIp(String s) {
+    public void b(String s) {
         try {
             ReflectionHelper.setField(ReflectionUtil.getNMSClass("MinecraftServer"), getMinecraftServer(), "serverIp", s);
         } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+
+    public void setServerIp(String s) { b(s); } // NMSAPI - OBFHelper
 
     public boolean isRunning() {
         return getIsRunning();
@@ -88,10 +97,11 @@ public class MinecraftServer extends NMSAPI {
     }
 
     /**
-     * @implNote Actual type is TickTask.
+     * todo: create TickTask?
      */
-    public Object postToMainThread(Runnable runnable) {
-        return invoke("postToMainThread", runnable);
+    @SuppressWarnings("unchecked")
+    public ListenableFuture<Object> postToMainThread(Runnable runnable) {
+        return (ListenableFuture<Object>) invoke("postToMainThread", runnable);
     }
 
     public boolean executeNext() {
@@ -245,8 +255,8 @@ public class MinecraftServer extends NMSAPI {
         return (getJ() != null);
     }
 
-    public String getWorld() {
-        return getK();
+    public World getWorld() {
+        return World.newInstance(invoke("getWorld"));
     }
 
     public void a(KeyPair keyPair) {
@@ -371,7 +381,7 @@ public class MinecraftServer extends NMSAPI {
     }
 
     /**
-     * @implNote Actual return type is PlayerList.
+     * todo: create PlayerList
      */
     public Object getPlayerList() {
         return invoke("getPlayerList");
@@ -482,15 +492,14 @@ public class MinecraftServer extends NMSAPI {
         return getField("dataConverterManager");
     }
 
-    /**
-     * @apiNote Original method name: MinecraftServer#a(WorldServer)
-     */
-    public int getSpawnRadius(@Nullable Object worldServer) {
+    public int getSpawnRadius(@Nullable WorldServer worldServer) { return a(worldServer); } // NMSAPI - OBFHelper
+
+    public int a(@Nullable WorldServer worldServer) {
         try {
             return (int) ReflectionUtil
                     .getNMSClass("MinecraftServer")
-                    .getMethod("a", ReflectionUtil.getNMSClass("WorldServer"))
-                    .invoke(o, worldServer);
+                    .getMethod("a", WorldServer.CLASS)
+                    .invoke(o, worldServer == null ? null : worldServer.getHandle());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return 0;
@@ -521,9 +530,9 @@ public class MinecraftServer extends NMSAPI {
     }
 
     /**
-     * @apiNote Original method name: MinecraftServer#a(CommandListenerWrapper)
+     * todo: original method signature: MinecraftServer#a(CommandListenerWrapper)
      */
-    public void checkWhitelist(Object commandListenerWrapper) {
+    public void a2(Object commandListenerWrapper) {
         try {
             ReflectionUtil
                     .getNMSClass("MinecraftServer")
@@ -533,6 +542,8 @@ public class MinecraftServer extends NMSAPI {
             e.printStackTrace();
         }
     }
+
+    public void checkWhitelist(Object commandListenerWrapper) { a2(commandListenerWrapper); } // NMSAPI - OBFHelper
 
     public Object getResourceManager() {
         return getField("ae");
@@ -545,7 +556,7 @@ public class MinecraftServer extends NMSAPI {
     }
 
     /**
-     * @implNote Actual return type is nms.CommandListenerWrapper
+     * todo: create CommandListenerWrapper
      */
     public Object getServerCommandListener() {
         return invoke("getServerCommandListener");
@@ -560,70 +571,61 @@ public class MinecraftServer extends NMSAPI {
     }
 
     /**
-     * @implNote Actual return type is nms.CraftingManager
+     * todo: create CraftingManager
      */
     public Object getCraftingManager() {
         return getField("getCraftingManager");
     }
 
     /**
-     * @implNote Actual return type is nms.TagRegistry
+     * todo: create TagRegistry
      */
     public Object getTagRegistry() {
         return getField("tagRegistry");
     }
 
     /**
-     * @implNote Actual return type is nms.ScoreboardServer
+     * todo: create ScoreboardServer
      */
     public Object getScoreboard() {
         return getField("scoreboardServer");
     }
 
     /**
-     * @implNote Actual return type is PersistentCommandStorage
+     * todo: create PersistentCommandStorage
      */
     public Object aO() {
         return invoke("aO");
     }
 
-    /**
-     * Alias for {@link MinecraftServer#aO()}.
-     */
     public Object getPersistentCommandStorage() {
         return aO();
-    }
+    } // NMSAPI - OBFHelper
 
     /**
-     * @implNote Actual return type is LootTableRegistry
+     * todo: create LootTableRegistry
      */
     public Object getLootTableRegistry() {
         return getField("lootTableRegistry");
     }
 
     /**
-     * @implNote Actual return type is LootPredicateManager
+     * todo: create LootPredicateManager
      */
     public Object aQ() {
         return getField("lootPredicateManager");
     }
 
-    /**
-     * Alias for {@link MinecraftServer#aQ()}.
-     */
     public Object getLootPredicateManager() {
         return aQ();
+    } // NMSAPI - OBFHelper
+
+    public GameRules getGameRules() {
+        return new GameRules(invoke("getGameRules"));
     }
 
     /**
-     * @implNote Actual return type is nms.GameRules (not x.a.m.GameRules)
-     */
-    public Object getGameRules() {
-        return invoke("getGameRules");
-    }
-
-    /**
-     * @implNote Actual return type is nms.BossBattleCustomData
+     * todo: create BossBattleCustomData
      */
     public Object getBossBattleCustomData() {
         return getField("bossBattleCustomData");
@@ -646,7 +648,7 @@ public class MinecraftServer extends NMSAPI {
     }
 
     /**
-     * @implNote Actual return type is nms.GameProfiler
+     * todo: create GameProfiler
      */
     public Object getMethodProfiler() {
         return getField("methodProfiler");
@@ -867,7 +869,7 @@ public class MinecraftServer extends NMSAPI {
     }
 
     /**
-     * @implNote Actual type is CommandDispatcher.
+     * todo: create CommandDispatcher
      */
     public Object getVanillaCommandDispatcher() {
         return getField("vanillaCommandDispatcher");
@@ -900,8 +902,12 @@ public class MinecraftServer extends NMSAPI {
         return getField("stopLock");
     }
 
+    public WorldServer getWorldServer(int i) {
+        return new WorldServer(invoke("getWorldServer", i));
+    }
+
     public static MinecraftServer getMinecraftServer(Object o) {
-        return new MinecraftServer(o);
+        return MinecraftServer.newInstance(o);
     }
 
     @Override
@@ -916,9 +922,63 @@ public class MinecraftServer extends NMSAPI {
     public static MinecraftServer getServer() {
         Object server = ReflectionHelper.invokeMethodWithoutException(MinecraftServer.CLASS, null, "getServer");
         if (server != null) {
-            return new MinecraftServer(server);
+            return MinecraftServer.newInstance(server);
         } else {
             return new CraftServer(Bukkit.getServer()).getServer();
         }
+    }
+
+    public static MinecraftServer newInstance(Object o) {
+        if (o == null) {
+            LOGGER.warning("Object is null @ MinecraftServer#newInstance");
+            Thread.dumpStack();
+            return null;
+        }
+        return new MinecraftServer(o) {
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
+            public IChatBaseComponent getScoreboardDisplayName() {
+                return null;
+            }
+
+            @Override
+            public void sendMessage(IChatBaseComponent paramIChatBaseComponent) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean a(int paramInt, String paramString) {
+                return false;
+            }
+
+            @Override
+            public BlockPosition getChunkCoordinates() {
+                return null;
+            }
+
+            @Override
+            public Vec3D d() {
+                return null;
+            }
+
+            @Override
+            public Entity f() {
+                return null;
+            }
+
+            @Override
+            public boolean getSendCommandFeedback() {
+                return false;
+            }
+
+            @Override
+            public void a(Object paramEnumCommandResult, int paramInt) {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 }

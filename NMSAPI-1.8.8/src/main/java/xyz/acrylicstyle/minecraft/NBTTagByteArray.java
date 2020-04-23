@@ -41,7 +41,7 @@ public class NBTTagByteArray extends NBTBase {
 
     @Override
     public NBTBase clone() {
-        return super.getInstance(invoke("clone"));
+        return getInstance(invoke("clone"));
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

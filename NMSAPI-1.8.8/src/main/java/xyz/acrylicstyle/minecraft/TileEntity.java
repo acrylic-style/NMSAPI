@@ -62,7 +62,7 @@ public class TileEntity extends NMSAPI {
 
     // public Block w() {}
 
-    public Object getUpdatePacket() {
-        return invoke("getUpdatePacket"); // TODO: wip
+    public Packet<?> getUpdatePacket() {
+        return Packet.getInstance(invoke("getUpdatePacket"));
     }
 }

@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.*;
 
-public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
+public class CraftPlayer extends CraftEntity implements Player {
     public static final Class<?> CLASS = getClassWithoutException("entity.CraftPlayer");
 
     private Player player;
@@ -44,13 +44,12 @@ public class CraftPlayer extends CraftEntity implements Player, LivingEntity {
                 this.craftPlayer = o;
                 return;
             }
-            if ((o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer"))
-                    || o.getClass().getCanonicalName().equals("org.bukkit.entity.Player")) {
+            if (o.getClass().isAssignableFrom(CraftPlayer.CLASS)) {
                 this.player = (Player) o;
                 this.craftPlayer = o;
                 return;
             }
-            if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) {
+            if (o.getClass().isAssignableFrom(EntityPlayer.CLASS)) {
                 this.player = (Player) o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
                 this.craftPlayer = o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
                 return;

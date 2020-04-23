@@ -160,7 +160,7 @@ public class CraftMetaItem extends OBCAPI implements ItemMeta, Repairable {
         super("CraftMetaItem");
     }
 
-    // todo: SerializableMeta implements ConfigurationSerializable
+    // todo: create SerializableMeta implements ConfigurationSerializable?
 
     @Override
     public boolean hasDisplayName() {

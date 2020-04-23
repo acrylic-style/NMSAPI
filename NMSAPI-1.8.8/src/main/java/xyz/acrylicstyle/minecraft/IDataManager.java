@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 public interface IDataManager {
-    WorldData getWorldData(); // todo: create WorldData
+    WorldData getWorldData();
 
     void checkSession();
 

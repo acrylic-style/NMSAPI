@@ -1,10 +1,12 @@
 package xyz.acrylicstyle.minecraft;
 
+import util.Collection;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,11 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     public static final Class<?> CLASS = getClassWithoutException("NBTTagCompound");
 
     public static final Pattern c = Pattern.compile("[A-Za-z0-9._+-]+");
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public Map<String, NBTBase> getMap() {
+        return new Collection<>((Map) getField("map")).map((k, v) -> k, (k, v) -> NBTBase.getInstance(v));
+    }
 
     public NBTTagCompound() {
         super("NBTTagCompound");
@@ -107,7 +114,7 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     }
 
     public NBTBase get(String key) {
-        return super.getInstance(invoke("get", key));
+        return getInstance(invoke("get", key));
     }
 
     public byte b(String paramString) {
@@ -191,5 +198,21 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
 
     public void a(NBTTagCompound nbtTagCompound) {
         invoke("a", nbtTagCompound.getNMSClass());
+    }
+
+    public void merge(NBTTagCompound other) {
+        for (String s : getMap().keySet()) {
+            NBTBase nbtBase = get(s);
+            if (nbtBase.getTypeId() == 10) {
+                if (this.hasKeyOfType(s, 10)) {
+                    NBTTagCompound tag = this.getCompound(s);
+                    tag.merge((NBTTagCompound) nbtBase);
+                } else {
+                    this.set(s, nbtBase.copy());
+                }
+            } else {
+                this.set(s, nbtBase.copy());
+            }
+        }
     }
 }

@@ -64,7 +64,7 @@ public class NBTTagList extends NBTBase {
     }
 
     public NBTBase a(int i) {
-        return super.getInstance(invoke("a", i));
+        return getInstance(invoke("a", i));
     }
 
     public boolean isEmpty() {
@@ -92,7 +92,7 @@ public class NBTTagList extends NBTBase {
     }
 
     public NBTBase g(int i) {
-        return super.getInstance(invoke("g", i));
+        return getInstance(invoke("g", i));
     }
 
     public int size() {
@@ -100,7 +100,7 @@ public class NBTTagList extends NBTBase {
     }
 
     public NBTBase clone() {
-        return super.getInstance(invoke("clone"));
+        return getInstance(invoke("clone"));
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

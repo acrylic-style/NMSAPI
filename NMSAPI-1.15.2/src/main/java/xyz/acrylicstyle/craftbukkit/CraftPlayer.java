@@ -1766,6 +1766,11 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     }
 
     @Override
+    public float getAttackCooldown() {
+        return player.getAttackCooldown();
+    }
+
+    @Override
     public <T extends Projectile> @NotNull T launchProjectile(@NotNull Class<? extends T> aClass) {
         return player.launchProjectile(aClass);
     }

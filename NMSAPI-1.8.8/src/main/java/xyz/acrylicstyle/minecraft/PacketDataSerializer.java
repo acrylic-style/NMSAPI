@@ -57,7 +57,7 @@ public class PacketDataSerializer extends NMSAPI {
     }
 
     public void a(IChatBaseComponent iChatBaseComponent) {
-        invoke("a", iChatBaseComponent.getIChatBaseComponent());
+        invoke("a", iChatBaseComponent.getHandle());
     }
 
     public Enum<?> a(Class<?> oClass) {

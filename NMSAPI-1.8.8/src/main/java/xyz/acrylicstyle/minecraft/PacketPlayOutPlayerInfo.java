@@ -12,6 +12,10 @@ public class PacketPlayOutPlayerInfo extends NMSAPI implements Packet<PacketList
 
     public EnumPlayerInfoAction a;
 
+    public PacketPlayOutPlayerInfo(Object o) {
+        super(o, "PacketPlayOutPlayerInfo");
+    }
+
     public PacketPlayOutPlayerInfo(EnumPlayerInfoAction paramEnumPlayerInfoAction, EntityPlayer... paramVarArgs) {
         super(callCtor(paramEnumPlayerInfoAction, paramVarArgs), "PacketPlayOutPlayerInfo");
         this.a = paramEnumPlayerInfoAction;

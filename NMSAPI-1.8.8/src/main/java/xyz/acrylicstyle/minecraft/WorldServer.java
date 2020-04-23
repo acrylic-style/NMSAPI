@@ -14,7 +14,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
 
     public WorldServer(Object o) {
         super(o, "WorldServer");
-        this.server = new MinecraftServer(getField("server"));
+        this.server = MinecraftServer.newInstance(getField("server"));
     }
 
     public final MinecraftServer server;
@@ -181,7 +181,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
     }
 
     public Object createExplosion(Entity entity, double d0, double d1, double d2, float f, boolean flag, boolean flag1) {
-        throw new NotImplementedException(); // todo
+        throw new NotImplementedException(); // todo: create Explosion class
     }
 
     public void playBlockAction(BlockPosition blockPosition, Object block, int i, int j) {
@@ -205,7 +205,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
     }
 
     public MinecraftServer getMinecraftServer() {
-        return new MinecraftServer(getField("server"));
+        return MinecraftServer.newInstance(getField("server"));
     }
 
     // todo: create EntityTracker

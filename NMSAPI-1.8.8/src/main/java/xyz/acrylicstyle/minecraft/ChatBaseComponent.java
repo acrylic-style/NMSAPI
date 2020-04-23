@@ -1,13 +1,14 @@
 package xyz.acrylicstyle.minecraft;
 
-import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class ChatBaseComponent extends NMSAPI implements IChatBaseComponent {
+public abstract class ChatBaseComponent extends IChatBaseComponent {
+    public static final Class<?> CLASS = getClassWithoutException("ChatBaseComponent");
+
     protected ChatBaseComponent(Object o, String clazz) {
         super(o, clazz);
     }
@@ -16,8 +17,12 @@ public abstract class ChatBaseComponent extends NMSAPI implements IChatBaseCompo
         super(clazz, args);
     }
 
+    public ChatBaseComponent(Object o) {
+        super(o, "ChatBaseComponent");
+    }
+
     public IChatBaseComponent addSibling(IChatBaseComponent iChatBaseComponent) {
-        invoke("addSibling", iChatBaseComponent.getIChatBaseComponent());
+        invoke("addSibling", iChatBaseComponent.getHandle());
         return this;
     }
 
@@ -58,9 +63,5 @@ public abstract class ChatBaseComponent extends NMSAPI implements IChatBaseCompo
 
     public String toString() {
         return (String) invoke("toString");
-    }
-
-    public ChatBaseComponent(Object o) {
-        super(o, "ChatBaseComponent");
     }
 }

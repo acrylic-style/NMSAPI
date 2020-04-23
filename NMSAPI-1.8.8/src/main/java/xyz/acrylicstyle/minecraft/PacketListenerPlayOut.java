@@ -10,4 +10,6 @@ public interface PacketListenerPlayOut extends PacketListener {
     void a(PacketPlayOutNamedEntitySpawn paramPacketPlayOutNamedEntitySpawn);
 
     void a(PacketPlayOutPlayerInfo paramPacketPlayOutPlayerInfo);
+
+    void a(PacketPlayOutChat paramPacketPlayOutChat);
 }

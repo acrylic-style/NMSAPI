@@ -36,6 +36,6 @@ public class NBTTagEnd extends NBTBase {
 
     @Override
     public NBTBase clone() {
-        return super.getInstance(invoke("clone"));
+        return getInstance(invoke("clone"));
     }
 }
