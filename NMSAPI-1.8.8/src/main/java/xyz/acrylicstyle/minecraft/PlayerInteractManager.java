@@ -12,6 +12,13 @@ public class PlayerInteractManager extends NMSAPI {
     public boolean interactResult;
     public boolean firedResult;
 
+    public PlayerInteractManager(Object o) {
+        super(o, "PlayerInteractManager");
+        this.world = World.newInstance(getField("world"));
+        this.firedResult = false;
+        this.interactResult = false;
+    }
+
     public PlayerInteractManager(World world) {
         super("PlayerInteractManager", world.getHandle());
         this.interactResult = false;

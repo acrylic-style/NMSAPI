@@ -22,6 +22,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
     public PlayerConnection playerConnection = null;
     public int ping = field("ping");
     public final MinecraftServer server;
+    public final PlayerInteractManager playerInteractManager;
     public List<Integer> removeQueue = Lists.newLinkedList();
     public String locale = field("locale");
     public int invulnerableTicks = field("invulnerableTicks");
@@ -46,6 +47,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
         if (__playerConnection != null) {
             this.playerConnection = new PlayerConnection(this);
         } else System.err.println("playerConnection field is null.");
+        this.playerInteractManager = new PlayerInteractManager(getField("playerInteractManager"));
         this.server = MinecraftServer.getMinecraftServer(getField("server"));
     }
 
@@ -62,6 +64,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
         if (checkState()) throw new RuntimeException();
         this.__playerConnection = getField("playerConnection");
         if (__playerConnection != null) this.playerConnection = new PlayerConnection(this);
+        this.playerInteractManager = new PlayerInteractManager(getField("playerInteractManager"));
         this.server = minecraftServer;
     }
 
