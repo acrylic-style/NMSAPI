@@ -63,15 +63,8 @@ public class PlayerConnection extends NMSAPI {
         return (boolean) invoke("isExemptPlayer");
     }
 
-    public void disconnect(Object iChatBaseComponent) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("disconnect", ReflectionUtil.getNMSClass("IChatBaseComponent"))
-                    .invoke(getHandle(), iChatBaseComponent);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void disconnect(IChatBaseComponent iChatBaseComponent) {
+        invoke1("disconnect", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
     }
 
     public void sendPacket(@NotNull Packet<?> packet) { invoke1("sendPacket", Packet.CLASS, packet.getHandle()); }

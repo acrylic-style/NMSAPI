@@ -13,6 +13,7 @@ import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
 import xyz.acrylicstyle.shared.NMSAPI;
+import xyz.acrylicstyle.tomeito_api.utils.Log;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.io.File;
@@ -24,19 +25,12 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
-import java.util.logging.Logger;
 
 @SuppressWarnings("unused")
 public abstract class MinecraftServer extends NMSAPI implements Runnable, ICommandListener, IAsyncTaskHandler {
-    public static final Logger LOGGER;
-
     public final Thread primaryThread = field("primaryThread");
 
     public static final Class<?> CLASS = getClassWithoutException("MinecraftServer");
-
-    static {
-        LOGGER = (Logger) ReflectionHelper.getFieldWithoutException(CLASS, null, "LOGGER");
-    }
 
     public void convertWorld(String s) {
         invoke("convertWorld", s);
@@ -930,7 +924,7 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
 
     public static MinecraftServer newInstance(Object o) {
         if (o == null) {
-            LOGGER.warning("Object is null @ MinecraftServer#newInstance");
+            Log.warn("Object is null @ MinecraftServer#newInstance");
             Thread.dumpStack();
             return null;
         }

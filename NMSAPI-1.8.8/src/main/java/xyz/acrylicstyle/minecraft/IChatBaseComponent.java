@@ -1,5 +1,6 @@
 package xyz.acrylicstyle.minecraft;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import util.ICollectionList;
 import xyz.acrylicstyle.shared.NMSAPI;
@@ -64,7 +65,9 @@ public abstract class IChatBaseComponent extends NMSAPI implements Cloneable { /
 
     abstract IChatBaseComponent g();
 
+    @Contract(value = "null -> null; !null -> new", pure = true)
     public static IChatBaseComponent getInstance(Object o) {
+        if (o == null) return null;
         try {
             if (o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass("ChatMessage"))) {
                 return new ChatMessage(o);

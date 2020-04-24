@@ -58,22 +58,15 @@ public class NetworkManager extends NMSAPI {
     }
 
     public void sendPacket(Packet<?> packet) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("NetworkManager")
-                    .getMethod("sendPacket", ReflectionUtil.getNMSClass("Packet"))
-                    .invoke(this.getHandle(), packet.toNMSPacket());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        invoke1("sendPacket", Packet.CLASS, packet.getHandle());
     }
 
     public void sendPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
-        invoke("sendPacket", packet.getHandle(), genericFutureListener);
+        invoke1("sendPacket", Packet.CLASS, GenericFutureListener.class, packet.getHandle(), genericFutureListener);
     }
 
     public void b(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
-        invoke("b", packet.getHandle(), genericFutureListener);
+        invoke1("b", Packet.CLASS, GenericFutureListener.class, packet.getHandle(), genericFutureListener);
     }
 
     public void o() {
@@ -89,14 +82,7 @@ public class NetworkManager extends NMSAPI {
     }
 
     public void close(IChatBaseComponent iChatBaseComponent) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("NetworkManager")
-                    .getMethod("a", ReflectionUtil.getNMSClass("IChatBaseComponent"))
-                    .invoke(this.getHandle(), iChatBaseComponent.getHandle());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        invoke1("close", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
     }
 
     public boolean isLocal() {
@@ -132,7 +118,7 @@ public class NetworkManager extends NMSAPI {
     }
 
     public IChatBaseComponent getIChatBaseComponent() {
-        return new ChatComponentText(j());
+        return IChatBaseComponent.getInstance(j());
     }
 
     public void stopReading() {
