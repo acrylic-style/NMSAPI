@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -93,9 +93,29 @@ public class NMSAPI {
         try {
             return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName), getNMSClass(), field);
         } catch (Exception e) {
-            LOGGER.severe("An error occurred while getting a field: " + field);
-            e.printStackTrace();
-            return null;
+            try {
+                return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName).getSuperclass(), getNMSClass(), field);
+            } catch (Exception e1) {
+                try {
+                    return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName).getSuperclass().getSuperclass(), getNMSClass(), field);
+                } catch (Exception e2) {
+                    try {
+                        return ReflectionHelper.getField(ReflectionUtil.getNMSClass(nmsClassName).getSuperclass().getSuperclass().getSuperclass(), getNMSClass(), field);
+                    } catch (Exception e3) {
+                        LOGGER.severe("An error occurred while getting a field: " + field);
+                        LOGGER.severe("Stacktrace #1");
+                        e.printStackTrace();
+                        LOGGER.severe("Stacktrace #2");
+                        e1.printStackTrace();
+                        LOGGER.severe("Stacktrace #3");
+                        e2.printStackTrace();
+                        LOGGER.severe("Stacktrace #4");
+                        e3.printStackTrace();
+                        LOGGER.severe("------------------------------");
+                        return null;
+                    }
+                }
+            }
         }
     }
 
