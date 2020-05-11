@@ -7,9 +7,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.acrylicstyle.shared.NMSAPI;
+import xyz.acrylicstyle.shared.OBCAPI;
 
-public class CraftItemFactory extends NMSAPI implements ItemFactory {
+public class CraftItemFactory extends OBCAPI implements ItemFactory {
     public static final Class<?> CLASS = getClassWithoutException("inventory.CraftItemFactory");
 
     public static final Color DEFAULT_LEATHER_COLOR = Color.fromRGB(10511680);

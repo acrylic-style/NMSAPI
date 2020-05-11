@@ -7,10 +7,11 @@ import org.jetbrains.annotations.Nullable;
 import util.Serializer;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Set;
 
-public class CraftScoreboard implements Handler<xyz.acrylicstyle.minecraft.Scoreboard>, Scoreboard {
-    private Scoreboard scoreboard;
+public class CraftScoreboard implements Handler<xyz.acrylicstyle.minecraft.Scoreboard>, Scoreboard, Serializable {
+    private final Scoreboard scoreboard;
 
     public CraftScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;

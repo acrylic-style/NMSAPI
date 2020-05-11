@@ -7,7 +7,7 @@
     <groupId>xyz.acrylicstyle</groupId>
     <artifactId>NMSAPI</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.22</version>
+    <version>0.1.23</version>
     <build>
         <plugins>
             <plugin>
@@ -54,12 +54,12 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>api</artifactId>
-            <version>0.3.9</version>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>Util</artifactId>
-            <version>0.10.2</version>
+            <version>0.11.1</version>
         </dependency>
     </dependencies>
 </project>
