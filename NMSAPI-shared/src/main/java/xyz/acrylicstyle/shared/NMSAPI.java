@@ -86,7 +86,7 @@ public class NMSAPI {
         return null;
     }
 
-    public final Object getHandle() { return getNMSClass(); }
+    public Object getHandle() { return getNMSClass(); }
 
     public Object getField(String field) {
         if (checkState()) return null;
@@ -175,20 +175,47 @@ public class NMSAPI {
         }
     }
 
+    public static Object invokeStatic(String clazz, Object object, String method) {
+        try {
+            Method m = ReflectionUtil.getNMSClass(clazz).getMethod(method);
+            m.setAccessible(true);
+            return m.invoke(object);
+        } catch (Exception e) {
+            LOGGER.severe("An error occurred while invoking a method: " + method);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public Object invoke(String method, Object... o) {
         if (checkState()) return null;
         try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
-            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, classes.toArray(new Class[0]));
-            m.setAccessible(true);
-            return m.invoke(getNMSClass(), o);
+            return invoke0(nmsClassName, method, o).invoke(getNMSClass(), o);
         } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
             LOGGER.severe("With signature: " + ICollectionList.asList(o).map(Object::getClass).map(Class::getCanonicalName).join(", "));
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Object invokeStatic(String clazz, Object object, String method, Object... o) {
+        try {
+            return invoke0(clazz, method, o).invoke(object, o);
+        } catch (Exception e) {
+            LOGGER.severe("An error occurred while invoking a method: " + method);
+            LOGGER.severe("With signature: " + ICollectionList.asList(o).map(Object::getClass).map(Class::getCanonicalName).join(", "));
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Method invoke0(String clazz, String method, Object[] o) throws NoSuchMethodException, ClassNotFoundException {
+        CollectionList<Class<?>> classes = new CollectionList<>();
+        for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
+        Method m = ReflectionUtil.getNMSClass(clazz).getMethod(method, classes.toArray(new Class[0]));
+        m.setAccessible(true);
+        return m;
     }
 
     public Object invoke1(String method, Class<?> clazz, Object o) {

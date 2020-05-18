@@ -4,13 +4,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufProcessor;
 import org.apache.commons.lang.Validate;
-import util.CollectionList;
-import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.shared.NMSAPI;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.GatheringByteChannel;
@@ -19,17 +16,15 @@ import java.nio.charset.Charset;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class PacketDataSerializer {
-    private Object o = null;
+public class PacketDataSerializer extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("PacketDataSerializer");
 
-    private PacketDataSerializer() {}
+    public PacketDataSerializer() {
+        super("PacketDataSerializer");
+    }
 
     public PacketDataSerializer(ByteBuf byteBuf) {
-        try {
-            o = ReflectionUtil.getNMSClass("PacketDataSerializer").getConstructor(ByteBuf.class).newInstance(byteBuf);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        super("PacketDataSerializer", byteBuf);
     }
 
     public static int a(int i) {
@@ -49,33 +44,27 @@ public class PacketDataSerializer {
         return (byte[]) invoke("a");
     }
 
-    /**
-     * @implNote Return value is nms.BlockPosition.
-     */
-    public Object c() {
-        return invoke("c");
+    public BlockPosition c() {
+        return new BlockPosition(invoke("c"));
     }
 
-    // public void a(BlockPosition blockPosition) {}
+    public void a(BlockPosition blockPosition) {
+        invoke("a", blockPosition.getHandle());
+    }
 
-    /**
-     * @implNote return value is nms.IChatBaseComponent.
-     */
-    public Object d() {
-        return invoke("d");
+    public IChatBaseComponent d() {
+        return new ChatComponentText(invoke("d"));
     }
 
     public void a(IChatBaseComponent iChatBaseComponent) {
-        invoke("a", iChatBaseComponent.getIChatBaseComponent());
+        invoke("a", iChatBaseComponent.getHandle());
     }
 
-    @SuppressWarnings("rawtypes")
-    public Enum a(Class oClass) {
-        return ((Enum[]) oClass.getEnumConstants())[e()];
+    public Enum<?> a(Class<?> oClass) {
+        return ((Enum<?>[]) oClass.getEnumConstants())[e()];
     }
 
-    @SuppressWarnings("rawtypes")
-    public void a(Enum oEnum) {
+    public void a(Enum<?> oEnum) {
         b(oEnum.ordinal());
     }
 
@@ -104,16 +93,16 @@ public class PacketDataSerializer {
     }
 
     public void a(NBTTagCompound nbtTagCompound) {
-        invoke("a", nbtTagCompound.getNBTTagCompound());
+        invoke("a", nbtTagCompound.getNMSClass());
     }
 
     public NBTTagCompound h() {
         return new NBTTagCompound(invoke("h"));
     }
 
-    // public void a(ItemStack itemStack) { invoke("a", itemStack); }
+    public void a(ItemStack itemStack) { invoke("a", itemStack.getHandle()); }
 
-    // public ItemStack i() { return (ItemStack) invoke("i"); }
+    public ItemStack i() { return new ItemStack(invoke("i")); }
 
     public String c(int i) {
         return (String) invoke("c", i);
@@ -702,63 +691,10 @@ public class PacketDataSerializer {
         return (boolean) invoke("release", i);
     }
 
-    // NMSAPI start
     public static PacketDataSerializer fromPacketDataSerializer(Object o) {
         Validate.notNull(o, "Object cannot be null");
         PacketDataSerializer packetDataSerializer = new PacketDataSerializer();
         packetDataSerializer.o = o;
         return packetDataSerializer;
     }
-
-    public Object getPacketDataSerializer() {
-        try {
-            if (o.getClass().getCanonicalName().equals(ReflectionUtil.getNMSClass("PacketDataSerializer").getCanonicalName())) return o;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("PacketDataSerializer"), getPacketDataSerializer(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("PacketDataSerializer")
-                    .getMethod(method)
-                    .invoke(getPacketDataSerializer());
-        } catch (NoSuchMethodException e) {
-            try {
-                return ReflectionUtil.getNMSClass("PacketDataSerializer")
-                        .getSuperclass()
-                        .getMethod(method)
-                        .invoke(getPacketDataSerializer());
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("PacketDataSerializer")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getPacketDataSerializer(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 }

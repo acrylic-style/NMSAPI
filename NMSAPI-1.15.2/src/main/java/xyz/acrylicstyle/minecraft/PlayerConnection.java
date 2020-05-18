@@ -4,29 +4,35 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import util.CollectionList;
-import util.ReflectionHelper;
-import xyz.acrylicstyle.craftbukkit.CraftPlayer;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public class PlayerConnection {
+public class PlayerConnection extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("PlayerConnection");
+
     public EntityPlayer player;
     private final MinecraftServer minecraftServer;
-    public NetworkManager networkManager = null;
+    public NetworkManager networkManager;
 
-    public PlayerConnection(EntityPlayer player) {
+    public PlayerConnection(@NotNull EntityPlayer player) {
+        super(player.__playerConnection, "PlayerConnection");
         this.player = player;
-        minecraftServer = player.server;
-        try {
-            networkManager = new NetworkManager(this.getPlayerConnection().getClass().getField("networkManager").get(this.getPlayerConnection()));
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+        this.minecraftServer = player.server;
+        this.networkManager = new NetworkManager(getField("networkManager"));
+    }
+
+    public PlayerConnection(MinecraftServer minecraftServer, NetworkManager networkManager, EntityPlayer entityPlayer) {
+        super("PlayerConnection", minecraftServer.getHandle(), networkManager.getHandle(), entityPlayer.getHandle());
+        this.player = entityPlayer;
+        this.minecraftServer = minecraftServer;
+        this.networkManager = networkManager;
     }
 
     public CraftPlayer getPlayer() {
@@ -58,37 +64,19 @@ public class PlayerConnection {
     }
 
     public void disconnect(IChatBaseComponent iChatBaseComponent) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("disconnect", ReflectionUtil.getNMSClass("IChatBaseComponent"))
-                    .invoke(getPlayerConnection(), iChatBaseComponent.getIChatBaseComponent());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        invoke1("disconnect", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
     }
 
-    public void sendPacket(Packet packet) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("sendPacket", ReflectionUtil.getNMSClass("Packet"))
-                    .invoke(getPlayerConnection(), packet.toNMSPacket());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+    public void sendPacket(@NotNull Packet<?> packet) { invoke1("sendPacket", Packet.CLASS, packet.getHandle()); }
 
-    public void disconnect(String s) {
-        invoke("disconnect", s);
-    }
+    public void disconnect(String s) { invoke("disconnect", s); }
 
     public void a(Object packetPlayInSteerVehicle) {
         try {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInSteerVehicle"))
-                    .invoke(getPlayerConnection(), packetPlayInSteerVehicle);
+                    .invoke(getHandle(), packetPlayInSteerVehicle);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -129,7 +117,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInVehicleMove"))
-                    .invoke(getPlayerConnection(), packetPlayInVehicleMove);
+                    .invoke(getHandle(), packetPlayInVehicleMove);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -140,7 +128,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInTeleportAccept"))
-                    .invoke(getPlayerConnection(), packetPlayInTeleportAccept);
+                    .invoke(getHandle(), packetPlayInTeleportAccept);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -151,7 +139,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInRecipeDisplayed"))
-                    .invoke(getPlayerConnection(), packetPlayInRecipeDisplayed);
+                    .invoke(getHandle(), packetPlayInRecipeDisplayed);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -162,7 +150,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInAdvancements"))
-                    .invoke(getPlayerConnection(), packetPlayInAdvancements);
+                    .invoke(getHandle(), packetPlayInAdvancements);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -173,7 +161,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInTabComplete"))
-                    .invoke(getPlayerConnection(), packetPlayInTabComplete);
+                    .invoke(getHandle(), packetPlayInTabComplete);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -184,7 +172,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInSetCommandBlock"))
-                    .invoke(getPlayerConnection(), packetPlayInSetCommandBlock);
+                    .invoke(getHandle(), packetPlayInSetCommandBlock);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -195,7 +183,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInSetCommandMinecart"))
-                    .invoke(getPlayerConnection(), packetPlayInSetCommandMinecart);
+                    .invoke(getHandle(), packetPlayInSetCommandMinecart);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -206,7 +194,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInPickItem"))
-                    .invoke(getPlayerConnection(), packetPlayInPickItem);
+                    .invoke(getHandle(), packetPlayInPickItem);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -217,7 +205,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInItemName"))
-                    .invoke(getPlayerConnection(), packetPlayInItemName);
+                    .invoke(getHandle(), packetPlayInItemName);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -228,7 +216,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInBeacon"))
-                    .invoke(getPlayerConnection(), packetPlayInBeacon);
+                    .invoke(getHandle(), packetPlayInBeacon);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -239,7 +227,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInStruct"))
-                    .invoke(getPlayerConnection(), packetPlayInStruct);
+                    .invoke(getHandle(), packetPlayInStruct);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -250,7 +238,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInSetJigsaw"))
-                    .invoke(getPlayerConnection(), packetPlayInSetJigsaw);
+                    .invoke(getHandle(), packetPlayInSetJigsaw);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -261,7 +249,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInTrSel"))
-                    .invoke(getPlayerConnection(), packetPlayInTrSel);
+                    .invoke(getHandle(), packetPlayInTrSel);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -272,7 +260,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInBEdit"))
-                    .invoke(getPlayerConnection(), packetPlayInBEdit);
+                    .invoke(getHandle(), packetPlayInBEdit);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -283,7 +271,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInEntityNBTQuery"))
-                    .invoke(getPlayerConnection(), packetPlayInEntityNBTQuery);
+                    .invoke(getHandle(), packetPlayInEntityNBTQuery);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -294,7 +282,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInTileNBTQuery"))
-                    .invoke(getPlayerConnection(), packetPlayInTileNBTQuery);
+                    .invoke(getHandle(), packetPlayInTileNBTQuery);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -305,7 +293,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInFlying"))
-                    .invoke(getPlayerConnection(), packetPlayInFlying);
+                    .invoke(getHandle(), packetPlayInFlying);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -316,7 +304,7 @@ public class PlayerConnection {
             return (boolean) ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("IWorldReader"))
-                    .invoke(getPlayerConnection(), iWorldReader);
+                    .invoke(getHandle(), iWorldReader);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
@@ -332,11 +320,11 @@ public class PlayerConnection {
     }
 
     public void a(double d0, double d1, double d2, float f, float f1, Set<Object> packetPlayOutPositionEnumPlayerTeleportFlagsSet) {
-        throw new UnsupportedOperationException(); // todo: Not implemented
+        throw new UnsupportedOperationException(); // TODO: Not implemented
     }
 
     public void a(double d0, double d1, double d2, float f, float f1, Set<Object> packetPlayOutPositionEnumPlayerTeleportFlagsSet, PlayerTeleportEvent.TeleportCause cause) {
-        throw new UnsupportedOperationException(); // todo: not implemented
+        throw new UnsupportedOperationException();
     }
 
     public void teleport(Location dest) {
@@ -352,7 +340,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInBlockDig"))
-                    .invoke(getPlayerConnection(), packetPlayInBlockDig);
+                    .invoke(getHandle(), packetPlayInBlockDig);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -367,7 +355,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInUseItem"))
-                    .invoke(getPlayerConnection(), packetPlayInUseItem);
+                    .invoke(getHandle(), packetPlayInUseItem);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -378,7 +366,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInBlockPlace"))
-                    .invoke(getPlayerConnection(), packetPlayInBlockPlace);
+                    .invoke(getHandle(), packetPlayInBlockPlace);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -389,7 +377,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInSpectate"))
-                    .invoke(getPlayerConnection(), packetPlayInSpectate);
+                    .invoke(getHandle(), packetPlayInSpectate);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -400,7 +388,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInResourcePackStatus"))
-                    .invoke(getPlayerConnection(), packetPlayInResourcePackStatus);
+                    .invoke(getHandle(), packetPlayInResourcePackStatus);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -411,43 +399,18 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInBoatMove"))
-                    .invoke(getPlayerConnection(), packetPlayInBoatMove);
+                    .invoke(getHandle(), packetPlayInBoatMove);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void a26(Object iChatBaseComponent) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("a", ReflectionUtil.getNMSClass("IChatBaseComponent"))
-                    .invoke(getPlayerConnection(), iChatBaseComponent);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void a(IChatBaseComponent iChatBaseComponent) {
+        invoke1("a", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
     }
 
-    public void sendPacket(Object packet) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("a", ReflectionUtil.getNMSClass("Packet"))
-                    .invoke(getPlayerConnection(), packet);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void a(Object packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
-        try {
-            ReflectionUtil
-                    .getNMSClass("PlayerConnection")
-                    .getMethod("a", ReflectionUtil.getNMSClass("Packet"), genericFutureListener == null ? null : genericFutureListener.getClass())
-                    .invoke(getPlayerConnection(), packet, genericFutureListener);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void a(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
+        invoke1("a", Packet.CLASS, GenericFutureListener.class, packet.getHandle(), genericFutureListener);
     }
 
     public void a27(Object packetPlayInHeldItemSlot) {
@@ -455,7 +418,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInHeldItemSlot"))
-                    .invoke(getPlayerConnection(), packetPlayInHeldItemSlot);
+                    .invoke(getHandle(), packetPlayInHeldItemSlot);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -466,7 +429,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInChat"))
-                    .invoke(getPlayerConnection(), packetPlayInChat);
+                    .invoke(getHandle(), packetPlayInChat);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -485,7 +448,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInArmAnimation"))
-                    .invoke(getPlayerConnection(), packetPlayInArmAnimation);
+                    .invoke(getHandle(), packetPlayInArmAnimation);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -496,7 +459,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInEntityAction"))
-                    .invoke(getPlayerConnection(), packetPlayInEntityAction);
+                    .invoke(getHandle(), packetPlayInEntityAction);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -507,7 +470,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInUseEntity"))
-                    .invoke(getPlayerConnection(), packetPlayInUseEntity);
+                    .invoke(getHandle(), packetPlayInUseEntity);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -518,7 +481,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInClientCommand"))
-                    .invoke(getPlayerConnection(), packetPlayInClientCommand);
+                    .invoke(getHandle(), packetPlayInClientCommand);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -529,7 +492,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInCloseWindow"))
-                    .invoke(getPlayerConnection(), packetPlayInCloseWindow);
+                    .invoke(getHandle(), packetPlayInCloseWindow);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -540,7 +503,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInWindowClick"))
-                    .invoke(getPlayerConnection(), packetPlayInWindowClick);
+                    .invoke(getHandle(), packetPlayInWindowClick);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -551,7 +514,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInAutoRecipe"))
-                    .invoke(getPlayerConnection(), packetPlayInAutoRecipe);
+                    .invoke(getHandle(), packetPlayInAutoRecipe);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -562,7 +525,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInEnchantItem"))
-                    .invoke(getPlayerConnection(), packetPlayInEnchantItem);
+                    .invoke(getHandle(), packetPlayInEnchantItem);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -573,7 +536,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInSetCreativeSlot"))
-                    .invoke(getPlayerConnection(), packetPlayInSetCreativeSlot);
+                    .invoke(getHandle(), packetPlayInSetCreativeSlot);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -584,7 +547,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInTransaction"))
-                    .invoke(getPlayerConnection(), packetPlayInTransaction);
+                    .invoke(getHandle(), packetPlayInTransaction);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -595,7 +558,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInUpdateSign"))
-                    .invoke(getPlayerConnection(), packetPlayInUpdateSign);
+                    .invoke(getHandle(), packetPlayInUpdateSign);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -606,7 +569,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInKeepAlive"))
-                    .invoke(getPlayerConnection(), packetPlayInKeepAlive);
+                    .invoke(getHandle(), packetPlayInKeepAlive);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -617,7 +580,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInAbilities"))
-                    .invoke(getPlayerConnection(), packetPlayInAbilities);
+                    .invoke(getHandle(), packetPlayInAbilities);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -628,7 +591,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInSettings"))
-                    .invoke(getPlayerConnection(), packetPlayInSettings);
+                    .invoke(getHandle(), packetPlayInSettings);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -639,7 +602,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInCustomPayload"))
-                    .invoke(getPlayerConnection(), packetPlayInCustomPayload);
+                    .invoke(getHandle(), packetPlayInCustomPayload);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -650,7 +613,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInDifficultyChange"))
-                    .invoke(getPlayerConnection(), packetPlayInDifficultyChange);
+                    .invoke(getHandle(), packetPlayInDifficultyChange);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -661,7 +624,7 @@ public class PlayerConnection {
             ReflectionUtil
                     .getNMSClass("PlayerConnection")
                     .getMethod("a", ReflectionUtil.getNMSClass("PacketPlayInDifficultyLock"))
-                    .invoke(getPlayerConnection(), packetPlayInDifficultyLock);
+                    .invoke(getHandle(), packetPlayInDifficultyLock);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -670,48 +633,4 @@ public class PlayerConnection {
     public boolean isDisconnected() {
         return (boolean) invoke("isDisconnected");
     }
-
-    // NMSAPI start
-    public Object getPlayerConnection() {
-        try {
-            return player.getEntityPlayer().getClass().getField("playerConnection").get(player.getEntityPlayer());
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("PlayerConnection"), getPlayerConnection(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("PlayerConnection")
-                    .getMethod(method)
-                    .invoke(getPlayerConnection());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("PlayerConnection")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getPlayerConnection(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 }

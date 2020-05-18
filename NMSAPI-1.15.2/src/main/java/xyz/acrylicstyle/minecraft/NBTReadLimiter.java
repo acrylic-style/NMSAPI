@@ -1,36 +1,28 @@
 package xyz.acrylicstyle.minecraft;
 
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class NBTReadLimiter {
+public class NBTReadLimiter extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("NBTReadLimiter");
+
     public static final NBTReadLimiter a = new NBTReadLimiter(0L) {
         public void a(long b) {}
     };
 
-    private Object o;
-
     public NBTReadLimiter(Object o) {
-        if (o.getClass().isAssignableFrom(Long.class)) {
-            try {
-                this.o = ReflectionUtil.getNMSClass("NBTReadLimiter").getConstructor(Long.class).newInstance((long) o);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-        this.o = o;
+        super(o, "NBTReadLimiter");
     }
 
-    public Object getNMSNBTReadLimiter() {
-        if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getSimpleName().equals("NBTReadLimiter")) return o;
-        return null;
+    public NBTReadLimiter(long l) {
+        super("NBTReadLimiter", l);
     }
 
     public void a(long l) {
         try {
-            ReflectionUtil.getNMSClass("NBTReadLimiter").getMethod("a", Long.class).invoke(getNMSNBTReadLimiter(), l);
+            ReflectionUtil.getNMSClass("NBTReadLimiter").getMethod("a", Long.class).invoke(getHandle(), l);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }

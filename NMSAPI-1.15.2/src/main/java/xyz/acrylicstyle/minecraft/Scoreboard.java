@@ -3,8 +3,7 @@ package xyz.acrylicstyle.minecraft;
 import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
-import util.ReflectionHelper;
-import xyz.acrylicstyle.craftbukkit.CraftUtils;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,9 +13,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class Scoreboard {
+public class Scoreboard extends NMSAPI {
+    public static final Class<?> CLASS = getClassWithoutException("Scoreboard");
+
     public void resetPlayerScores(String s, ScoreboardObjective objective) {
-        invoke("resetPlayerScores", s, objective.getNMSScoreboard());
+        invoke("resetPlayerScores", s, objective.getHandle());
     }
 
     public ScoreboardObjective getObjective(@Nullable String s) {
@@ -39,16 +40,16 @@ public class Scoreboard {
     }
 
     public boolean b(String s, ScoreboardObjective scoreboardObjective) {
-        return (boolean) invoke("b", s, scoreboardObjective.getNMSScoreboard());
+        return (boolean) invoke("b", s, scoreboardObjective.getHandle());
     }
 
     public Object getPlayerScoreForObjective(String s, ScoreboardObjective scoreboardObjective) {
-        return invoke("getPlayerScoreForObjective", s, scoreboardObjective.getNMSScoreboard());
+        return invoke("getPlayerScoreForObjective", s, scoreboardObjective.getHandle());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Collection<Object> getScoresForObjective(ScoreboardObjective scoreboardObjective) {
-        return (Collection) invoke("getScoresForObjective", scoreboardObjective.getNMSScoreboard());
+        return (Collection) invoke("getScoresForObjective", scoreboardObjective.getHandle());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -75,11 +76,11 @@ public class Scoreboard {
     }
 
     public void unregisterObjective(ScoreboardObjective scoreboardObjective) {
-        invoke("unregisterObjective", scoreboardObjective.getNMSScoreboard());
+        invoke("unregisterObjective", scoreboardObjective.getHandle());
     }
 
     public void setDisplaySlot(int i, ScoreboardObjective scoreboardObjective) {
-        invoke("setDisplaySlot", i, scoreboardObjective.getNMSScoreboard());
+        invoke("setDisplaySlot", i, scoreboardObjective.getHandle());
     }
 
     public ScoreboardObjective getObjectiveForSlot(int i) {
@@ -123,65 +124,7 @@ public class Scoreboard {
         return invoke("getPlayerTeam", s);
     }
 
-    // NMSAPI start
-    private Object o;
-
     public Scoreboard(Object o) {
-        this.o = o;
+        super(o, "Scoreboard");
     }
-
-    public Object getNMSScoreboard() {
-        if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("Scoreboard")) return o;
-        try {
-            return CraftUtils.getHandle(o);
-        } catch (NoSuchMethodException e1) {
-            try {
-                return o.getClass().getDeclaredField("scoreboard").get(o);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                try {
-                    return o.getClass().getDeclaredField("getScoreboard").get(o);
-                } catch (IllegalAccessException | NoSuchFieldException ex) {
-                    ex.printStackTrace();
-                    return null;
-                }
-            }
-        } catch (InvocationTargetException | IllegalAccessException e2) {
-            e2.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("Scoreboard"), getNMSScoreboard(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("Scoreboard")
-                    .getMethod(method)
-                    .invoke(getNMSScoreboard());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("Scoreboard")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getNMSScoreboard(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    // NMSAPI end
 }

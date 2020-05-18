@@ -7,6 +7,9 @@ import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftEntity;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import xyz.acrylicstyle.minecraft.NBTTagCompound;
 
+/**
+ * Be aware, this may not work on newer versions.
+ */
 public class NBTUtils extends NBTTagCompound {
     @NotNull
     public static NBTUtils load(@NotNull Entity entity) {

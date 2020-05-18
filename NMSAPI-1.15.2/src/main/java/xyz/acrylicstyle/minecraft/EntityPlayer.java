@@ -1,53 +1,71 @@
 package xyz.acrylicstyle.minecraft;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.Validate;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import util.CollectionList;
-import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.GameProfile;
-import xyz.acrylicstyle.craftbukkit.CraftPlayer;
-import xyz.acrylicstyle.craftbukkit.CraftUtils;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class EntityPlayer {
-    private static boolean doPolling = false;
-    private boolean disposed = false;
-    private Plugin plugin = null;
-    private Object o;
-    public PlayerConnection playerConnection;
-    public int ping = -1;
+public class EntityPlayer extends Entity implements ICommandListener {
+    public static final Class<?> CLASS = getClassWithoutException("EntityPlayer");
+
+    Object __playerConnection;
+    public PlayerConnection playerConnection = null;
+    public int ping = field("ping");
     public final MinecraftServer server;
+    public final PlayerInteractManager playerInteractManager;
     public List<Integer> removeQueue = Lists.newLinkedList();
-    public String locale = "en_us";
-    public int invulnerableTicks = 60;
-    public String displayName = "";
-    public long timeOffset;
-    public boolean relativeTime;
-    public float pluginRainPosition;
-    public float pluginRainPositionPrevious;
-    public Location compassTarget = null;
-    public boolean viewingCredits;
-    public boolean joining;
-    public double maxHealthCache;
-    public boolean keepLevel;
-    public int newExp = 0;
-    public int newLevel = 0;
-    public int newTotalExp = 0;
-    public int containerCounter;
+    public String locale = field("locale");
+    public int invulnerableTicks = field("invulnerableTicks");
+    public String displayName = field("displayName");
+    public Location compassTarget = field("compassTarget");
+
+    public void setCompassTarget(Location compassTarget) {
+        setField("compassTarget", compassTarget);
+    }
+
+    public void setDisplayName(String displayName) {
+        setField("displayName", displayName);
+    }
+
+    public void setInvulnerableTicks(int ticks) {
+        setField("invulnerableTicks", ticks);
+    }
 
     public EntityPlayer(Object o) {
-        this.o = o;
-        this.playerConnection = new PlayerConnection(this);
+        super(Objects.requireNonNull(o), "EntityPlayer");
+        this.__playerConnection = getField("playerConnection");
+        if (__playerConnection != null) {
+            this.playerConnection = new PlayerConnection(this);
+        } else System.err.println("playerConnection field is null.");
+        this.playerInteractManager = new PlayerInteractManager(getField("playerInteractManager"));
         this.server = MinecraftServer.getMinecraftServer(getField("server"));
+    }
+
+    private static Object call(MinecraftServer minecraftServer, WorldServer worldServer, GameProfile gameProfile, PlayerInteractManager playerInteractManager) {
+        try {
+            return EntityPlayer.CLASS
+                    .getConstructor(MinecraftServer.CLASS, WorldServer.CLASS, Class.forName("com.mojang.authlib.GameProfile"), PlayerInteractManager.CLASS)
+                    .newInstance(minecraftServer.getHandle(), worldServer.getHandle(), gameProfile.getHandle(), playerInteractManager.getHandle());
+        } catch (ReflectiveOperationException e) { throw new RuntimeException(e); }
+    }
+
+    public EntityPlayer(MinecraftServer minecraftServer, WorldServer worldServer, GameProfile gameProfile, PlayerInteractManager playerInteractManager) {
+        super(call(minecraftServer, worldServer, gameProfile, playerInteractManager), "EntityPlayer");
+        if (checkState()) throw new RuntimeException();
+        this.__playerConnection = getField("playerConnection");
+        if (__playerConnection != null) this.playerConnection = new PlayerConnection(this);
+        this.playerInteractManager = new PlayerInteractManager(getField("playerInteractManager"));
+        this.server = minecraftServer;
     }
 
     public void reset() {
@@ -102,191 +120,191 @@ public class EntityPlayer {
         }
         f.setAccessible(true);
         try {
-            f.set(getEntityPlayer(), profile.getGameProfile());
+            f.set(getNMSClass(), profile.getGameProfile());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
-    public EntityPlayer setPlugin(Plugin plugin) {
-        this.plugin = plugin;
-        return this;
-    }
-
-    /**
-     * Cancel the polling.
-     */
-    public void cancelPolling() { disposed = true; }
-
-    public void poll() {
-        Validate.notNull(plugin, "Plugin cannot be null");
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    if (disposed) this.cancel();
-                    EntityPlayer.this.ping = getPing();
-                    EntityPlayer.this.removeQueue = getRemoveQueue();
-                    EntityPlayer.this.locale = getLocale();
-                    EntityPlayer.this.invulnerableTicks = getInvulnerableTicks();
-                    EntityPlayer.this.displayName = getDisplayName();
-                    EntityPlayer.this.timeOffset = (long) getField("timeOffset");
-                    EntityPlayer.this.relativeTime = getRelativeTime();
-                    EntityPlayer.this.pluginRainPosition = getPluginRainPosition();
-                    EntityPlayer.this.pluginRainPositionPrevious = getPluginRainPositionPrevious();
-                    EntityPlayer.this.compassTarget = getCompassTarget();
-                    EntityPlayer.this.viewingCredits = getViewingCredits();
-                    EntityPlayer.this.joining = getJoining();
-                    EntityPlayer.this.maxHealthCache = getMaxHealthCache();
-                    EntityPlayer.this.keepLevel = getKeepLevel();
-                    EntityPlayer.this.newExp = (int) getField("newExp");
-                    EntityPlayer.this.newLevel = (int) getField("newLevel");
-                    EntityPlayer.this.newTotalExp = (int) getField("newTotalExp");
-                    EntityPlayer.this.containerCounter = (int) getField("containerCounter");
-                } catch (Throwable throwable) {
-                    System.out.println("An error occurred while polling data! Cancelling the polling.");
-                    throwable.printStackTrace();
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(plugin, 0, 2);
-    }
-
-    public Object getEntityPlayer() {
-        try {
-            if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) return o;
-            if (o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer")) return CraftUtils.getHandle(o);
-            if (o.getClass().getCanonicalName().equals(CraftPlayer.class.getCanonicalName())) return CraftUtils.getHandle(((CraftPlayer) o).getOBCCraftPlayer());
-            return CraftUtils.getHandle(o).getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") ? CraftUtils.getHandle(o) : null;
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public Object getEntityHuman() {
-        return getEntityPlayer().getClass().getSuperclass().cast(getEntityPlayer());
-    }
-
-    public String getLocale() {
-        return (String) getField("locale");
-    }
-
-    public int getPing() {
-        return (int) getField("ping");
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Integer> getRemoveQueue() {
-        return (List<Integer>) getField("removeQueue");
-    }
-
-    public int getLastSentExp() {
-        return (int) getField("lastSentExp");
-    }
-
-    public int getInvulnerableTicks() {
-        return (int) getField("invulnerableTicks");
-    }
-
-    public boolean getViewingCredits() {
-        return (boolean) getField("viewingCredits");
-    }
-
-    public String getDisplayName() {
-        return (String) getField("displayName");
-    }
-
-    public Location getCompassTarget() {
-        return (Location) getField("compassTarget");
-    }
-
-    public boolean getKeepLevel() {
-        return (boolean) getField("keepLevel");
-    }
-
-    public double getMaxHealthCache() {
-        return (double) getField("maxHealthCache");
-    }
-
-    public boolean getJoining() {
-        return (boolean) getField("joining");
-    }
-
-    public boolean getRelativeTime() {
-        return (boolean) getField("relativeTime");
-    }
-
-    public float getPluginRainPosition() {
-        return (float) getField("pluginRainPosition");
-    }
-
-    public float getPluginRainPositionPrevious() {
-        return (float) getField("pluginRainPositionPrevious");
-    }
-
-    public Object getField(String field) {
-        try {
-            return ReflectionHelper.getField(ReflectionUtil.getNMSClass("EntityPlayer"), getEntityPlayer(), field);
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void setField(String field, Object value) {
-        try {
-            Field f = ReflectionUtil.getNMSClass("EntityPlayer").getDeclaredField(field);
-            f.setAccessible(true);
-            f.set(getEntityPlayer(), value);
-        } catch (NoSuchFieldException e) {
-            try {
-                Field f = ReflectionUtil.getNMSClass("EntityPlayer").getSuperclass().getDeclaredField(field);
-                f.setAccessible(true);
-                f.set(getEntityPlayer(), value);
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (ClassNotFoundException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Object invoke(String method) {
-        try {
-            return ReflectionUtil.getNMSClass("EntityPlayer")
-                    .getMethod(method)
-                    .invoke(getEntityPlayer());
-        } catch (NoSuchMethodException e) {
-            try {
-                return ReflectionUtil.getNMSClass("EntityPlayer")
-                        .getSuperclass()
-                        .getMethod(method)
-                        .invoke(getEntityPlayer());
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Object invoke(String method, Object... o) {
-        try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            return ReflectionUtil.getNMSClass("EntityPlayer")
-                    .getMethod(method, classes.toArray(new Class[0]))
-                    .invoke(getEntityPlayer(), o);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return getNMSClass().getClass().getSuperclass().cast(getNMSClass());
     }
     // NMSAPI end
 
+    public String getLocale() {
+        return field("locale");
+    }
+
+    public int getPing() {
+        return field("ping");
+    }
+
+    public List<Integer> getRemoveQueue() {
+        return field("removeQueue");
+    }
+
+    public int getLastSentExp() {
+        return field("lastSentExp");
+    }
+
+    public int getInvulnerableTicks() {
+        return field("invulnerableTicks");
+    }
+
+    public boolean getViewingCredits() {
+        return field("viewingCredits");
+    }
+
+    public String getDisplayName() {
+        return field("displayName");
+    }
+
+    public Location getCompassTarget() {
+        return field("compassTarget");
+    }
+
+    public boolean getKeepLevel() {
+        return field("keepLevel");
+    }
+
+    public double getMaxHealthCache() {
+        return field("maxHealthCache");
+    }
+
+    public boolean getJoining() {
+        return field("joining");
+    }
+
+    public boolean getRelativeTime() {
+        return field("relativeTime");
+    }
+
+    public float getPluginRainPosition() {
+        return field("pluginRainPosition");
+    }
+
+    public float getPluginRainPositionPrevious() {
+        return field("pluginRainPositionPrevious");
+    }
+
     public CraftPlayer getBukkitEntity() {
-        return new CraftPlayer(invoke("getBukkitEntity", getEntityPlayer()));
+        return new CraftPlayer(invoke("getBukkitEntity", getNMSClass()));
+    }
+
+    @Override
+    public String getName() {
+        return getDisplayName();
+    }
+
+    @Override
+    public IChatBaseComponent getScoreboardDisplayName() {
+        return new ChatComponentText(getDisplayName());
+    }
+
+    @Override
+    public boolean a(int paramInt, String paramString) {
+        return (boolean) invoke("a", paramInt, paramString);
+    }
+
+    @Override
+    public BlockPosition getChunkCoordinates() {
+        return new BlockPosition(invoke("getChunkCoordinates"));
+    }
+
+    @Override
+    public Vec3D d() {
+        return new Vec3D(invoke("d"));
+    }
+
+    @Override
+    public World getWorld() {
+        return World.newInstance(invoke("getWorld"));
+    }
+
+    @Override
+    public Entity f() {
+        return new Entity(invoke("f"));
+    }
+
+    @Override
+    public boolean getSendCommandFeedback() {
+        return (boolean) invoke("getSendCommandFeedback");
+    }
+
+    @Override
+    public void a(Object paramEnumCommandResult, int paramInt) {
+        invoke("a", paramEnumCommandResult, paramInt);
+    }
+
+    public void updateAbilities() {
+        invoke("updateAbilities");
+    }
+
+    public WorldServer u() {
+        return new WorldServer(invoke("u"));
+    }
+
+    @SuppressWarnings("deprecation")
+    public void a(WorldSettings.EnumGamemode enumGameMode) {
+        getBukkitEntity().setGameMode(GameMode.getByValue(enumGameMode.getId()));
+    }
+
+    public boolean isSpectator() {
+        return (boolean) invoke("isSpectator");
+    }
+
+    public void resetIdleTimer() {
+        invoke("resetIdleTimer");
+    }
+
+    public void d(Entity entity) {
+        invoke1("d", Entity.CLASS, entity);
+    }
+
+    protected void B() {
+        invoke("B");
+    }
+
+    public Entity C() {
+        return new Entity(invoke("C"));
+    }
+
+    public void setSpectatorTarget(Entity entity) {
+        invoke1("setSpectatorTarget", Entity.CLASS, entity);
+    }
+
+    public void attack(Entity entity) {
+        invoke1("attack", Entity.CLASS, entity);
+    }
+
+    public long D() {
+        return (long) invoke("D");
+    }
+
+    public IChatBaseComponent getPlayerListName() {
+        return new ChatComponentText(invoke("getPlayerListName"));
+    }
+
+    public long getPlayerTime() {
+        return (long) invoke("getPlayerTime");
+    }
+
+    public WeatherType getPlayerWeather() {
+        return (WeatherType) invoke("getPlayerWeather");
+    }
+
+    public void sendMessage(IChatBaseComponent iChatBaseComponent) {
+        this.playerConnection.sendPacket(new PacketPlayOutChat(iChatBaseComponent));
+    }
+
+    public void sendMessage(IChatBaseComponent[] iChatBaseComponents) {
+        IChatBaseComponent[] arrayOfIChatBaseComponent;
+        int i;
+        byte b;
+        for (i = (arrayOfIChatBaseComponent = iChatBaseComponents).length, b = 0; b < i; ) {
+            IChatBaseComponent component = arrayOfIChatBaseComponent[b];
+            sendMessage(component);
+            b++;
+        }
     }
 }

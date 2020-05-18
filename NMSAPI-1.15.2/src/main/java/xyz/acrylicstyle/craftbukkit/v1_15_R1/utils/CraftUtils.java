@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.craftbukkit;
+package xyz.acrylicstyle.craftbukkit.v1_15_R1.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

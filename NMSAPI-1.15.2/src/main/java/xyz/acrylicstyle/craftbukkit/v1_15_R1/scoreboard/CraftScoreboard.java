@@ -1,25 +1,29 @@
-package xyz.acrylicstyle.craftbukkit;
+package xyz.acrylicstyle.craftbukkit.v1_15_R1.scoreboard;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.Serializer;
+import xyz.acrylicstyle.shared.NMSAPI;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
 
-public class CraftScoreboard implements Handler<xyz.acrylicstyle.minecraft.Scoreboard>, Scoreboard, Serializable {
+public class CraftScoreboard extends NMSAPI implements Scoreboard, Serializable {
+    public static final Class<?> CLASS = getClassWithoutException("scoreboard.CraftScoreboard");
+
     private final Scoreboard scoreboard;
 
     public CraftScoreboard(Scoreboard scoreboard) {
+        super(scoreboard, "CraftScoreboard");
         this.scoreboard = scoreboard;
     }
 
     @Override
     public xyz.acrylicstyle.minecraft.Scoreboard getHandle() {
-        return new xyz.acrylicstyle.minecraft.Scoreboard(scoreboard);
+        return new xyz.acrylicstyle.minecraft.Scoreboard(super.getNMSClass());
     }
 
     @Override

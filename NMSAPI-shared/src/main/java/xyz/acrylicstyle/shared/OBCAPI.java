@@ -90,17 +90,41 @@ public class OBCAPI implements Handler<Object> {
         }
     }
 
-    public Object invoke(String method, Object... o) {
+    public static Object invokeStatic(String clazz, Object object, String method) {
         try {
-            CollectionList<Class<?>> classes = new CollectionList<>();
-            for (Object o1 : o) classes.add(o1.getClass());
-            Method m = ReflectionUtil.getOBCClass(obcClassName).getMethod(method, classes.toArray(new Class[0]));
+            Method m = ReflectionUtil.getOBCClass(clazz).getDeclaredMethod(method);
             m.setAccessible(true);
-            return m.invoke(getOBCClass(), o);
+            return m.invoke(object);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Object invoke(String method, Object... o) {
+        try {
+            return invoke0(obcClassName, method, o).invoke(getOBCClass(), o);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Object invokeStatic(String clazz, Object object, String method, Object... o) {
+        try {
+            return invoke0(clazz, method, o).invoke(object, o);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Method invoke0(String clazz, String method, Object[] o) throws NoSuchMethodException, ClassNotFoundException {
+        CollectionList<Class<?>> classes = new CollectionList<>();
+        for (Object o1 : o) classes.add(o1.getClass());
+        Method m = ReflectionUtil.getOBCClass(clazz).getMethod(method, classes.toArray(new Class[0]));
+        m.setAccessible(true);
+        return m;
     }
 
     public static Class<?> getClassWithoutException(String clazz) {

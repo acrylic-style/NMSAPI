@@ -3,7 +3,7 @@ package xyz.acrylicstyle.authlib;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
-import xyz.acrylicstyle.craftbukkit.CraftUtils;
+import xyz.acrylicstyle.craftbukkit.v1_15_R1.utils.CraftUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -55,11 +55,13 @@ public class GameProfile {
     }
 
     // NMSAPI start
-    private Object o;
+    private final Object o;
 
     public GameProfile(Object o) {
         this.o = o;
     }
+
+    public Object getHandle() { return getGameProfile(); }
 
     public Object getGameProfile() {
         if (o.getClass().getCanonicalName().equals("com.mojang.authlib.GameProfile")) return o;

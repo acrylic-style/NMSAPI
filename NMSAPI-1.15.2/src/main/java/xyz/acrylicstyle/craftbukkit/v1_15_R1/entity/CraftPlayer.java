@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.craftbukkit;
+package xyz.acrylicstyle.craftbukkit.v1_15_R1.entity;
 
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
@@ -17,7 +17,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.map.MapView;
-import org.bukkit.util.Vector;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -29,43 +28,28 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.minecraft.EntityPlayer;
+import xyz.acrylicstyle.shared.OBCAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.*;
 
-public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity {
-    private Player player;
+public class CraftPlayer extends OBCAPI implements Player, LivingEntity {
+    public static final Class<?> CLASS = getClassWithoutException("entity.CraftPlayer");
+
+    private final Player player;
     public Object craftPlayer;
 
     public CraftPlayer(Object o) {
-        try {
-            if (o.getClass().isAssignableFrom(Player.class)) {
-                this.player = (Player) o;
-                this.craftPlayer = o;
-                return;
-            }
-            if ((o.getClass().getCanonicalName().startsWith("org.bukkit.craftbukkit") && o.getClass().getCanonicalName().endsWith("CraftPlayer"))
-                    || o.getClass().getCanonicalName().equals("org.bukkit.entity.Player")) {
-                this.player = (Player) o;
-                this.craftPlayer = o;
-                return;
-            }
-            if (o.getClass().getCanonicalName().startsWith("net.minecraft.server") && o.getClass().getCanonicalName().endsWith("EntityPlayer")) {
-                this.player = (Player) o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
-                this.craftPlayer = o.getClass().getDeclaredMethod("getBukkitEntity").invoke(o);
-                return;
-            }
-            throw new IllegalArgumentException("Illegal object: " + o);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        super(o, "CraftPlayer");
+        this.player = (Player) o;
     }
 
     public static CraftPlayer getInstance(Object o) {
@@ -80,6 +64,8 @@ public class CraftPlayer implements Handler<EntityPlayer>, Player, LivingEntity 
     public GameProfile getProfile() {
         return getHandle().getProfile();
     }
+
+    public void setHandle(EntityPlayer ep) { invoke("setHandle", ep.getHandle()); }
 
     public EntityPlayer getHandle() {
         return new EntityPlayer(this);

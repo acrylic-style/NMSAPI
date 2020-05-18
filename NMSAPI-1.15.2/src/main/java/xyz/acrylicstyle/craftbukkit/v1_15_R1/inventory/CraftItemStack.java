@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.craftbukkit;
+package xyz.acrylicstyle.craftbukkit.v1_15_R1.inventory;
 
 import org.bukkit.inventory.ItemStack;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;

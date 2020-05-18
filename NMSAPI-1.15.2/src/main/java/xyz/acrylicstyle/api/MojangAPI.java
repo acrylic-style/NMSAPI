@@ -10,7 +10,7 @@ import util.JSONAPI;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.authlib.properties.Property;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
-import xyz.acrylicstyle.craftbukkit.CraftPlayer;
+import xyz.acrylicstyle.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import xyz.acrylicstyle.shared.BaseMojangAPI;
 
 import java.util.UUID;
