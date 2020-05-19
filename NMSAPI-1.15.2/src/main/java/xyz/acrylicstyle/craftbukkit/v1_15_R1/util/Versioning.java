@@ -1,0 +1,28 @@
+package xyz.acrylicstyle.craftbukkit.v1_15_R1.util;
+
+import org.bukkit.Bukkit;
+import xyz.acrylicstyle.shared.OBCAPI;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public final class Versioning {
+    public static final Class<?> CLASS = OBCAPI.getClassWithoutException("util.Versioning");
+
+    public static String getBukkitVersion() {
+        String result = "Unknown-Version";
+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.spigotmc/spigot-api/pom.properties");
+        Properties properties = new Properties();
+        if (stream != null)
+            try {
+                properties.load(stream);
+                result = properties.getProperty("version");
+            } catch (IOException ex) {
+                Logger.getLogger(Versioning.class.getName()).log(Level.SEVERE, "Could not get Bukkit version!", ex);
+            }
+        return result;
+    }
+}

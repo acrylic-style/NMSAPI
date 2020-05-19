@@ -3,7 +3,7 @@ package xyz.acrylicstyle.authlib;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
-import xyz.acrylicstyle.craftbukkit.v1_15_R1.utils.CraftUtils;
+import xyz.acrylicstyle.craftbukkit.v1_15_R1.util.CraftUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

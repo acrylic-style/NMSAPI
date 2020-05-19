@@ -1,18 +1,19 @@
 package xyz.acrylicstyle.craftbukkit.v1_15_R1.inventory;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
+import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("unused")
 public final class CraftItemStack extends ItemStack {
-    public static Object asNMSCopy(ItemStack original) {
+    public static xyz.acrylicstyle.minecraft.v1_15_R1.ItemStack asNMSCopy(ItemStack original) {
         try {
-            return ReflectionUtil.getOBCClass("inventory.CraftItemStack").getMethod("asNMSCopy", ItemStack.class).invoke(null, original);
+            return new xyz.acrylicstyle.minecraft.v1_15_R1.ItemStack(ReflectionUtil.getOBCClass("inventory.CraftItemStack").getMethod("asNMSCopy", ItemStack.class).invoke(null, original));
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -23,5 +24,9 @@ public final class CraftItemStack extends ItemStack {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void makeTag(xyz.acrylicstyle.minecraft.v1_15_R1.ItemStack stack) {
+        NMSAPI.invokeStatic("inventory.CraftItemStack", null, "makeTag", stack == null ? null : stack.getHandle());
     }
 }

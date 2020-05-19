@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import xyz.acrylicstyle.authlib.GameProfile;
-import xyz.acrylicstyle.minecraft.EntityPlayer;
+import xyz.acrylicstyle.minecraft.v1_15_R1.EntityPlayer;
 import xyz.acrylicstyle.shared.OBCAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 

@@ -22,8 +22,8 @@ public class CraftScoreboard extends NMSAPI implements Scoreboard, Serializable 
     }
 
     @Override
-    public xyz.acrylicstyle.minecraft.Scoreboard getHandle() {
-        return new xyz.acrylicstyle.minecraft.Scoreboard(super.getNMSClass());
+    public xyz.acrylicstyle.minecraft.v1_15_R1.Scoreboard getHandle() {
+        return new xyz.acrylicstyle.minecraft.v1_15_R1.Scoreboard(super.getNMSClass());
     }
 
     @Override

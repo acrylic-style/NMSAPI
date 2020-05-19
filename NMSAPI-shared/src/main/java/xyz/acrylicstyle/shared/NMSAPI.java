@@ -43,6 +43,10 @@ public class NMSAPI {
         this.nmsClassName = nmsClassName;
     }
 
+    public static NMSAPI getEmptyNMSAPI(Object o, String nmsClassName) {
+        return new NMSAPI(o, nmsClassName);
+    }
+
     /**
      * Constructs NMSAPI and calls NMS class's constructor.
      * @param nmsClassName NMS class name (target)

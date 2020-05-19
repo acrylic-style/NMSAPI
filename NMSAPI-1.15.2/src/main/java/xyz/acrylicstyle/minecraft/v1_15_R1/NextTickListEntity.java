@@ -1,0 +1,61 @@
+package xyz.acrylicstyle.minecraft.v1_15_R1;
+
+import org.jetbrains.annotations.NotNull;
+import xyz.acrylicstyle.shared.NMSAPI;
+
+public class NextTickListEntity extends NMSAPI implements Comparable<NextTickListEntity> {
+    public final xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition a;
+    public long b;
+    public int c;
+
+    public NextTickListEntity(Object o) {
+        super(o, "NextTickListEntity");
+        this.a = new xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition(getField("a"));
+    }
+
+    public NextTickListEntity(BlockPosition blockPosition, Object block) {
+        super("NextTickListEntity", blockPosition.getHandle(), block);
+        this.a = blockPosition;
+    }
+
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object o) {
+        return (boolean) invoke("equals", o);
+    }
+
+    public int hashCode() {
+        return a.hashCode();
+    }
+
+    public NextTickListEntity a(long i) {
+        this.b = i;
+        invoke1("a", long.class, i);
+        return this;
+    }
+
+    public void a(int i) {
+        this.c = i;
+        invoke1("a", int.class, i);
+    }
+
+    public int a(NextTickListEntity nextTickListEntity) {
+        return (int) invoke("a", nextTickListEntity.getHandle());
+    }
+
+    @Override
+    public String toString() {
+        return (String) invoke("toString");
+    }
+
+
+    // todo: create Block
+    public Object a() {
+        return getField("e");
+    }
+
+    @Override
+    public int compareTo(@NotNull NextTickListEntity o) {
+        return a(o);
+    }
+}
