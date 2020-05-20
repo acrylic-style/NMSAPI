@@ -7,6 +7,7 @@ import util.ICollectionList;
 import util.ReflectionHelper;
 import util.reflect.Ref;
 import util.reflect.RefMethod;
+import xyz.acrylicstyle.tomeito_api.utils.Log;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -84,12 +85,14 @@ public class NMSAPI {
             if (o == null) {
                 LOGGER.severe("Object is null! Dumping a thread stack");
                 Thread.dumpStack();
-                return true;
+                return null;
             }
-            if (o.getClass().getCanonicalName().equalsIgnoreCase(ReflectionUtil.getNMSClass(nmsClassName).getCanonicalName())) return o;
+            if (ReflectionUtil.getNMSClass(nmsClassName).isAssignableFrom(o.getClass())) return o;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        Log.warn("No suitable class found: " + o.getClass().getCanonicalName());
+        Thread.dumpStack();
         return null;
     }
 

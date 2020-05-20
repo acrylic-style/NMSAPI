@@ -37,7 +37,8 @@ public abstract class World extends NMSAPI implements IBlockAccess {
 
     @Override
     public TileEntity getTileEntity(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-        return new TileEntity(method("getTileEntity", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle()));
+        Object te = method("getTileEntity", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle());
+        return te == null ? null : new TileEntity(te);
     }
 
     @Override
@@ -101,7 +102,8 @@ public abstract class World extends NMSAPI implements IBlockAccess {
     }
 
     public Chunk getChunkIfLoaded(BlockPosition blockPosition) {
-        return new Chunk(method("getChunkIfLoaded", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle()));
+        Object c = method("getChunkIfLoaded", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle());
+        return c == null ? null : new Chunk(c);
     }
 
     public boolean setTypeAndData(BlockPosition blockPosition, IBlockData iBlockData, int i) {

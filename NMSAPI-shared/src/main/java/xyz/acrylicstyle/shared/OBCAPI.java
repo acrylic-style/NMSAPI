@@ -107,9 +107,7 @@ public class OBCAPI implements Handler<Object> {
     private static <S> RefMethod<S> invoke0(String clazz, String method, Object[] o) throws ClassNotFoundException {
         CollectionList<Class<?>> classes = new CollectionList<>();
         for (Object o1 : o) classes.add(o1.getClass());
-        RefMethod<S> m = Ref.getMethod((Class<S>) ReflectionUtil.getOBCClass(clazz), method, classes.toArray(new Class[0]));
-        m.setAccessible(true);
-        return m;
+        return Ref.getMethod((Class<S>) ReflectionUtil.getOBCClass(clazz), method, classes.toArray(new Class[0])).accessible(true);
     }
 
     public static Class<?> getClassWithoutException(String clazz) {

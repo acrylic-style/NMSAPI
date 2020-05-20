@@ -67,7 +67,9 @@ public abstract class NBTBase extends NMSAPI {
         return null;
     }
 
-    public abstract NBTBase clone();
+    public NBTBase clone() {
+        return NBTBase.getInstance(invoke("clone"));
+    }
 
     public final NBTBase copy() {
         return this.clone();

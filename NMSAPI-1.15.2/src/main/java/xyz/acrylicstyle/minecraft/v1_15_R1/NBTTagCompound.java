@@ -53,11 +53,6 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
         return 10;
     }
 
-    @Override
-    public NBTBase clone() {
-        return (NBTBase) invoke("clone");
-    }
-
     @SuppressWarnings("unchecked")
     public Set<String> c() {
         return (Set<String>) invoke("c");
