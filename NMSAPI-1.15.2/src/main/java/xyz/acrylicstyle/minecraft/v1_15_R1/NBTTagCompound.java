@@ -166,7 +166,7 @@ public class NBTTagCompound extends NBTBase implements Cloneable {
     }
 
     public NBTTagCompound getCompound(String key) {
-        return new NBTTagCompound(invoke("key"));
+        return new NBTTagCompound(invoke("getCompound", key));
     }
 
     public NBTTagList getList(String key, int paramInt) {
