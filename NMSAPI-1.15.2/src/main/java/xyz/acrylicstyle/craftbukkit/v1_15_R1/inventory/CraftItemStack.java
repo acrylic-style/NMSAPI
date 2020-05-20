@@ -17,9 +17,9 @@ public final class CraftItemStack extends ItemStack {
         }
     }
 
-    public static ItemStack asBukkitCopy(Object original) {
+    public static ItemStack asBukkitCopy(xyz.acrylicstyle.minecraft.v1_15_R1.ItemStack original) {
         try {
-            return (ItemStack) ReflectionUtil.getOBCClass("inventory.CraftItemStack").getMethod("asBukkitCopy", ReflectionUtil.getNMSClass("ItemStack")).invoke(null, original);
+            return (ItemStack) ReflectionUtil.getOBCClass("inventory.CraftItemStack").getMethod("asBukkitCopy", ReflectionUtil.getNMSClass("ItemStack")).invoke(null, original.getHandle());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             return null;
