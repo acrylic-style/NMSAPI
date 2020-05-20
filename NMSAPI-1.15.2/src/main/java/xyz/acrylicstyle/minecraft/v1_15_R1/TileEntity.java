@@ -61,4 +61,8 @@ public class TileEntity extends NMSAPI {
     public Packet<?> getUpdatePacket() {
         return Packet.getInstance(invoke("getUpdatePacket"));
     }
+
+    public void load(NBTTagCompound tag) {
+        method("load", NBTTagCompound.CLASS).invokeObj(getHandle(), tag.getHandle());
+    }
 }
