@@ -187,4 +187,12 @@ public class BlockPosition extends BaseBlockPosition {
     public BlockPosition(double double1, double double2, double double3) {
         super("BlockPosition", double1, double2, double3);
     }
+
+    public final boolean isValidLocation() {
+        return getX() >= -30000000 && getZ() >= -30000000 && getX() < 30000000 && getZ() < 30000000 && getY() >= 0 && getY() < 256;
+    }
+
+    public final boolean isInvalidYLocation() {
+        return getY() < 0 || getY() >= 256;
+    }
 }
