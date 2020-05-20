@@ -57,12 +57,12 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>api</artifactId>
-            <version>0.4.4</version>
+            <version>0.4.5</version>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>Util</artifactId>
-            <version>0.11.4</version>
+            <version>0.11.5</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
