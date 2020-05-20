@@ -6,10 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.acrylicstyle.craftbukkit.v1_15_R1.CraftServer;
 import xyz.acrylicstyle.craftbukkit.v1_15_R1.CraftWorld;
-import xyz.acrylicstyle.minecraft.v1_15_R1.utils.Paper;
 import xyz.acrylicstyle.shared.NMSAPI;
-
-import java.util.function.Consumer;
 
 public abstract class World extends NMSAPI implements IBlockAccess {
     public static final Class<?> CLASS = getClassWithoutException("World");
@@ -40,22 +37,22 @@ public abstract class World extends NMSAPI implements IBlockAccess {
 
     @Override
     public TileEntity getTileEntity(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-        return new TileEntity(method("getTileEntity", BlockPosition.class).invokeObj(getHandle(), blockPosition.getHandle()));
+        return new TileEntity(method("getTileEntity", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle()));
     }
 
     @Override
     public IBlockData getType(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-        return IBlockData.getInstance(method("getType", BlockPosition.class).invokeObj(getHandle(), blockPosition.getHandle()));
+        return IBlockData.getInstance(method("getType", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle()));
     }
 
     @Override
     public boolean isEmpty(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-        return (boolean) method("isEmpty", BlockPosition.class).invokeObj(getHandle(), blockPosition.getHandle());
+        return (boolean) method("isEmpty", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle());
     }
 
     @Override
     public int getBlockPower(BlockPosition blockPosition, EnumDirection enumDirection) {
-        return (int) method("getBlockPower", BlockPosition.class, EnumDirection.class)
+        return (int) method("getBlockPower", BlockPosition.CLASS, EnumDirection.CLASS)
                 .invokeObj(getHandle(), blockPosition.getHandle(), enumDirection.getHandle());
     }
 
