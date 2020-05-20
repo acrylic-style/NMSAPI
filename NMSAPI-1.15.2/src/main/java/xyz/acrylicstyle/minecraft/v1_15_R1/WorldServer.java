@@ -116,7 +116,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
     }
 
     public boolean a(boolean flag) {
-        return (boolean) invoke1("a", boolean.class, flag);
+        return (boolean) method("a", boolean.class).invokeObj(getHandle(), flag);
     }
 
     // todo: create Chunk
@@ -169,15 +169,15 @@ public class WorldServer extends World implements IAsyncTaskHandler {
     }
 
     protected void b(xyz.acrylicstyle.minecraft.v1_15_R1.Entity entity) {
-        invoke1("b", xyz.acrylicstyle.minecraft.v1_15_R1.Entity.CLASS, entity.getHandle());
+        method("b", xyz.acrylicstyle.minecraft.v1_15_R1.Entity.CLASS).invokeObj(getHandle(), entity.getHandle());
     }
 
     public boolean strikeLightning(xyz.acrylicstyle.minecraft.v1_15_R1.Entity entity) {
-        return (boolean) invoke1("strikeLightning", xyz.acrylicstyle.minecraft.v1_15_R1.Entity.CLASS, entity.getHandle());
+        return (boolean) method("strikeLightning", xyz.acrylicstyle.minecraft.v1_15_R1.Entity.CLASS).invokeObj(getHandle(), entity.getHandle());
     }
 
     public void broadcastEntityEffect(xyz.acrylicstyle.minecraft.v1_15_R1.Entity entity, byte b0) {
-        invoke1("broadcastEntityEffect", xyz.acrylicstyle.minecraft.v1_15_R1.Entity.CLASS, byte.class, entity.getHandle(), b0);
+        method("broadcastEntityEffect", xyz.acrylicstyle.minecraft.v1_15_R1.Entity.CLASS, byte.class).invokeObj(getHandle(), entity.getHandle(), b0);
     }
 
     public Object createExplosion(xyz.acrylicstyle.minecraft.v1_15_R1.Entity entity, double d0, double d1, double d2, float f, boolean flag, boolean flag1) {

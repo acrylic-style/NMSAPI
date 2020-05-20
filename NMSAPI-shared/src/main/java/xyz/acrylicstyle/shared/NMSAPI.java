@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
+import util.reflect.Ref;
+import util.reflect.RefMethod;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -18,6 +20,7 @@ public class NMSAPI {
     public static final Map<Class<?>, Class<?>> PRIMITIVES = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger("NMSAPI");
     protected final String nmsClassName;
+    protected final Class<?> nmsClass;
 
     static {
         PRIMITIVES.put(Integer.class, int.class);
@@ -41,11 +44,10 @@ public class NMSAPI {
         if (nmsClassName == null) throw new IllegalArgumentException("NMS Class name cannot be null");
         this.o = o;
         this.nmsClassName = nmsClassName;
+        this.nmsClass = getClassWithoutException(nmsClassName);
     }
 
-    public static NMSAPI getEmptyNMSAPI(Object o, String nmsClassName) {
-        return new NMSAPI(o, nmsClassName);
-    }
+    public static NMSAPI getEmptyNMSAPI(Object o, String nmsClassName) { return new NMSAPI(o, nmsClassName); }
 
     /**
      * Constructs NMSAPI and calls NMS class's constructor.
@@ -54,6 +56,7 @@ public class NMSAPI {
      */
     protected NMSAPI(@NotNull String nmsClassName, Object... o) {
         this.nmsClassName = nmsClassName;
+        this.nmsClass = getClassWithoutException(nmsClassName);
         try {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
@@ -222,10 +225,12 @@ public class NMSAPI {
         return m;
     }
 
+    @Deprecated
     public Object invoke1(String method, Class<?> clazz, Object o) {
         return invoke10(method, o, clazz);
     }
 
+    @Deprecated
     public Object invoke1(String method, String sClazz, Object o) {
         Class<?> clazz = getClassWithoutException(sClazz);
         return invoke10(method, o, clazz);
@@ -245,6 +250,9 @@ public class NMSAPI {
         }
     }
 
+    public RefMethod<?> method(String method, Class<?>... classes) { return Ref.getMethod(nmsClass, method, classes); }
+
+    @Deprecated
     public Object invoke1(String method, String sClazz1, String sClazz2, Object o1, Object o2) {
         Class<?> clazz1 = getClassWithoutException(sClazz1);
         Class<?> clazz2 = getClassWithoutException(sClazz2);
@@ -265,6 +273,7 @@ public class NMSAPI {
         }
     }
 
+    @Deprecated
     public Object invoke1(String method, Class<?> clazz1, Class<?> clazz2, Object o1, Object o2) {
         return invoke11(method, o1, o2, clazz1, clazz2);
     }

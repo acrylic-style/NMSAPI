@@ -30,13 +30,13 @@ public class NextTickListEntity extends NMSAPI implements Comparable<NextTickLis
 
     public NextTickListEntity a(long i) {
         this.b = i;
-        invoke1("a", long.class, i);
+        invoke("a", i);
         return this;
     }
 
     public void a(int i) {
         this.c = i;
-        invoke1("a", int.class, i);
+        invoke("a", i);
     }
 
     public int a(NextTickListEntity nextTickListEntity) {

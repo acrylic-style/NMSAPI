@@ -246,7 +246,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
 
     @SuppressWarnings("deprecation")
     public void a(WorldSettings.EnumGamemode enumGameMode) {
-        getBukkitEntity().setGameMode(GameMode.getByValue(enumGameMode.getId()));
+        getBukkitEntity().setGameMode(Objects.requireNonNull(GameMode.getByValue(enumGameMode.getId())));
     }
 
     public boolean isSpectator() {
@@ -258,7 +258,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
     }
 
     public void d(Entity entity) {
-        invoke1("d", Entity.CLASS, entity);
+        method("d", Entity.CLASS).invokeObj(getHandle(), entity);
     }
 
     protected void B() {
@@ -270,11 +270,11 @@ public class EntityPlayer extends Entity implements ICommandListener {
     }
 
     public void setSpectatorTarget(Entity entity) {
-        invoke1("setSpectatorTarget", Entity.CLASS, entity);
+        method("setSpectatorTarget", Entity.CLASS).invokeObj(getHandle(), entity);
     }
 
     public void attack(Entity entity) {
-        invoke1("attack", Entity.CLASS, entity);
+        method("attack", Entity.CLASS).invokeObj(getHandle(), entity);
     }
 
     public long D() {

@@ -19,29 +19,29 @@ public abstract class World extends NMSAPI implements IBlockAccess {
         super(o, "World");
     }
 
+    @Override
+    public TileEntity getTileEntity(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
+        return new TileEntity(method("getTileEntity", BlockPosition.class).invokeObj(getHandle(), blockPosition.getHandle()));
+    }
+
+    @Override
+    public IBlockData getType(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
+        return IBlockData.getInstance(method("getType", BlockPosition.class).invokeObj(getHandle(), blockPosition));
+    }
+
+    @Override
+    public boolean isEmpty(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
+        return (boolean) method("isEmpty", BlockPosition.class).invokeObj(getHandle(), blockPosition);
+    }
+
+    @Override
+    public int getBlockPower(BlockPosition blockPosition, EnumDirection enumDirection) {
+        return (int) method("getBlockPower", BlockPosition.class, EnumDirection.class).invokeObj(getHandle(), blockPosition, enumDirection);
+    }
+
     @NotNull
     @Contract("_ -> new")
     public static World newInstance(Object o) {
-        return new World(o) {
-            @Override
-            public TileEntity getTileEntity(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-                return null;
-            }
-
-            @Override
-            public IBlockData getType(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-                return null;
-            }
-
-            @Override
-            public boolean isEmpty(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-                return false;
-            }
-
-            @Override
-            public int getBlockPower(BlockPosition blockPosition, EnumDirection enumDirection) {
-                return 0;
-            }
-        };
+        return new World(o) {};
     }
 }

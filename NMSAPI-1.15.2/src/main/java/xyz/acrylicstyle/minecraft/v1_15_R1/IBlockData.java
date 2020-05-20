@@ -22,4 +22,10 @@ public interface IBlockData {
     ImmutableMap<IBlockState, Comparable> b();
 
     // Block getBlock();
+
+    Object getHandle();
+
+    static IBlockData getInstance(Object o) {
+        return null; // todo
+    }
 }

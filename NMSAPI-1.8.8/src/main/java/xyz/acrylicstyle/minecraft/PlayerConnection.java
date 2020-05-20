@@ -64,10 +64,10 @@ public class PlayerConnection extends NMSAPI {
     }
 
     public void disconnect(IChatBaseComponent iChatBaseComponent) {
-        invoke1("disconnect", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
+        method("disconnect", IChatBaseComponent.CLASS).invokeObj(getHandle(), iChatBaseComponent.getHandle());
     }
 
-    public void sendPacket(@NotNull Packet<?> packet) { invoke1("sendPacket", Packet.CLASS, packet.getHandle()); }
+    public void sendPacket(@NotNull Packet<?> packet) { method("sendPacket", Packet.CLASS).invokeObj(getHandle(), packet.getHandle()); }
 
     public void disconnect(String s) { invoke("disconnect", s); }
 
@@ -406,11 +406,11 @@ public class PlayerConnection extends NMSAPI {
     }
 
     public void a(IChatBaseComponent iChatBaseComponent) {
-        invoke1("a", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
+        method("a", IChatBaseComponent.CLASS).invokeObj(getHandle(), iChatBaseComponent.getHandle());
     }
 
     public void a(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
-        invoke1("a", Packet.CLASS, GenericFutureListener.class, packet.getHandle(), genericFutureListener);
+        method("a", Packet.CLASS, GenericFutureListener.class).invokeObj(getHandle(), packet.getHandle(), genericFutureListener);
     }
 
     public void a27(Object packetPlayInHeldItemSlot) {

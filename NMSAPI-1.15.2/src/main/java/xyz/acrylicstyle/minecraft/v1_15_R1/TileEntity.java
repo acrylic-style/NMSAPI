@@ -37,15 +37,7 @@ public class TileEntity extends NMSAPI {
     }
 
     public static TileEntity c(NBTTagCompound nbtTagCompound) {
-        try {
-            return new TileEntity(ReflectionUtil
-                    .getNMSClass("TileEntity")
-                    .getMethod("c", ReflectionUtil.getNMSClass("NBTTagCompound"))
-                    .invoke(null, nbtTagCompound.getNMSClass()));
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new TileEntity(invokeStatic("TileEntity", null, "c", nbtTagCompound.getHandle()));
     }
 
     public int u() {
@@ -58,6 +50,10 @@ public class TileEntity extends NMSAPI {
 
     public xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition getPosition() {
         return new BlockPosition(invoke("getPosition"));
+    }
+
+    public void save(NBTTagCompound tag) {
+        invoke("save", tag.getHandle());
     }
 
     // public Block w() {}

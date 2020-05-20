@@ -58,15 +58,15 @@ public class NetworkManager extends NMSAPI {
     }
 
     public void sendPacket(Packet<?> packet) {
-        invoke1("sendPacket", Packet.CLASS, packet.getHandle());
+        method("sendPacket", Packet.CLASS).invokeObj(getHandle(), packet.getHandle());
     }
 
     public void sendPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
-        invoke1("sendPacket", Packet.CLASS, GenericFutureListener.class, packet.getHandle(), genericFutureListener);
+        method("sendPacket", Packet.CLASS, GenericFutureListener.class).invokeObj(getHandle(), packet.getHandle(), genericFutureListener);
     }
 
     public void b(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) {
-        invoke1("b", Packet.CLASS, GenericFutureListener.class, packet.getHandle(), genericFutureListener);
+        method("b", Packet.CLASS, GenericFutureListener.class).invokeObj(getHandle(), packet.getHandle(), genericFutureListener);
     }
 
     public void o() {
@@ -82,7 +82,7 @@ public class NetworkManager extends NMSAPI {
     }
 
     public void close(IChatBaseComponent iChatBaseComponent) {
-        invoke1("close", IChatBaseComponent.CLASS, iChatBaseComponent.getHandle());
+        method("close", IChatBaseComponent.CLASS).invokeObj(getHandle(), iChatBaseComponent.getHandle());
     }
 
     public boolean isLocal() {

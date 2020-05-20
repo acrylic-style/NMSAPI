@@ -82,11 +82,11 @@ public class WorldData extends NMSAPI {
     }
 
     public void setTime(long i) {
-        invoke1("setTime", long.class, i);
+        invoke("setTime", i);
     }
 
     public void setDayTime(long i) {
-        invoke1("setDayTime", long.class, i);
+        invoke("setDayTime", i);
     }
 
     public void setSpawn(BlockPosition blockPosition) {
@@ -106,7 +106,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void e(int i) {
-        invoke1("e", int.class, i);
+        invoke("e", i);
     }
 
     public int A() {
@@ -114,7 +114,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void i(int i) {
-        invoke1("i", int.class, i);
+        invoke("i", i);
     }
 
     public boolean isThundering() {
@@ -137,7 +137,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void setThunderDuration(int i) {
-        invoke1("setThunderDuration", int.class, i);
+        invoke("setThunderDuration", i);
     }
 
     public boolean hasStorm() {
@@ -160,7 +160,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void setWeatherDuration(int i) {
-        invoke1("setWeatherDuration", int.class, i);
+        invoke("setWeatherDuration", i);
     }
 
     public WorldSettings.EnumGamemode getGameType() {
@@ -244,7 +244,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void e(long i) {
-        invoke1("e", long.class, i);
+        invoke("e", i);
     }
 
     public double G() {
@@ -252,15 +252,15 @@ public class WorldData extends NMSAPI {
     }
 
     public void b(double d0) {
-        invoke1("b", double.class, d0);
+        invoke("b", d0);
     }
 
     public void c(double d0) {
-        invoke1("c", double.class, d0);
+        invoke("c", d0);
     }
 
     public void d(double d0) {
-        invoke1("d", double.class, d0);
+        invoke("d", d0);
     }
 
     public double H() {
@@ -268,7 +268,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void e(double d0) {
-        invoke1("e", double.class, d0);
+        invoke("e", d0);
     }
 
     public double I() {
@@ -276,7 +276,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void f(double d0) {
-        invoke1("f", double.class, d0);
+        invoke("f", d0);
     }
 
     public int J() {
@@ -288,11 +288,11 @@ public class WorldData extends NMSAPI {
     }
 
     public void j(int i) {
-        invoke1("j", int.class, i);
+        invoke("j", i);
     }
 
     public void k(int i) {
-        invoke1("k", int.class, i);
+        invoke("k", i);
     }
 
     public EnumDifficulty getDifficulty() {
@@ -308,7 +308,7 @@ public class WorldData extends NMSAPI {
     }
 
     public void e(boolean flag) {
-        invoke1("e", boolean.class, flag);
+        invoke("e", flag);
     }
 
     public void a(CrashReportSystemDetails crashReportSystemDetails) {

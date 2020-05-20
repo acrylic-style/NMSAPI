@@ -116,7 +116,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
     }
 
     public boolean a(boolean flag) {
-        return (boolean) invoke1("a", boolean.class, flag);
+        return (boolean) invoke("a", flag);
     }
 
     // todo: create Chunk
@@ -169,15 +169,15 @@ public class WorldServer extends World implements IAsyncTaskHandler {
     }
 
     protected void b(Entity entity) {
-        invoke1("b", Entity.CLASS, entity.getHandle());
+        method("b", Entity.CLASS).invokeObj(getHandle(), entity.getHandle());
     }
 
     public boolean strikeLightning(Entity entity) {
-        return (boolean) invoke1("strikeLightning", Entity.CLASS, entity.getHandle());
+        return (boolean) method("strikeLightning", Entity.CLASS).invokeObj(getHandle(), entity.getHandle());
     }
 
     public void broadcastEntityEffect(Entity entity, byte b0) {
-        invoke1("broadcastEntityEffect", Entity.CLASS, byte.class, entity.getHandle(), b0);
+        method("broadcastEntityEffect", Entity.CLASS, byte.class).invokeObj(getHandle(), entity.getHandle(), b0);
     }
 
     public Object createExplosion(Entity entity, double d0, double d1, double d2, float f, boolean flag, boolean flag1) {
