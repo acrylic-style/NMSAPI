@@ -1,12 +1,15 @@
 package xyz.acrylicstyle.minecraft.v1_15_R1;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import util.reflect.Ref;
 import xyz.acrylicstyle.craftbukkit.v1_15_R1.CraftServer;
 import xyz.acrylicstyle.craftbukkit.v1_15_R1.CraftWorld;
 import xyz.acrylicstyle.shared.NMSAPI;
+import xyz.acrylicstyle.tomeito_api.utils.Log;
 
 public abstract class World extends NMSAPI implements IBlockAccess {
     public static final Class<?> CLASS = getClassWithoutException("World");
@@ -37,7 +40,13 @@ public abstract class World extends NMSAPI implements IBlockAccess {
 
     @Override
     public TileEntity getTileEntity(xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition blockPosition) {
-        Object te = method("getTileEntity", BlockPosition.CLASS).invokeObj(getHandle(), blockPosition.getHandle());
+        if (o == null) {
+            Log.error("Object is null!");
+            throw new NullPointerException();
+        }
+        Object te = Ref.getClass(CLASS)
+                .getMethod("getTileEntity", BlockPosition.CLASS)
+                .invokeObj(o, blockPosition.getHandle());
         return te == null ? null : new TileEntity(te);
     }
 
@@ -141,11 +150,11 @@ public abstract class World extends NMSAPI implements IBlockAccess {
 
     public void setTileEntity(BlockPosition blockposition, @Nullable TileEntity tileentity) {
         method("setTileEntity", BlockPosition.CLASS, TileEntity.CLASS)
-                .invokeObj(blockposition.getHandle(), tileentity == null ? null : tileentity.getHandle());
+                .invokeObj(o, blockposition.getHandle(), tileentity == null ? null : tileentity.getHandle());
     }
 
     public void removeTileEntity(BlockPosition blockposition) {
-        method("removeTileEntity", BlockPosition.CLASS).invokeObj(getHandle(), blockposition.getHandle());
+        method("removeTileEntity", BlockPosition.CLASS).invokeObj(o, blockposition.getHandle());
     }
 
     public BlockPosition getSpawn() {
@@ -163,6 +172,7 @@ public abstract class World extends NMSAPI implements IBlockAccess {
     @NotNull
     @Contract("_ -> new")
     public static World newInstance(Object o) {
+        Validate.notNull(o, "World cannot be null");
         return new World(o) {};
     }
 }

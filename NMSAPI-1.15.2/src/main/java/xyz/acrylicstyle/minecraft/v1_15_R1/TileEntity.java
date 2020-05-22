@@ -1,9 +1,6 @@
 package xyz.acrylicstyle.minecraft.v1_15_R1;
 
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class TileEntity extends NMSAPI {
     public static final Class<?> CLASS = getClassWithoutException("TileEntity");
@@ -21,7 +18,7 @@ public class TileEntity extends NMSAPI {
     }
 
     public void a(World world) {
-        invoke("a", world.getNMSClass());
+        invoke("a", world.getHandle());
     }
 
     public boolean t() {
@@ -45,7 +42,7 @@ public class TileEntity extends NMSAPI {
     }
 
     public void update() {
-        invoke("update");
+        method("update").invokeObj(this.o);
     }
 
     public xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition getPosition() {
@@ -53,7 +50,7 @@ public class TileEntity extends NMSAPI {
     }
 
     public void save(NBTTagCompound tag) {
-        invoke("save", tag.getHandle());
+        method("save", NBTTagCompound.CLASS).invokeObj(this.o, tag.getHandle());
     }
 
     // public Block w() {}
@@ -63,6 +60,6 @@ public class TileEntity extends NMSAPI {
     }
 
     public void load(NBTTagCompound tag) {
-        method("load", NBTTagCompound.CLASS).invokeObj(getHandle(), tag.getHandle());
+        method("load", NBTTagCompound.CLASS).invokeObj(this.o, tag.getHandle());
     }
 }

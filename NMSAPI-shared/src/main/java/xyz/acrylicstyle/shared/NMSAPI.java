@@ -80,23 +80,27 @@ public class NMSAPI {
 
     protected Object o;
 
-    public Object getNMSClass() {
+    public Object getNMSClass() { return o; }
+
+    public Object getNMSClass(boolean checkClass) {
+        if (!checkClass) return o;
         try {
             if (o == null) {
                 LOGGER.severe("Object is null! Dumping a thread stack");
                 Thread.dumpStack();
                 return null;
             }
-            if (ReflectionUtil.getNMSClass(nmsClassName).isAssignableFrom(o.getClass())) return o;
+            if (ReflectionUtil.getNMSClass(nmsClassName).isAssignableFrom(o.getClass()) || o.getClass().isAssignableFrom(ReflectionUtil.getNMSClass(nmsClassName))) return o;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.error("Class could not be found: nms." + nmsClassName);
         }
-        Log.warn("No suitable class found: " + o.getClass().getCanonicalName());
+        Log.error("No suitable class found: " + o.getClass().getCanonicalName());
         Thread.dumpStack();
         return null;
     }
 
-    public Object getHandle() { return getNMSClass(); }
+    public final Object getHandle() { return this.o; }
+    public final Object getHandle(boolean checkClass) { return checkClass ? getNMSClass(true) : this.o; }
 
     public Object getField(String field) {
         if (checkState()) return null;
@@ -173,11 +177,10 @@ public class NMSAPI {
     }
 
     public Object invoke(String method) {
-        if (checkState()) return null;
         try {
             Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method);
             m.setAccessible(true);
-            return m.invoke(getNMSClass());
+            return m.invoke(this.o);
         } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
             e.printStackTrace();
@@ -198,9 +201,11 @@ public class NMSAPI {
     }
 
     public Object invoke(String method, Object... o) {
-        if (checkState()) return null;
+        if (getNMSClass() == null) Log.warn("NMS object is null :(");
+        if (getHandle() == null) Log.warn("Handle is null :(");
+        if (this.o == null) Log.warn("Object is null :(");
         try {
-            return invoke0(nmsClassName, method, o).invoke(getNMSClass(), o);
+            return invoke0(nmsClassName, method, o).invoke(this.o, o);
         } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
             LOGGER.severe("With signature: " + ICollectionList.asList(o).map(Object::getClass).map(Class::getCanonicalName).join(", "));
