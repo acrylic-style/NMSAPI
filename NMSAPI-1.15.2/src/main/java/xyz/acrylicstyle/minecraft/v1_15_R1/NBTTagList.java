@@ -1,11 +1,9 @@
 package xyz.acrylicstyle.minecraft.v1_15_R1;
 
-import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
+import util.reflect.Ref;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.lang.reflect.Method;
-import java.util.List;
 
 public class NBTTagList extends NBTBase {
     public static final Class<?> CLASS = getClassWithoutException("NBTTagList");
@@ -38,29 +36,8 @@ public class NBTTagList extends NBTBase {
         return 9;
     }
 
-    public void add(NBTBase nbtBase) {
-        try {
-            Method m = ReflectionUtil.getNMSClass("NBTTagList").getMethod("add", ReflectionUtil.getNMSClass("NBTBase"));
-            m.setAccessible(true);
-            m.invoke(getNMSClass(), nbtBase.getHandle());
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void a(int i, NBTBase nbtBase) {
-        try {
-            Method m = ReflectionUtil.getNMSClass("NBTTagList").getMethod("a", int.class, ReflectionUtil.getNMSClass("NBTBase"));
-            m.setAccessible(true);
-            m.invoke(getNMSClass(), i, nbtBase.getHandle());
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public NBTTagList addAllString(List<String> list) {
-        list.forEach(s -> this.add(new NBTTagString(s)));
-        return this;
+    public void set(int i, NBTBase nbtBase) {
+        Ref.getMethod(CLASS, "set", int.class, NBTBase.CLASS).accessible(true).invokeObj(o, i, nbtBase.getHandle());
     }
 
     public NBTBase a(int i) {

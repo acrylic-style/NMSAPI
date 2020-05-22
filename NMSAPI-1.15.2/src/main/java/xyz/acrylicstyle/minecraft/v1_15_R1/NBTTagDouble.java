@@ -1,5 +1,7 @@
 package xyz.acrylicstyle.minecraft.v1_15_R1;
 
+import util.reflect.Ref;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 
@@ -16,6 +18,10 @@ public class NBTTagDouble extends NBTBase.NBTNumber {
 
     public NBTTagDouble(Object o) {
         super(o, "NBTTagDouble");
+    }
+
+    public static NBTTagDouble a(double var0) {
+        return new NBTTagDouble(Ref.getMethod(CLASS, "a", double.class).invokeObj(null, var0));
     }
 
     @Override

@@ -62,14 +62,14 @@ public class NMSAPI {
             CollectionList<Class<?>> classes = new CollectionList<>();
             for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
             this.o = ReflectionUtil.getNMSClass(nmsClassName)
-                    .getConstructor(classes.toArray(new Class[0]))
+                    .getDeclaredConstructor(classes.toArray(new Class[0]))
                     .newInstance(o);
         } catch (Exception e) {
             try {
                 CollectionList<Class<?>> classes = new CollectionList<>();
                 for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass().getSuperclass());
                 this.o = ReflectionUtil.getNMSClass(nmsClassName)
-                        .getConstructor(classes.toArray(new Class[0]))
+                        .getDeclaredConstructor(classes.toArray(new Class[0]))
                         .newInstance(o);
             } catch (Exception ex2) {
                 e.printStackTrace();
@@ -208,7 +208,11 @@ public class NMSAPI {
             return invoke0(nmsClassName, method, o).invoke(this.o, o);
         } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
-            LOGGER.severe("With signature: " + ICollectionList.asList(o).map(Object::getClass).map(Class::getCanonicalName).join(", "));
+            LOGGER.severe("With signature: " + ICollectionList
+                    .asList(o)
+                    .map(ox -> ox == null ? null : ox.getClass())
+                    .map(c -> c == null ? null : c.getCanonicalName())
+                    .join(", "));
             e.printStackTrace();
             return null;
         }
@@ -219,7 +223,11 @@ public class NMSAPI {
             return invoke0(clazz, method, o).invoke(object, o);
         } catch (Exception e) {
             LOGGER.severe("An error occurred while invoking a method: " + method);
-            LOGGER.severe("With signature: " + ICollectionList.asList(o).map(Object::getClass).map(Class::getCanonicalName).join(", "));
+            LOGGER.severe("With signature: " + ICollectionList
+                    .asList(o)
+                    .map(ox -> ox == null ? null : ox.getClass())
+                    .map(c -> c == null ? null : c.getCanonicalName())
+                    .join(", "));
             e.printStackTrace();
             return null;
         }
