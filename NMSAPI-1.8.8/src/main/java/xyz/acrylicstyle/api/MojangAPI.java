@@ -2,16 +2,20 @@ package xyz.acrylicstyle.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import util.JSONAPI;
+import util.promise.Promise;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.authlib.properties.Property;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import xyz.acrylicstyle.shared.BaseMojangAPI;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class MojangAPI extends BaseMojangAPI {
@@ -22,6 +26,16 @@ public class MojangAPI extends BaseMojangAPI {
         UUID uuid = getUniqueId(name);
         if (uuid == null) throw new RuntimeException("UUID is null (rate limit?)");
         return getGameProfile(uuid);
+    }
+
+    @NotNull
+    public static Promise<GameProfile> getGameProfileAsync(@NotNull UUID uuid) {
+        return new Promise<GameProfile>() {
+            @Override
+            public GameProfile apply(Object o) {
+                return getGameProfile(uuid);
+            }
+        };
     }
 
     @NotNull
@@ -42,6 +56,26 @@ public class MojangAPI extends BaseMojangAPI {
         return profile;
     }
 
+    @NotNull
+    public static Promise<Player> changeSkinAsync(@NotNull Plugin plugin, @NotNull Player player, @NotNull UUID uuid) {
+        return getGameProfileAsync(uuid).then(profile -> {
+            CraftPlayer craftPlayer = new CraftPlayer(player);
+            craftPlayer.getProfile().setProperties(profile.getProperties());
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        if (player.getUniqueId().equals(p.getUniqueId())) continue;
+                        p.hidePlayer(player);
+                        p.showPlayer(player);
+                    }
+                }
+            }.runTask(plugin);
+            return craftPlayer.getPlayer();
+        });
+    }
+
+    @NotNull
     public static Player changeSkin(@NotNull Player player, @NotNull UUID uuid) {
         CraftPlayer craftPlayer = new CraftPlayer(player);
         craftPlayer.getProfile().setProperties(getGameProfile(uuid).getProperties());
@@ -50,6 +84,6 @@ public class MojangAPI extends BaseMojangAPI {
             p.hidePlayer(player);
             p.showPlayer(player);
         }
-        return craftPlayer.getPlayer();
+        return Objects.requireNonNull(craftPlayer.getPlayer());
     }
 }

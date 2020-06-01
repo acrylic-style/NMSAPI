@@ -827,8 +827,8 @@ public class CraftPlayer extends CraftEntity implements Player {
     }
 
     @Override
-    public @Nullable CraftPlayer getPlayer() {
-        return new CraftPlayer(player.getPlayer());
+    public Player getPlayer() {
+        return player.getPlayer();
     }
 
     @Override

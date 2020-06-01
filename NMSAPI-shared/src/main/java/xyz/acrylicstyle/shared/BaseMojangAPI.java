@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import util.CollectionList;
 import util.JSONAPI;
+import util.promise.Promise;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -23,6 +24,20 @@ public class BaseMojangAPI {
         if (response.getResponseCode() != 200) return null;
         JSONObject json = (JSONObject) response.getResponse();
         return UUID.fromString(json.getString("id").replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"));
+    }
+
+    /**
+     * Calls mojang API and lookups player uuid from name.
+     * @param name Name of the player.
+     * @return Player's uuid.
+     */
+    public static Promise<UUID> getUniqueIdAsync(@NotNull String name) {
+        return new Promise<UUID>() {
+            @Override
+            public UUID apply(Object o) {
+                return getUniqueId(name);
+            }
+        };
     }
 
     /**

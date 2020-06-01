@@ -6,6 +6,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.CustomTimingsHandler;
 import util.ICollectionList;
+import util.SneakyThrow;
+import util.reflect.Ref;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftEntity;
 import xyz.acrylicstyle.shared.NMSAPI;
 
@@ -39,7 +41,14 @@ public class Entity extends NMSAPI {
 
     public static final int CURRENT_LEVEL = 2;
 
-    public int id() { return field("id"); }
+    public int id() {
+        try {
+            return (int) Ref.getField(CLASS, "id").getField().get(getHandle());
+        } catch (IllegalAccessException e) {
+            SneakyThrow.sneaky(e);
+            return 0; // unreachable
+        }
+    }
     public double j() { return field("j"); }
     public boolean k() { return field("k"); }
     public Entity passenger() { return new Entity(getField("passenger")); }
