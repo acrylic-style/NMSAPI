@@ -5,7 +5,7 @@
     <parent>
         <artifactId>NMSAPI</artifactId>
         <groupId>xyz.acrylicstyle</groupId>
-        <version>0.1.47c</version>
+        <version>0.1.47d</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -94,12 +94,12 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-shared</artifactId>
-            <version>0.1.47c</version>
+            <version>0.1.47d</version>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-abstract</artifactId>
-            <version>0.1.47c</version>
+            <version>0.1.47d</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
