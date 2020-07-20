@@ -1,6 +1,6 @@
 package xyz.acrylicstyle.craftbukkit;
 
-import xyz.acrylicstyle.minecraft.MinecraftServer;
+import xyz.acrylicstyle.minecraft.v1_8_R1.MinecraftServer;
 
 /**
  * Why do we have this class?<br />

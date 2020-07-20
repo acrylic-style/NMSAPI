@@ -20,9 +20,9 @@ public class BaseMojangAPI {
     public static UUID getUniqueId(@NotNull String name) {
         Player player = Bukkit.getPlayer(name);
         if (player != null) return player.getUniqueId();
-        JSONAPI.Response response = new JSONAPI("https://api.mojang.com/users/profiles/minecraft/" + name).call(JSONObject.class);
+        JSONAPI.Response<JSONObject> response = new JSONAPI("https://api.mojang.com/users/profiles/minecraft/" + name).call(JSONObject.class);
         if (response.getResponseCode() != 200) return null;
-        JSONObject json = (JSONObject) response.getResponse();
+        JSONObject json = response.getResponse();
         return UUID.fromString(json.getString("id").replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"));
     }
 
@@ -47,7 +47,7 @@ public class BaseMojangAPI {
      * @return Name histories
      */
     public static CollectionList<NameHistory> getNameChanges(@NotNull UUID uuid) {
-        JSONAPI.Response response = new JSONAPI("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names").call();
+        JSONAPI.Response<JSONObject> response = new JSONAPI("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names").call();
         if (response.getResponseCode() != 200) return null;
         JSONArray json = new JSONArray(response.getRawResponse());
         CollectionList<NameHistory> histories = new CollectionList<>();
@@ -77,9 +77,9 @@ public class BaseMojangAPI {
     public static PlayerProfile getPlayerProfile(@NotNull String name) {
         Player player = Bukkit.getPlayer(name);
         if (player != null) return new PlayerProfile(player.getName(), player.getUniqueId());
-        JSONAPI.Response response = new JSONAPI("https://api.mojang.com/users/profiles/minecraft/" + name).call(JSONObject.class);
+        JSONAPI.Response<JSONObject> response = new JSONAPI("https://api.mojang.com/users/profiles/minecraft/" + name).call(JSONObject.class);
         if (response.getResponseCode() != 200) return null;
-        JSONObject json = (JSONObject) response.getResponse();
+        JSONObject json = response.getResponse();
         return new PlayerProfile(json.getString("name"), json.getString("id"));
     }
 
@@ -96,9 +96,9 @@ public class BaseMojangAPI {
 
     @NotNull
     public static JSONObject getProperty(@NotNull UUID uuid) {
-        JSONAPI.Response response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call(JSONObject.class);
+        JSONAPI.Response<JSONObject> response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call(JSONObject.class);
         if (response.getResponseCode() != 200) throw new RuntimeException("Response code isn't 200! (" + response.getResponseCode() + ")");
-        JSONObject json = (JSONObject) response.getResponse();
+        JSONObject json = response.getResponse();
         JSONArray properties = json.getJSONArray("properties");
         return (JSONObject) properties.get(0);
     }

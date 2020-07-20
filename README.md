@@ -5,21 +5,22 @@ An API for call net.minecraft.server APIs and org.bukkit.craftbukkit APIs withou
 Maven:
 ```xml
 <repository>
-    <id>acrylicstyle-repo</id>
-    <name>Acrylic Style's Repository2</name>
+    <id>acrylic-repo</id>
+    <name>acrylic-repo</name>
     <url>https://repo.acrylicstyle.xyz/</url>
 </repository>
 ...
 <dependency>
     <groupId>xyz.acrylicstyle</groupId>
-    <artifactId>NMSAPI-shared</artifactId>
-    <version>0.1.19</version>
+    <artifactId>NMSAPI-abstract</artifactId>
+    <version>0.1.45</version>
 </dependency>
 ```
+
+Use NMSAPI-abstract if possible, or you'll be messed up with errors.
 
 Look at [the wiki](https://github.com/acrylic-style/NMSAPI/wiki) for usages.
 
 ## How to use (For server owners)
 Grab the [latest version of the TomeitoLib](https://ci.acrylicstyle.xyz/job/TomeitoLib/) and install it.
 
-This plugin includes the latest version of this API.

@@ -16,8 +16,8 @@ public class CraftScoreboard extends OBCAPI implements Scoreboard {
     }
 
     @Override
-    public xyz.acrylicstyle.minecraft.Scoreboard getHandle() {
-        return new xyz.acrylicstyle.minecraft.Scoreboard(o);
+    public xyz.acrylicstyle.minecraft.v1_8_R1.Scoreboard getHandle() {
+        return new xyz.acrylicstyle.minecraft.v1_8_R1.Scoreboard(o);
     }
 
     @Override

@@ -21,10 +21,10 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftIconCache;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Versioning;
-import xyz.acrylicstyle.minecraft.EntityPlayer;
-import xyz.acrylicstyle.minecraft.ICommandListener;
-import xyz.acrylicstyle.minecraft.MinecraftServer;
-import xyz.acrylicstyle.minecraft.ServerCommand;
+import xyz.acrylicstyle.minecraft.v1_8_R1.EntityPlayer;
+import xyz.acrylicstyle.minecraft.v1_8_R1.ICommandListener;
+import xyz.acrylicstyle.minecraft.v1_8_R1.MinecraftServer;
+import xyz.acrylicstyle.minecraft.v1_8_R1.ServerCommand;
 import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.shared.OBCAPI;
 

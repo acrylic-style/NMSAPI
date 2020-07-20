@@ -24,7 +24,7 @@ import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.scoreboard.CraftScoreboard;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
-import xyz.acrylicstyle.minecraft.EntityPlayer;
+import xyz.acrylicstyle.minecraft.v1_8_R1.EntityPlayer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
@@ -656,7 +656,7 @@ public class CraftPlayer extends CraftEntity implements Player {
     }
 
     @Override
-    public List<Entity> getNearbyEntities(double x, double y, double z) {
+    public @NotNull List<Entity> getNearbyEntities(double x, double y, double z) {
         return player.getNearbyEntities(x, y, z);
     }
 
@@ -708,16 +708,6 @@ public class CraftPlayer extends CraftEntity implements Player {
     @Override
     public @NotNull CraftServer getServer() {
         return new CraftServer(player.getServer());
-    }
-
-    @Override
-    public @Nullable CraftEntity getPassenger() {
-        return new CraftEntity(player.getPassenger());
-    }
-
-    @Override
-    public boolean setPassenger(@NotNull Entity entity) {
-        return player.setPassenger(entity);
     }
 
     @Override

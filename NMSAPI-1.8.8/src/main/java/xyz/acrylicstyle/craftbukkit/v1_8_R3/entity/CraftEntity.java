@@ -15,8 +15,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.CraftServer;
-import xyz.acrylicstyle.minecraft.Entity;
-import xyz.acrylicstyle.shared.OBCAPI;
+import xyz.acrylicstyle.minecraft.v1_8_R1.Entity;
 
 import java.util.List;
 import java.util.Set;
@@ -25,13 +24,13 @@ import java.util.UUID;
 /**
  * Placeholder class(for now) to make easier to get nms instance
  */
-public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
+public class CraftEntity extends xyz.acrylicstyle.nmsapi.abstracts.craftbukkit.entity.CraftEntity implements org.bukkit.entity.Entity {
     public static final Class<?> CLASS = getClassWithoutException("entity.CraftEntity");
 
     @Override
     @Contract(value = "-> new", pure = true)
     public Entity getHandle() {
-        return new xyz.acrylicstyle.minecraft.Entity(super.getOBCClass());
+        return new Entity(super.getOBCClass());
     }
 
     private org.bukkit.entity.Entity entity;
@@ -54,7 +53,7 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public Location getLocation() {
+    public @NotNull Location getLocation() {
         return entity.getLocation();
     }
 
@@ -64,12 +63,12 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public void setVelocity(Vector velocity) {
+    public void setVelocity(@NotNull Vector velocity) {
         entity.setVelocity(velocity);
     }
 
     @Override
-    public Vector getVelocity() {
+    public @NotNull Vector getVelocity() {
         return entity.getVelocity();
     }
 
@@ -79,32 +78,32 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public World getWorld() {
+    public @NotNull World getWorld() {
         return entity.getWorld();
     }
 
     @Override
-    public boolean teleport(Location location) {
+    public boolean teleport(@NotNull Location location) {
         return entity.teleport(location);
     }
 
     @Override
-    public boolean teleport(Location location, PlayerTeleportEvent.TeleportCause cause) {
+    public boolean teleport(@NotNull Location location, PlayerTeleportEvent.@NotNull TeleportCause cause) {
         return entity.teleport(location, cause);
     }
 
     @Override
-    public boolean teleport(org.bukkit.entity.Entity destination) {
+    public boolean teleport(org.bukkit.entity.@NotNull Entity destination) {
         return entity.teleport(destination);
     }
 
     @Override
-    public boolean teleport(org.bukkit.entity.Entity destination, PlayerTeleportEvent.TeleportCause cause) {
+    public boolean teleport(org.bukkit.entity.@NotNull Entity destination, PlayerTeleportEvent.@NotNull TeleportCause cause) {
         return entity.teleport(destination, cause);
     }
 
     @Override
-    public List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z) {
+    public @NotNull List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z) {
         return entity.getNearbyEntities(x, y, z);
     }
 
@@ -144,7 +143,7 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(@NotNull String message) {
         entity.sendMessage(message);
     }
 
@@ -154,12 +153,12 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public CraftServer getServer() {
+    public @NotNull CraftServer getServer() {
         return new CraftServer(entity.getServer());
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return entity.getName();
     }
 
@@ -169,7 +168,7 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public boolean setPassenger(org.bukkit.entity.Entity passenger) {
+    public boolean setPassenger(org.bukkit.entity.@NotNull Entity passenger) {
         return entity.setPassenger(passenger);
     }
 
@@ -204,7 +203,7 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public UUID getUniqueId() {
+    public @NotNull UUID getUniqueId() {
         return entity.getUniqueId();
     }
 
@@ -219,12 +218,12 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public void playEffect(EntityEffect type) {
+    public void playEffect(@NotNull EntityEffect type) {
         entity.playEffect(type);
     }
 
     @Override
-    public EntityType getType() {
+    public @NotNull EntityType getType() {
         return entity.getType();
     }
 
@@ -264,72 +263,67 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public Spigot spigot() {
-        return entity.spigot();
-    }
-
-    @Override
-    public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
+    public void setMetadata(@NotNull String metadataKey, @NotNull MetadataValue newMetadataValue) {
         entity.setMetadata(metadataKey, newMetadataValue);
     }
 
     @Override
-    public List<MetadataValue> getMetadata(String metadataKey) {
+    public @NotNull List<MetadataValue> getMetadata(@NotNull String metadataKey) {
         return entity.getMetadata(metadataKey);
     }
 
     @Override
-    public boolean hasMetadata(String metadataKey) {
+    public boolean hasMetadata(@NotNull String metadataKey) {
         return entity.hasMetadata(metadataKey);
     }
 
     @Override
-    public void removeMetadata(String metadataKey, Plugin owningPlugin) {
+    public void removeMetadata(@NotNull String metadataKey, @NotNull Plugin owningPlugin) {
         entity.removeMetadata(metadataKey, owningPlugin);
     }
 
     @Override
-    public boolean isPermissionSet(String name) {
+    public boolean isPermissionSet(@NotNull String name) {
         return entity.isPermissionSet(name);
     }
 
     @Override
-    public boolean isPermissionSet(Permission perm) {
+    public boolean isPermissionSet(@NotNull Permission perm) {
         return entity.isPermissionSet(perm);
     }
 
     @Override
-    public boolean hasPermission(String name) {
+    public boolean hasPermission(@NotNull String name) {
         return entity.hasPermission(name);
     }
 
     @Override
-    public boolean hasPermission(Permission perm) {
+    public boolean hasPermission(@NotNull Permission perm) {
         return entity.hasPermission(perm);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
+    public @NotNull PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String name, boolean value) {
         return entity.addAttachment(plugin, name, value);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin plugin) {
+    public @NotNull PermissionAttachment addAttachment(@NotNull Plugin plugin) {
         return entity.addAttachment(plugin);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+    public PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String name, boolean value, int ticks) {
         return entity.addAttachment(plugin, name, value, ticks);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+    public PermissionAttachment addAttachment(@NotNull Plugin plugin, int ticks) {
         return entity.addAttachment(plugin, ticks);
     }
 
     @Override
-    public void removeAttachment(PermissionAttachment attachment) {
+    public void removeAttachment(@NotNull PermissionAttachment attachment) {
         entity.removeAttachment(attachment);
     }
 
@@ -339,7 +333,7 @@ public class CraftEntity extends OBCAPI implements org.bukkit.entity.Entity {
     }
 
     @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+    public @NotNull Set<PermissionAttachmentInfo> getEffectivePermissions() {
         return entity.getEffectivePermissions();
     }
 

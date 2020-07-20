@@ -6,9 +6,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
-import xyz.acrylicstyle.minecraft.NBTBase;
-import xyz.acrylicstyle.minecraft.NBTTagCompound;
-import xyz.acrylicstyle.minecraft.NBTTagList;
+import xyz.acrylicstyle.minecraft.v1_8_R1.NBTBase;
+import xyz.acrylicstyle.minecraft.v1_8_R1.NBTTagCompound;
+import xyz.acrylicstyle.minecraft.v1_8_R1.NBTTagList;
 import xyz.acrylicstyle.shared.OBCAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 

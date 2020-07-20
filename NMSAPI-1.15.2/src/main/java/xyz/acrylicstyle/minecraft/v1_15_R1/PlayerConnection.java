@@ -6,15 +6,15 @@ import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import xyz.acrylicstyle.nmsapi.abstracts.craftbukkit.entity.CraftPlayer;
 import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
-@SuppressWarnings("unused")
-public class PlayerConnection extends NMSAPI {
+@SuppressWarnings({ "unused", "deprecation" })
+public class PlayerConnection extends NMSAPI implements xyz.acrylicstyle.nmsapi.abstracts.minecraft.PlayerConnection {
     public static final Class<?> CLASS = getClassWithoutException("PlayerConnection");
 
     public xyz.acrylicstyle.minecraft.v1_15_R1.EntityPlayer player;

@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.reflect.Ref;
 import xyz.acrylicstyle.craftbukkit.v1_15_R1.CraftServer;
-import xyz.acrylicstyle.craftbukkit.v1_15_R1.CraftWorld;
 import xyz.acrylicstyle.shared.NMSAPI;
 import xyz.acrylicstyle.tomeito_api.utils.Log;
 
+@SuppressWarnings("deprecation")
 public abstract class World extends NMSAPI implements IBlockAccess {
     public static final Class<?> CLASS = getClassWithoutException("World");
 
@@ -26,7 +26,7 @@ public abstract class World extends NMSAPI implements IBlockAccess {
         super(o, "World");
     }
 
-    public CraftWorld getWorld() { return new CraftWorld((org.bukkit.World) getField("world")); }
+    public org.bukkit.World getWorld() { return (org.bukkit.World) getField("world"); }
 
     public CraftServer getServer() { return new CraftServer(Bukkit.getServer()); }
 

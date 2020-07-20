@@ -50,6 +50,17 @@ public class NMSAPI {
 
     public static NMSAPI getEmptyNMSAPI(Object o, String nmsClassName) { return new NMSAPI(o, nmsClassName); }
 
+    public static String getClassPrefix() {
+        String v = Bukkit.getVersion();
+        if (v.contains("1.8")) {
+            return "xyz.acrylicstyle.minecraft.v1_8_R1.";
+        }
+        if (v.contains("1.9") || v.contains("1.10") || v.contains("1.11") || v.contains("1.12")) {
+            return "xyz.acrylicstyle.minecraft.v1_12_R1.";
+        }
+        return "xyz.acrylicstyle.minecraft.v1_15_R1.";
+    }
+
     /**
      * Constructs NMSAPI and calls NMS class's constructor.
      * @param nmsClassName NMS class name (target)
@@ -99,6 +110,7 @@ public class NMSAPI {
         return null;
     }
 
+    @NotNull
     public final Object getHandle() { return this.o; }
     public final Object getHandle(boolean checkClass) { return checkClass ? getNMSClass(true) : this.o; }
 
@@ -178,7 +190,7 @@ public class NMSAPI {
 
     public Object invoke(String method) {
         try {
-            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method);
+            Method m = ReflectionUtil.getNMSClass(nmsClassName).getDeclaredMethod(method);
             m.setAccessible(true);
             return m.invoke(this.o);
         } catch (Exception e) {
@@ -190,7 +202,7 @@ public class NMSAPI {
 
     public static Object invokeStatic(String clazz, Object object, String method) {
         try {
-            Method m = ReflectionUtil.getNMSClass(clazz).getMethod(method);
+            Method m = ReflectionUtil.getNMSClass(clazz).getDeclaredMethod(method);
             m.setAccessible(true);
             return m.invoke(object);
         } catch (Exception e) {
@@ -202,8 +214,6 @@ public class NMSAPI {
 
     public Object invoke(String method, Object... o) {
         if (getNMSClass() == null) Log.warn("NMS object is null :(");
-        if (getHandle() == null) Log.warn("Handle is null :(");
-        if (this.o == null) Log.warn("Object is null :(");
         try {
             return invoke0(nmsClassName, method, o).invoke(this.o, o);
         } catch (Exception e) {
@@ -236,7 +246,7 @@ public class NMSAPI {
     private static Method invoke0(String clazz, String method, Object[] o) throws NoSuchMethodException, ClassNotFoundException {
         CollectionList<Class<?>> classes = new CollectionList<>();
         for (Object o1 : o) classes.add(PRIMITIVES.containsKey(o1.getClass()) ? PRIMITIVES.get(o1.getClass()) : o1.getClass());
-        Method m = ReflectionUtil.getNMSClass(clazz).getMethod(method, classes.toArray(new Class[0]));
+        Method m = ReflectionUtil.getNMSClass(clazz).getDeclaredMethod(method, classes.toArray(new Class[0]));
         m.setAccessible(true);
         return m;
     }
@@ -255,7 +265,7 @@ public class NMSAPI {
     private Object invoke10(String method, Object o, Class<?> clazz) {
         if (checkState()) return null;
         try {
-            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, clazz);
+            Method m = ReflectionUtil.getNMSClass(nmsClassName).getDeclaredMethod(method, clazz);
             m.setAccessible(true);
             return m.invoke(getNMSClass(), o);
         } catch (Exception e) {
@@ -278,7 +288,7 @@ public class NMSAPI {
     private Object invoke11(String method, Object o1, Object o2, Class<?> clazz1, Class<?> clazz2) {
         if (checkState()) return null;
         try {
-            Method m = ReflectionUtil.getNMSClass(nmsClassName).getMethod(method, clazz1, clazz2);
+            Method m = ReflectionUtil.getNMSClass(nmsClassName).getDeclaredMethod(method, clazz1, clazz2);
             m.setAccessible(true);
             return m.invoke(getNMSClass(), o1, o2);
         } catch (Exception e) {

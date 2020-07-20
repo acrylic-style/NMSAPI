@@ -1,6 +1,7 @@
 package xyz.acrylicstyle.shared;
 
 import org.jetbrains.annotations.Contract;
+import util.reflect.Ref;
 
 import java.util.UUID;
 
@@ -25,5 +26,9 @@ class Bukkit {
         } catch (ReflectiveOperationException e) {
             return null;
         }
+    }
+
+    static String getVersion() {
+        return (String) Ref.forName("org.bukkit.Bukkit").getMethod("getVersion").invoke(null);
     }
 }

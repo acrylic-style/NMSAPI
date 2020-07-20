@@ -12,7 +12,7 @@ public class PacketPlayOutNamedEntitySpawn extends NMSAPI implements Packet<Pack
     public PacketPlayOutNamedEntitySpawn(@NotNull EntityPlayer entityPlayer) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         super(ReflectionUtil.getNMSClass("PacketPlayOutNamedEntitySpawn")
                 .getConstructor(ReflectionUtil.getNMSClass("EntityHuman"))
-                .newInstance(entityPlayer.getEntityHuman()), "PacketPlayOutNamedEntitySpawn");
+                .newInstance(entityPlayer.getHandle()), "PacketPlayOutNamedEntitySpawn");
     }
 
     public PacketPlayOutNamedEntitySpawn(@NotNull Object o) {

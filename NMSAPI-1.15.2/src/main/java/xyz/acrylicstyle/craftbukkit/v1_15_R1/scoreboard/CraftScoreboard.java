@@ -125,11 +125,7 @@ public class CraftScoreboard extends TypedOBCAPI<Scoreboard> implements Scoreboa
     }
 
     public CraftScoreboard cloneScoreboard() {
-        try {
-            String s = new Serializer(this).asString();
-            return (CraftScoreboard) Serializer.fromString(s).getObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        String s = new Serializer(this).asString();
+        return (CraftScoreboard) Serializer.fromString(s).getObject();
     }
 }

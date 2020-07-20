@@ -9,7 +9,7 @@ import util.JSONAPI;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.authlib.properties.Property;
 import xyz.acrylicstyle.authlib.properties.PropertyMap;
-import xyz.acrylicstyle.craftbukkit.CraftPlayer;
+import xyz.acrylicstyle.nmsapi.abstracts.craftbukkit.entity.CraftPlayer;
 import xyz.acrylicstyle.shared.BaseMojangAPI;
 
 import java.util.UUID;
@@ -25,9 +25,9 @@ public class MojangAPI extends BaseMojangAPI {
 
     @NotNull
     public static GameProfile getGameProfile(@NotNull UUID uuid) {
-        JSONAPI.Response response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call(JSONObject.class);
+        JSONAPI.Response<JSONObject> response = new JSONAPI(String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", uuid.toString().replaceAll("-", ""))).call(JSONObject.class);
         if (response.getResponseCode() != 200) throw new RuntimeException("Response code isn't 200! (" + response.getResponseCode() + ")");
-        JSONObject json = (JSONObject) response.getResponse();
+        JSONObject json = response.getResponse();
         UUID id = UUID.fromString(json.getString("id").replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"));
         String name = json.getString("name");
         JSONArray properties = json.getJSONArray("properties");

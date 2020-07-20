@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
-import xyz.acrylicstyle.craftbukkit.CraftUtils;
+import xyz.acrylicstyle.craftbukkit.v1_12_R1.CraftUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;

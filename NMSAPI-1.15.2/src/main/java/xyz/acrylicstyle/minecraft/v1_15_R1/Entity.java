@@ -4,17 +4,22 @@ import org.bukkit.Location;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spigotmc.CustomTimingsHandler;
 import util.ICollectionList;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftEntity;
+import util.reflect.Ref;
+import xyz.acrylicstyle.nmsapi.abstracts.craftbukkit.entity.CraftEntity;
+import xyz.acrylicstyle.nmsapi.abstracts.minecraft.DamageSource;
 import xyz.acrylicstyle.shared.NMSAPI;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public class Entity extends NMSAPI {
+public class Entity extends NMSAPI implements xyz.acrylicstyle.nmsapi.abstracts.minecraft.Entity {
     public static final Class<?> CLASS = getClassWithoutException("Entity");
 
     public Entity(String clazz) {
@@ -39,86 +44,92 @@ public class Entity extends NMSAPI {
 
     public static final int CURRENT_LEVEL = 2;
 
-    public int id() { return field("id"); }
-    public double j() { return field("j"); }
-    public boolean k() { return field("k"); }
-    public Entity passenger() { return new Entity(getField("passenger")); }
-    public Entity vehicle() { return new Entity(getField("vehicle")); }
-    public boolean attachedToPlayer() { return field("attachedToPlayer"); }
-    public World world() { return World.newInstance(getField("world")); }
-    public double lastX() { return field("lastX"); }
-    public double lastY() { return field("lastY"); }
-    public double lastZ() { return field("lastZ"); }
-    public double locX() { return field("locX"); }
-    public double locY() { return field("locY"); }
-    public double locZ() { return field("locZ"); }
-    public double motX() { return field("motX"); }
-    public double motY() { return field("motY"); }
-    public double motZ() { return field("motZ"); }
-    public float yaw() { return field("yaw"); }
-    public float pitch() { return field("pitch"); }
-    public float lastYaw() { return field("lastYaw"); }
-    public float lastPitch() { return field("lastPitch"); }
-    public boolean onGround() { return field("onGround"); }
-    public boolean positionChanged() { return field("positionChanged"); }
-    public boolean E() { return field("E"); }
-    public boolean F() { return field("F"); }
-    public boolean velocityChanged() { return field("velocityChanged"); }
-    public boolean H() { return field("H"); }
-    public boolean g() { return field("g"); }
-    public boolean dead() { return field("dead"); }
-    public float width() { return field("width"); }
-    public float length() { return field("length"); }
-    public float getL() { return field("L"); }
-    public float M() { return field("M"); }
-    public float N() { return field("N"); }
-    public float fallDistance() { return field("fallDistance"); }
-    public int getH() { return field("h"); }
-    public double getP() { return field("P"); }
-    public double getQ() { return field("Q"); }
-    public double getR() { return field("R"); }
-    public float S() { return field("S"); }
-    public boolean noclip() { return field("noclip"); }
-    public float getU() { return field("U"); }
-    public Random random() { return field("random"); }
-    public int ticksLived() { return field("ticksLived"); }
-    public int maxFireTicks() { return field("maxFireTicks"); }
-    public int fireTicks() { return field("fireTicks"); }
-    public boolean inWater() { return field("inWater"); }
-    public int noDamageTicks() { return field("noDamageTicks"); }
-    public boolean justCreated() { return field("justCreated"); }
-    public boolean fireProof() { return field("fireProof"); }
-    public double ar() { return field("ar"); }
-    public double as() { return field("as"); }
-    public boolean isAd() { return field("ad"); }
-    public int getAe() { return field("ae"); }
-    public int getAf() { return field("af"); }
-    public int getAg() { return field("ag"); }
-    public boolean getAh() { return field("ah"); }
-    public boolean ai() { return field("ai"); }
-    public int portalCooldown() { return field("portalCooldown"); }
-    public boolean isAk() { return field("ak"); }
-    public int getAl() { return field("al"); }
-    public int dimension() { return field("dimension"); }
-    public xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition getAn() { return new xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition(getField("an")); }
-    public Vec3D getAo() { return new Vec3D(getField("ao")); }
-    public EnumDirection getAp() { return EnumDirection.valueOf(((Enum<?>) getField("ap")).name()); }
-    public boolean invulnerable() { return field("invulnerable"); }
-    public UUID uniqueID() { return field("uniqueID"); }
-    public boolean valid() { return field("valid"); }
-    public ProjectileSource projectileSource() { return field("projectileSource"); }
-    public boolean forceExplosionKnockback() { return field("forceExplosionKnockback"); }
+    private int id() { return field("id"); }
+    private double j() { return field("j"); }
+    private boolean k() { return field("k"); }
+    private Entity passenger() { return new Entity(getField("passenger")); }
+    private Entity vehicle() { return getField("vehicle") != null ? new Entity(getField("vehicle")) : null; }
+    private boolean attachedToPlayer() { return field("attachedToPlayer"); }
+    private World world() { return World.newInstance(getField("world")); }
+    private double lastX() { return field("lastX"); }
+    private double lastY() { return field("lastY"); }
+    private double lastZ() { return field("lastZ"); }
+    private double locX() { return field("locX"); }
+    private double locY() { return field("locY"); }
+    private double locZ() { return field("locZ"); }
+    private double motX() { return field("motX"); }
+    private double motY() { return field("motY"); }
+    private double motZ() { return field("motZ"); }
+    private float yaw() { return field("yaw"); }
+    private float pitch() { return field("pitch"); }
+    private float lastYaw() { return field("lastYaw"); }
+    private float lastPitch() { return field("lastPitch"); }
+    private boolean onGround() { return field("onGround"); }
+    private boolean positionChanged() { return field("positionChanged"); }
+    private boolean E() { return field("E"); }
+    private boolean F() { return field("F"); }
+    private boolean velocityChanged() { return field("velocityChanged"); }
+    private boolean H() { return field("H"); }
+    private boolean g() { return field("g"); }
+    private boolean dead() { return field("dead"); }
+    private float getL() { return field("L"); }
+    private float M() { return field("M"); }
+    private float N() { return field("N"); }
+    private float fallDistance() { return field("fallDistance"); }
+    private int getH() { return field("h"); }
+    private double getP() { return field("P"); }
+    private double getQ() { return field("Q"); }
+    private double getR() { return field("R"); }
+    private float S() { return field("S"); }
+    private boolean noclip() { return field("noclip"); }
+    private float getU() { return field("U"); }
+    private Random random() { return field("random"); }
+    private int ticksLived() { return field("ticksLived"); }
+    private int fireTicks() { return field("fireTicks"); }
+    private boolean inWater() { return field("inWater"); }
+    private int noDamageTicks() { return field("noDamageTicks"); }
+    private boolean justCreated() { return field("justCreated"); }
+    private boolean fireProof() { return field("fireProof"); }
+    private double ar() { return field("ar"); }
+    private double as() { return field("as"); }
+    private boolean isAd() { return field("ad"); }
+    private int getAe() { return field("ae"); }
+    private int getAf() { return field("af"); }
+    private int getAg() { return field("ag"); }
+    private boolean getAh() { return field("ah"); }
+    private boolean ai() { return field("ai"); }
+    private int portalCooldown() { return field("portalCooldown"); }
+    private boolean isAk() { return field("ak"); }
+    private int getAl() { return field("al"); }
+    private int dimension() { return field("dimension"); }
+    private xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition getAn() { return new xyz.acrylicstyle.minecraft.v1_15_R1.BlockPosition(getField("an")); }
+    private Vec3D getAo() { return new Vec3D(getField("ao")); }
+    private EnumDirection getAp() { return EnumDirection.valueOf(((Enum<?>) getField("ap")).name()); }
+    private boolean invulnerable() { return field("invulnerable"); }
+    private UUID uniqueID() { return field("uniqueID"); }
+    private boolean valid() { return field("valid"); }
+    private ProjectileSource projectileSource() { return field("projectileSource"); }
+    private boolean forceExplosionKnockback() { return field("forceExplosionKnockback"); }
 
+    @Override
     public boolean isAddedToChunk() {
-        return ad();
+        return field("inChunk");
+    }
+
+    @Override
+    public boolean isFromMobSpawner() {
+        return false;
+    }
+
+    @Override
+    public int getCollisions() {
+        return 0;
     }
 
     public CustomTimingsHandler tickTimer() { return field("tickTimer"); }
     public final byte activationType() { return field("activationType"); }
     public final boolean defaultActivationState() { return field("defaultActivationState"); }
     public long activatedTick() { return field("activatedTick"); }
-    public boolean fromMobSpawner() { return field("fromMobSpawner"); }
-    public int numCollisions() { return field("numCollisions"); }
 
     public void inactiveTick() { invoke("inactiveTick"); }
 
@@ -126,12 +137,150 @@ public class Entity extends NMSAPI {
         return this.id();
     }
 
-    public void d(int i) {
-        invoke("d", i);
+    @Override
+    public xyz.acrylicstyle.nmsapi.abstracts.minecraft.@Nullable Entity getPassenger() throws NoSuchElementException {
+        return getPassengers().get(0);
     }
 
-    public void G() {
-        invoke("G");
+    @SuppressWarnings({ "Convert2MethodRef" })
+    @Override
+    public @NotNull List<xyz.acrylicstyle.nmsapi.abstracts.minecraft.Entity> getPassengers() {
+        return ICollectionList.asList((List<?>) getField("passengers")).map(o -> new Entity(o));
+    }
+
+    @Override
+    public xyz.acrylicstyle.nmsapi.abstracts.minecraft.@Nullable Entity getVehicle() {
+        return vehicle();
+    }
+
+    @Override
+    public boolean isAttachedToPlayer() {
+        return attachedToPlayer();
+    }
+
+    @Override
+    public double getLastX() {
+        return lastX();
+    }
+
+    @Override
+    public double getLastY() {
+        return lastY();
+    }
+
+    @Override
+    public double getLastZ() {
+        return lastZ();
+    }
+
+    @Override
+    public float getLastYaw() {
+        return lastYaw();
+    }
+
+    @Override
+    public float getLastPitch() {
+        return lastPitch();
+    }
+
+    @Override
+    public double getX() {
+        return locX();
+    }
+
+    @Override
+    public double getY() {
+        return locY();
+    }
+
+    @Override
+    public double getZ() {
+        return locZ();
+    }
+
+    @Override
+    public float getYaw() {
+        return yaw();
+    }
+
+    @Override
+    public float getPitch() {
+        return pitch();
+    }
+
+    @Override
+    public double getMotionX() {
+        return motX();
+    }
+
+    @Override
+    public double getMotionY() {
+        return motY();
+    }
+
+    @Override
+    public double getMotionZ() {
+        return motZ();
+    }
+
+    @Override
+    public boolean isOnGround() {
+        return onGround();
+    }
+
+    @Override
+    public float getFallDistance() {
+        return fallDistance();
+    }
+
+    @Override
+    public float getWidth() {
+        return 0;
+    }
+
+    @Override
+    public float getLength() {
+        return 0;
+    }
+
+    @Override
+    public int getTicksLived() {
+        return ticksLived();
+    }
+
+    @Override
+    public void setTicksLived(int ticksLived) {
+        setField("ticksLived", ticksLived);
+    }
+
+    @Override
+    public int getMaxFireTicks() {
+        return (int) invoke("getMaxFireTicks");
+    }
+
+    @Override
+    public void setMaxFireTicks(int ticks) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getFireTicks() {
+        return fireTicks();
+    }
+
+    @Override
+    public void setFireTicks(int fireTicks) {
+        setField("fireTicks", fireTicks);
+    }
+
+    @Override
+    public boolean isInWater() {
+        return inWater();
+    }
+
+    @Override
+    public int getNoDamageTicks() {
+        return noDamageTicks();
     }
 
     public boolean equals(Object o) {
@@ -158,18 +307,6 @@ public class Entity extends NMSAPI {
         invoke("setPosition", d0, d1, d2);
     }
 
-    public void T_() {
-        invoke("T_");
-    }
-
-    public void K() {
-        invoke("K");
-    }
-
-    public int L() {
-        return (int) invoke("L");
-    }
-
     public void burnFromLava() {
         invoke("burnFromLava");
     }
@@ -180,6 +317,11 @@ public class Entity extends NMSAPI {
 
     public void extinguish() {
         invoke("extinguish");
+    }
+
+    @Override
+    public void remove() {
+
     }
 
     public void O() {
@@ -194,8 +336,9 @@ public class Entity extends NMSAPI {
         invoke("move", d0, d1, d2);
     }
 
-    public String P() {
-        return (String) invoke("P");
+    @Override
+    public @NotNull String getSwimSound() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
     public void checkBlockCollisions() {
@@ -204,20 +347,9 @@ public class Entity extends NMSAPI {
 
     // public void a(BlockPosition blockPosition, Block block) {}
 
-    public void makeSound(String s, float f, float f1) {
-        invoke("makeSound", s, f, f1);
-    }
-
-    public boolean R() {
-        return (boolean) invoke("R");
-    }
-
-    public void b(boolean flag) {
-        invoke("b", flag);
-    }
-
-    public boolean s_() {
-        return (boolean) invoke("s_");
+    @Override
+    public void makeSound(@NotNull String s, float f, float f1) {
+        throw new UnsupportedOperationException();
     }
 
     // public void a(double d0, boolean flag, Block block, BlockPosition blockPosition) {}
@@ -230,6 +362,31 @@ public class Entity extends NMSAPI {
 
     public boolean isFireProof() {
         return field("fireProof");
+    }
+
+    @Override
+    public int getPortalCooldown() {
+        return portalCooldown();
+    }
+
+    @Override
+    public int getDimension() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isInvulnerable() {
+        return invulnerable();
+    }
+
+    @Override
+    public @NotNull UUID getUniqueId() {
+        return uniqueID();
+    }
+
+    @Override
+    public boolean isValid() {
+        return valid();
     }
 
     public void e(float f, float f1) {
@@ -294,6 +451,25 @@ public class Entity extends NMSAPI {
         invoke("setPositionRotation", x, y, z, yaw, pitch);
     }
 
+    @Override
+    public double distanceSquared(xyz.acrylicstyle.nmsapi.abstracts.minecraft.@NotNull Entity entity) {
+        return (double) invoke("h", entity.getHandle()); // todo: verify
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void collide(xyz.acrylicstyle.nmsapi.abstracts.minecraft.@NotNull Entity entity) {
+        Ref.getClass(CLASS).getMethod("collide", Entity.CLASS).invokeObj(null, entity.getHandle());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean damageEntity(DamageSource damageSource, float damage) {
+        return (boolean) Ref.getClass(CLASS)
+                .getMethod("damageEntity", getClassWithoutException("DamageSource"), float.class)
+                .invokeObj(null, damageSource.getHandle(), damage);
+    }
+
     public float g(Entity entity) {
         return (float) invoke("g", entity.getHandle());
     }
@@ -344,10 +520,6 @@ public class Entity extends NMSAPI {
 
     public Vec3D f(float f, float f1) {
         return new Vec3D(invoke("f", f, f1));
-    }
-
-    public boolean ad() {
-        return (boolean) invoke("ad");
     }
 
     public boolean ae() {
@@ -436,8 +608,14 @@ public class Entity extends NMSAPI {
         return (double) invoke("an");
     }
 
-    public CraftEntity getBukkitEntity() {
+    public @NotNull CraftEntity getBukkitEntity() {
         return new CraftEntity(invoke("getBukkitEntity"));
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void mount(xyz.acrylicstyle.nmsapi.abstracts.minecraft.@Nullable Entity entity) {
+        Ref.getClass(CLASS).getMethod("mount", Entity.CLASS).invokeObj(null, entity == null ? null : entity.getHandle());
     }
 
     public void mount(Entity entity) {
@@ -470,6 +648,11 @@ public class Entity extends NMSAPI {
 
     public boolean isBurning() {
         return (boolean) invoke("isBurning");
+    }
+
+    @Override
+    public boolean hasVehicle() {
+        return getVehicle() != null;
     }
 
     public boolean au() {
@@ -520,6 +703,14 @@ public class Entity extends NMSAPI {
         invoke("setAirTicks", i);
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean isInvulnerable(@NotNull DamageSource damageSource) {
+        return (boolean) Ref.getClass(CLASS)
+                .getMethod("isInvulnerable", getClassWithoutException("DamageSource"))
+                .invokeObj(null, damageSource.getHandle());
+    }
+
     // public void onLightningStrike(EntityLightning entityLightning) {}
 
     // public void a(EntityLiving entityLiving) {}
@@ -534,6 +725,14 @@ public class Entity extends NMSAPI {
 
     public String getName() {
         return (String) invoke("getName");
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void sendMessage(xyz.acrylicstyle.nmsapi.abstracts.minecraft.@NotNull IChatBaseComponent iChatBaseComponent) {
+        Ref.getClass(CLASS)
+                .getMethod("sendMessage", xyz.acrylicstyle.nmsapi.abstracts.minecraft.IChatBaseComponent.CLASS)
+                .invokeObj(null, iChatBaseComponent.getHandle());
     }
 
     public Entity[] aB() {
@@ -668,6 +867,31 @@ public class Entity extends NMSAPI {
         return (float) invoke("getHeadHeight");
     }
 
+    @Override
+    public xyz.acrylicstyle.nmsapi.abstracts.minecraft.@NotNull Entity getEntity() {
+        return this;
+    }
+
+    @Override
+    public void tick() {
+        invoke("tick");
+    }
+
+    @Override
+    public org.bukkit.@NotNull World getBukkitWorld() {
+        return world().getWorld();
+    }
+
+    @Override
+    public boolean isGlowing() throws UnsupportedOperationException {
+        return field("glowing");
+    }
+
+    @Override
+    public void setGlowing(boolean flag) throws UnsupportedOperationException {
+        setField("glowing", flag);
+    }
+
     public boolean aT() {
         return (boolean) invoke("aT");
     }
@@ -705,6 +929,7 @@ public class Entity extends NMSAPI {
         return this;
     }
 
+    @Override
     public boolean getSendCommandFeedback() {
         return (boolean) invoke("getSendCommandFeedback");
     }

@@ -2,10 +2,9 @@ package xyz.acrylicstyle.nms.test;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.junit.Test;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.support.DummyServer;
-import xyz.acrylicstyle.minecraft.NBTTagCompound;
+import xyz.acrylicstyle.minecraft.v1_8_R1.NBTTagCompound;
 
 import java.util.UUID;
 
@@ -14,7 +13,7 @@ public class NMSAPITest {
 
     private NBTTagCompound getNBTTagCompound() {
         ItemStack item = new ItemStack(Material.STONE);
-        xyz.acrylicstyle.minecraft.ItemStack itemStack = CraftItemStack.asNMSCopy(item);
+        xyz.acrylicstyle.minecraft.v1_8_R1.ItemStack itemStack = CraftItemStack.asNMSCopy(item);
         return itemStack.getTag();
     }
 

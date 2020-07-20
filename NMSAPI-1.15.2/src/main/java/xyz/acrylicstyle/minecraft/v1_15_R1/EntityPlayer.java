@@ -4,18 +4,19 @@ import com.google.common.collect.Lists;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
+import org.jetbrains.annotations.NotNull;
+import util.reflect.Ref;
 import xyz.acrylicstyle.authlib.GameProfile;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
+import xyz.acrylicstyle.nmsapi.abstracts.craftbukkit.entity.CraftPlayer;
+import xyz.acrylicstyle.nmsapi.abstracts.utils.CraftUtils;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class EntityPlayer extends Entity implements ICommandListener {
+public class EntityPlayer extends EntityHuman implements ICommandListener, xyz.acrylicstyle.nmsapi.abstracts.minecraft.EntityPlayer {
     public static final Class<?> CLASS = getClassWithoutException("EntityPlayer");
 
     Object __playerConnection;
@@ -33,7 +34,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
         setField("compassTarget", compassTarget);
     }
 
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(@NotNull String displayName) {
         setField("displayName", displayName);
     }
 
@@ -73,12 +74,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
     }
 
     public Object getScoreboard() {
-        try {
-            return CraftUtils.getHandle(getBukkitEntity().getScoreboard());
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return CraftUtils.getHandle(getBukkitEntity().getScoreboard());
     }
 
     public boolean isFrozen() {
@@ -93,24 +89,53 @@ public class EntityPlayer extends Entity implements ICommandListener {
         invoke("tickWeather");
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void attack(xyz.acrylicstyle.nmsapi.abstracts.minecraft.Entity entity) {
+        Ref.getClass(CLASS).getMethod("attach", Entity.CLASS).invokeObj(null, entity.getHandle());
+    }
+
+    @Override
+    public xyz.acrylicstyle.nmsapi.abstracts.minecraft.@NotNull PlayerConnection getPlayerConnection() {
+        return playerConnection;
+    }
+
     public void updateWeather(float oldRain, float newRain, float oldThunder, float newThunder) {
         invoke("updateWeather", oldRain, newRain, oldThunder, newThunder);
     }
 
+    @Override
+    public void playerTick() {
+        invoke("playerTick");
+    }
+
+    @Override
+    public boolean canPvP() {
+        return (boolean) invoke("canPvP");
+    }
+
+    @Override
+    public void closeInventory() {
+        invoke("closeInventory");
+    }
+
+    @Override
     public void setPlayerWeather(WeatherType type, boolean plugin) {
         invoke("setPlayerWeather", type, plugin);
     }
 
-    public GameProfile getProfile() {
+    @Override
+    public @NotNull GameProfile getProfile() {
         return new GameProfile(invoke("getProfile"));
     }
 
+    @Override
     public void die() {
         invoke("die");
     }
 
-    // NMSAPI start
-    public void setProfile(GameProfile profile) {
+    @Override
+    public void setProfile(@NotNull GameProfile profile) {
         Field f;
         try {
             f = ReflectionUtil.getNMSClass("EntityPlayer").getSuperclass().getDeclaredField("bH");
@@ -126,17 +151,17 @@ public class EntityPlayer extends Entity implements ICommandListener {
         }
     }
 
-    public Object getEntityHuman() {
-        return getNMSClass().getClass().getSuperclass().cast(getNMSClass());
-    }
-    // NMSAPI end
-
-    public String getLocale() {
+    public @NotNull String getLocale() {
         return field("locale");
     }
 
     public int getPing() {
         return field("ping");
+    }
+
+    @Override
+    public void setPing(int ping) {
+        setField("ping", ping);
     }
 
     public List<Integer> getRemoveQueue() {
@@ -155,7 +180,7 @@ public class EntityPlayer extends Entity implements ICommandListener {
         return field("viewingCredits");
     }
 
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return field("displayName");
     }
 
@@ -187,12 +212,12 @@ public class EntityPlayer extends Entity implements ICommandListener {
         return field("pluginRainPositionPrevious");
     }
 
-    public CraftPlayer getBukkitEntity() {
+    public @NotNull CraftPlayer getBukkitEntity() {
         return new CraftPlayer(invoke("getBukkitEntity", getNMSClass()));
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return getDisplayName();
     }
 
@@ -253,10 +278,21 @@ public class EntityPlayer extends Entity implements ICommandListener {
         return (boolean) invoke("isSpectator");
     }
 
+    @Override
+    public @NotNull String getIP() {
+        return (String) invoke("v");
+    }
+
+    @Override
+    public void setResourcePack(String url, String hash) {
+        invoke("setResourcePack", url, hash);
+    }
+
     public void resetIdleTimer() {
         invoke("resetIdleTimer");
     }
 
+    @SuppressWarnings("deprecation")
     public void d(Entity entity) {
         method("d", Entity.CLASS).invokeObj(getHandle(), entity);
     }
@@ -269,12 +305,9 @@ public class EntityPlayer extends Entity implements ICommandListener {
         return new Entity(invoke("C"));
     }
 
+    @SuppressWarnings("deprecation")
     public void setSpectatorTarget(Entity entity) {
         method("setSpectatorTarget", Entity.CLASS).invokeObj(getHandle(), entity);
-    }
-
-    public void attack(Entity entity) {
-        method("attack", Entity.CLASS).invokeObj(getHandle(), entity);
     }
 
     public long D() {
@@ -285,16 +318,14 @@ public class EntityPlayer extends Entity implements ICommandListener {
         return new ChatComponentText(invoke("getPlayerListName"));
     }
 
+    @Override
     public long getPlayerTime() {
         return (long) invoke("getPlayerTime");
     }
 
+    @Override
     public WeatherType getPlayerWeather() {
         return (WeatherType) invoke("getPlayerWeather");
-    }
-
-    public void sendMessage(IChatBaseComponent iChatBaseComponent) {
-        this.playerConnection.sendPacket(new PacketPlayOutChat(iChatBaseComponent));
     }
 
     public void sendMessage(IChatBaseComponent[] iChatBaseComponents) {
