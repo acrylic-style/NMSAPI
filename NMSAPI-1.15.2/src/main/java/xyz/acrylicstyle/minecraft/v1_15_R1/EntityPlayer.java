@@ -22,7 +22,7 @@ public class EntityPlayer extends EntityHuman implements ICommandListener, xyz.a
     Object __playerConnection;
     public PlayerConnection playerConnection = null;
     public int ping = field("ping");
-    //public final MinecraftServer server; // removed for now
+    public final MinecraftServer server;
     public final PlayerInteractManager playerInteractManager;
     public List<Integer> removeQueue = Lists.newLinkedList();
     public String locale = field("locale");
