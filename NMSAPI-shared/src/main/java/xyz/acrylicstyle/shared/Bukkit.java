@@ -20,7 +20,7 @@ class Bukkit {
     @Contract("null -> fail")
     static Player getPlayer(String name) {
         try {
-            Object o = Class.forName("org.bukkit.Bukkit").getMethod("getPlayer", String.class).invoke(null, name);
+            Object o = Class.forName("org.bukkit.Bukkit").getMethod("getPlayerExact", String.class).invoke(null, name);
             if (o == null) return null;
             return new Player(o);
         } catch (ReflectiveOperationException e) {

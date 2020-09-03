@@ -32,6 +32,14 @@ public interface EntityPlayer extends EntityHuman {
     void die();
 
     /**
+     * {@inheritDoc}
+     * @deprecated unsafe operation (may causes inconsistent state)
+     */
+    @Deprecated
+    @Override
+    void remove();
+
+    /**
      * Get the ping of this player
      * @return the ping
      */

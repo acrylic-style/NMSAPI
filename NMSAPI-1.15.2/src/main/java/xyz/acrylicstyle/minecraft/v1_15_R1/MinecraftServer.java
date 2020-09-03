@@ -10,10 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ICollectionList;
 import util.ReflectionHelper;
+import util.Validate;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_15_R1.CraftServer;
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_api.utils.Log;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.io.File;
@@ -24,11 +24,10 @@ import java.security.KeyPair;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.Executor;
-import java.util.function.BooleanSupplier;
 
 @SuppressWarnings("unused")
 public abstract class MinecraftServer extends NMSAPI implements Runnable, ICommandListener, IAsyncTaskHandler {
-    public final Thread primaryThread = field("primaryThread");
+    //public final Thread primaryThread = field("primaryThread");
 
     public static final Class<?> CLASS = getClassWithoutException("MinecraftServer");
 
@@ -102,32 +101,12 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
         return (boolean) invoke("executeNext");
     }
 
-    public boolean ba() {
-        return (boolean) invoke("ba");
-    }
-
-    public File z() {
-        return (File) invoke("z");
-    }
-
     public void exit() {
         invoke("exit");
     }
 
-    public void a(BooleanSupplier booleanSupplier) {
-        invoke("a", booleanSupplier);
-    }
-
-    public void b(BooleanSupplier booleanSupplier) {
-        invoke("b", booleanSupplier);
-    }
-
     public boolean getAllowNether() {
         return (boolean) invoke("getAllowNether");
-    }
-
-    public void b(Runnable runnable) {
-        invoke("b", runnable);
     }
 
     public static void main() {
@@ -141,14 +120,6 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
                     .getMethod("main", Class.forName("joptsimple.OptionSet"))
                     .invoke(null, optionSet);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void c(String s) {
-        try {
-            ReflectionHelper.setField(ReflectionUtil.getNMSClass("MinecraftServer"), getMinecraftServer(), "ax", s);
-        } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -171,10 +142,6 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
 
     public void startServerThread() {
         invoke("startServerThread");
-    }
-
-    public File d(String s) {
-        return (File) invoke("d", s);
     }
 
     public void info(String s) {
@@ -203,18 +170,6 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
 
     public boolean isDebugging() {
         return (boolean) invoke("isDebugging");
-    }
-
-    public void g(String s) {
-        invoke("g", s);
-    }
-
-    public void error(String s) {
-        g(s);
-    }
-
-    public void h(String s) {
-        invoke("h", s);
     }
 
     public String getServerModName() {
@@ -251,14 +206,6 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
 
     public World getWorld() {
         return World.newInstance(invoke("getWorld"));
-    }
-
-    public void a(KeyPair keyPair) {
-        try {
-            ReflectionHelper.setField(ReflectionUtil.getNMSClass("MinecraftServer"), getMinecraftServer(), "I", keyPair);
-        } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public void d(boolean flag) {
@@ -307,14 +254,6 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
 
     public boolean getOnlineMode() {
         return isOnlineMode();
-    }
-
-    public boolean Y() {
-        return getA();
-    }
-
-    public void h(boolean flag) {
-        invoke("h", flag);
     }
 
     public boolean getSpawnAnimals() {
@@ -366,10 +305,6 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
         return getG();
     }
 
-    public void b(int i) {
-        invoke("b", i);
-    }
-
     public boolean isStopped() {
         return (boolean) getField("isStopped");
     }
@@ -385,7 +320,7 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
         try {
             ReflectionUtil
                     .getNMSClass("MinecraftServer")
-                    .getMethod("playerList", ReflectionUtil.getNMSClass("PlayerList"))
+                    .getMethod("a", ReflectionUtil.getNMSClass("PlayerList"))
                     .invoke(o, playerList);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -923,11 +858,7 @@ public abstract class MinecraftServer extends NMSAPI implements Runnable, IComma
     }
 
     public static MinecraftServer newInstance(Object o) {
-        if (o == null) {
-            Log.warn("Object is null @ MinecraftServer#newInstance");
-            Thread.dumpStack();
-            return null;
-        }
+        Validate.notNull(o, "object cannot be null");
         return new MinecraftServer(o) {
             @Override
             public String getName() {

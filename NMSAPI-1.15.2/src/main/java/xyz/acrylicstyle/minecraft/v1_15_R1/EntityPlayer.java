@@ -22,7 +22,7 @@ public class EntityPlayer extends EntityHuman implements ICommandListener, xyz.a
     Object __playerConnection;
     public PlayerConnection playerConnection = null;
     public int ping = field("ping");
-    public final MinecraftServer server;
+    //public final MinecraftServer server; // removed for now
     public final PlayerInteractManager playerInteractManager;
     public List<Integer> removeQueue = Lists.newLinkedList();
     public String locale = field("locale");
@@ -49,7 +49,8 @@ public class EntityPlayer extends EntityHuman implements ICommandListener, xyz.a
             this.playerConnection = new PlayerConnection(this);
         } else System.err.println("playerConnection field is null.");
         this.playerInteractManager = new PlayerInteractManager(getField("playerInteractManager"));
-        this.server = MinecraftServer.getMinecraftServer(getField("server"));
+        // this.server = MinecraftServer.getMinecraftServer(getField("server"));
+        this.server = null;
     }
 
     private static Object call(MinecraftServer minecraftServer, WorldServer worldServer, GameProfile gameProfile, PlayerInteractManager playerInteractManager) {

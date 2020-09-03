@@ -7,7 +7,7 @@
     <groupId>xyz.acrylicstyle</groupId>
     <artifactId>NMSAPI</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.47d</version>
+    <version>0.1.48</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shadedArtifactAttached>true</shadedArtifactAttached>
@@ -54,6 +54,10 @@
             <id>acrylic-repo</id>
             <url>https://repo.acrylicstyle.xyz/</url>
         </repository>
+        <repository>
+            <id>acrylic-repo2</id>
+            <url>https://repo2.acrylicstyle.xyz/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -65,7 +69,7 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>java-util-all</artifactId>
-            <version>0.11.22</version>
+            <version>0.11.25</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
