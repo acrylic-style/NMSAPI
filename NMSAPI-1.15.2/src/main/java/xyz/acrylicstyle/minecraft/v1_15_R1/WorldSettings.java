@@ -1,7 +1,7 @@
 package xyz.acrylicstyle.minecraft.v1_15_R1;
 
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 public final class WorldSettings extends NMSAPI {
     public static final Class<?> CLASS = getClassWithoutException("WorldSettings");

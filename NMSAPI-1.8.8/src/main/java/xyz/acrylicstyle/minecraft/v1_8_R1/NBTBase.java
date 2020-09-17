@@ -3,7 +3,7 @@ package xyz.acrylicstyle.minecraft.v1_8_R1;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;

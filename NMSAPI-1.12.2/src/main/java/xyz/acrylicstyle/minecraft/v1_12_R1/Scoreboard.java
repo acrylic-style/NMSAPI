@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ReflectionHelper;
 import xyz.acrylicstyle.craftbukkit.v1_12_R1.CraftUtils;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;

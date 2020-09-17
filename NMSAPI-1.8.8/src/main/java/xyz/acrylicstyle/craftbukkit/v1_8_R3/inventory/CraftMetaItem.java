@@ -10,14 +10,18 @@ import xyz.acrylicstyle.minecraft.v1_8_R1.NBTBase;
 import xyz.acrylicstyle.minecraft.v1_8_R1.NBTTagCompound;
 import xyz.acrylicstyle.minecraft.v1_8_R1.NBTTagList;
 import xyz.acrylicstyle.shared.OBCAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public class CraftMetaItem extends OBCAPI implements ItemMeta, Repairable {

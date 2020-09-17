@@ -1,6 +1,5 @@
 package xyz.acrylicstyle.minecraft.v1_15_R1;
 
-import xyz.acrylicstyle.minecraft.v1_15_R1.ICommandListener;
 import xyz.acrylicstyle.shared.NMSAPI;
 
 public class ServerCommand extends NMSAPI {

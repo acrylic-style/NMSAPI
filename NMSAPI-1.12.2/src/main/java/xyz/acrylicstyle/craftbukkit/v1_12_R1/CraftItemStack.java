@@ -2,7 +2,7 @@ package xyz.acrylicstyle.craftbukkit.v1_12_R1;
 
 import org.bukkit.inventory.ItemStack;
 import xyz.acrylicstyle.minecraft.v1_12_R1.NBTTagCompound;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 

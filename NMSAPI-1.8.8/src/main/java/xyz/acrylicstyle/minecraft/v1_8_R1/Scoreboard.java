@@ -4,7 +4,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;

@@ -1,9 +1,8 @@
 package xyz.acrylicstyle.craftbukkit.v1_15_R1.inventory;
 
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 

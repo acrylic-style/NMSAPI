@@ -10,7 +10,7 @@ import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_12_R1.CraftUtils;
 import xyz.acrylicstyle.nmsapi.abstracts.craftbukkit.entity.CraftPlayer;
 import xyz.acrylicstyle.nmsapi.abstracts.minecraft.Entity;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

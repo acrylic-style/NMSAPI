@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.Handler;
 import xyz.acrylicstyle.minecraft.v1_8_R1.NBTTagCompound;
 import xyz.acrylicstyle.shared.OBCAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 

@@ -1,6 +1,6 @@
 package xyz.acrylicstyle.minecraft.v1_12_R1;
 
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 public enum EnumDirection {
     DOWN,

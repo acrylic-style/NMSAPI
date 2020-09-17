@@ -1,6 +1,6 @@
 package xyz.acrylicstyle.minecraft.v1_12_R1;
 
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 public class GameRules {
     public static final GameRules DO_FIRE_TICK = new GameRules("DO_FIRE_TICK");

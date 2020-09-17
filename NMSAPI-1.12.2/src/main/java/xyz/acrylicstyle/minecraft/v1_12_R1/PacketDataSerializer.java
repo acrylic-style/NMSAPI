@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBufProcessor;
 import org.apache.commons.lang.Validate;
 import util.CollectionList;
 import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.io.InputStream;
 import java.io.OutputStream;

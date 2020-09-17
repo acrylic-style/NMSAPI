@@ -2,7 +2,7 @@ package xyz.acrylicstyle.minecraft.v1_15_R1;
 
 import util.ReflectionHelper;
 import xyz.acrylicstyle.shared.NMSAPI;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 

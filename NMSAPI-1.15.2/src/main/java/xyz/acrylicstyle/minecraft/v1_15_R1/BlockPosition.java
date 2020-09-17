@@ -1,7 +1,7 @@
 package xyz.acrylicstyle.minecraft.v1_15_R1;
 
 import util.CollectionList;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 @SuppressWarnings("unused")
 public class BlockPosition extends BaseBlockPosition {

@@ -5,7 +5,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.ReflectionHelper;
-import xyz.acrylicstyle.tomeito_core.utils.ReflectionUtil;
+import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import javax.crypto.SecretKey;
 import java.lang.reflect.InvocationTargetException;
