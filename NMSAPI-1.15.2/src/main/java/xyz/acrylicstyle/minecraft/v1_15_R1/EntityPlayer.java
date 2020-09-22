@@ -293,7 +293,7 @@ public class EntityPlayer extends EntityHuman implements ICommandListener, xyz.a
         invoke("resetIdleTimer");
     }
 
-    @Override
+    //@Override
     public long getLastActiveTime() { return field("cj"); }
 
     @SuppressWarnings("deprecation")

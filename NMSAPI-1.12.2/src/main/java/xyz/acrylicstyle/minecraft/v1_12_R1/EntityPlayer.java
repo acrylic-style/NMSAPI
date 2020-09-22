@@ -126,7 +126,7 @@ public class EntityPlayer extends EntityHuman implements xyz.acrylicstyle.nmsapi
         invoke("resetIdleTimer");
     }
 
-    @Override
+    //@Override
     public long getLastActiveTime() { return field("cn"); }
 
     @Override
