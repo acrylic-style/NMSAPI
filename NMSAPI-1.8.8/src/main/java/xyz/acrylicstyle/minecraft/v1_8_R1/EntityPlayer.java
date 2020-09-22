@@ -6,11 +6,9 @@ import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import util.reflect.Ref;
 import xyz.acrylicstyle.authlib.GameProfile;
 import xyz.acrylicstyle.craftbukkit.v1_8_R3.util.CraftUtils;
 import xyz.acrylicstyle.nmsapi.abstracts.craftbukkit.entity.CraftPlayer;
-import xyz.acrylicstyle.nmsapi.abstracts.minecraft.DamageSource;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -323,6 +321,11 @@ public class EntityPlayer extends EntityHuman implements ICommandListener, xyz.a
     @Override
     public void resetIdleTimer() {
         invoke("resetIdleTimer");
+    }
+
+    @Override
+    public long getLastActiveTime() {
+        return field("bT");
     }
 
     @SuppressWarnings("deprecation")

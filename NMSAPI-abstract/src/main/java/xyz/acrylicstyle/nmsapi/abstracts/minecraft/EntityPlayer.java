@@ -200,6 +200,11 @@ public interface EntityPlayer extends EntityHuman {
     void resetIdleTimer();
 
     /**
+     * Returns the time when the player become active. Also known as Idle timer.
+     */
+    long getLastActiveTime();
+
+    /**
      * Returns the time that is specific to this player.
      * @return the time
      */

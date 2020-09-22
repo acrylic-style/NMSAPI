@@ -7,7 +7,7 @@
     <groupId>xyz.acrylicstyle</groupId>
     <artifactId>NMSAPI</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.48a</version>
+    <version>0.1.49</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shadedArtifactAttached>true</shadedArtifactAttached>
@@ -63,13 +63,13 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>api</artifactId>
-            <version>0.5.17</version>
+            <version>0.5.17b</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>java-util-all</artifactId>
-            <version>0.11.26</version>
+            <version>0.11.27</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

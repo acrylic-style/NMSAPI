@@ -47,11 +47,10 @@ public class BaseMojangAPI {
      * @return Name histories
      */
     public static CollectionList<NameHistory> getNameChanges(@NotNull UUID uuid) {
-        JSONAPI.Response<JSONObject> response = new JSONAPI("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names").call();
+        JSONAPI.Response<JSONArray> response = new JSONAPI("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names").call(JSONArray.class);
         if (response.getResponseCode() != 200) return null;
-        JSONArray json = new JSONArray(response.getRawResponse());
         CollectionList<NameHistory> histories = new CollectionList<>();
-        json.forEach(o -> {
+        response.getResponse().forEach(o -> {
             JSONObject obj = (JSONObject) o;
             String name = obj.getString("name");
             Long changedToAt = obj.has("changedToAt") ? obj.getLong("changedToAt") : null;

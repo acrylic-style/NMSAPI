@@ -127,6 +127,9 @@ public class EntityPlayer extends EntityHuman implements xyz.acrylicstyle.nmsapi
     }
 
     @Override
+    public long getLastActiveTime() { return field("cn"); }
+
+    @Override
     public long getPlayerTime() {
         return (long) invoke("getPlayerTime");
     }
