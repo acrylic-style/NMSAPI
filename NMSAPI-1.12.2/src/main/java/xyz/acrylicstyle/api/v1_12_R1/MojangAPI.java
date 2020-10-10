@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.api;
+package xyz.acrylicstyle.api.v1_12_R1;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

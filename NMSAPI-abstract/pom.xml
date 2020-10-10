@@ -5,7 +5,7 @@
     <parent>
         <artifactId>NMSAPI</artifactId>
         <groupId>xyz.acrylicstyle</groupId>
-        <version>0.1.49</version>
+        <version>0.1.50</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -137,12 +137,12 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-shared</artifactId>
-            <version>0.1.49</version>
+            <version>0.1.50</version>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-1.8.8</artifactId>
-            <version>0.1.48a</version> <!-- Make sure to use old version -->
+            <version>0.1.49</version> <!-- Make sure to use old version -->
             <exclusions>
                 <exclusion>
                     <groupId>xyz.acrylicstyle</groupId>
@@ -153,7 +153,7 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-1.12.2</artifactId>
-            <version>0.1.48a</version> <!-- Make sure to use old version -->
+            <version>0.1.49</version> <!-- Make sure to use old version -->
             <exclusions>
                 <exclusion>
                     <groupId>xyz.acrylicstyle</groupId>
@@ -164,7 +164,7 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>NMSAPI-1.15.2</artifactId>
-            <version>0.1.48a</version> <!-- Make sure to use old version -->
+            <version>0.1.49</version> <!-- Make sure to use old version -->
             <exclusions>
                 <exclusion>
                     <groupId>xyz.acrylicstyle</groupId>
