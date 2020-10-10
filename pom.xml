@@ -7,7 +7,7 @@
     <groupId>xyz.acrylicstyle</groupId>
     <artifactId>NMSAPI</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.50</version>
+    <version>0.1.51</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shadedArtifactAttached>true</shadedArtifactAttached>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>api</artifactId>
-            <version>0.5.17b</version>
+            <version>0.5.19a</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
