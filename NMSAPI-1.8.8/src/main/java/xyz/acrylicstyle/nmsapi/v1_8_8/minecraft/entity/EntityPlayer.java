@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.nmsapi.minecraft.v1_8_8.entity;
+package xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -6,13 +6,16 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.reflect.RefClass;
+import util.reflector.CastTo;
 import util.reflector.FieldGetter;
 import util.reflector.FieldSetter;
-import xyz.acrylicstyle.nmsapi.craftbukkit.v1_8_8.entity.CraftPlayer;
+import util.reflector.ForwardMethod;
+import xyz.acrylicstyle.mcutil.mojang.GameProfile;
 import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.v1_8_8.craftbukkit.entity.CraftPlayer;
 
 public interface EntityPlayer {
-    RefClass<?> CLASS = NMSAPI.getRefClass(NMSAPI.Type.NMS, "EntityPlayer");
+    RefClass<?> CLASS = NMSAPI.nms("EntityPlayer");
 
     @NotNull
     static EntityPlayer getInstance(@NotNull Player player) { return CraftPlayer.getInstance(player).getHandle(); }
@@ -71,4 +74,20 @@ public interface EntityPlayer {
 
     @FieldSetter("bT")
     void setIdleTimer(long idleTimer);
+
+    /**
+     * Returns the current game profile
+     * @return the current profile
+     */
+    @CastTo(value = xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.authlib.GameProfile.class, createInstance = true)
+    @FieldGetter("bH")
+    @NotNull
+    GameProfile getProfile();
+
+    /**
+     * Sets the game profile to the provided profile.
+     * @param profile the profile
+     */
+    @FieldSetter("bH")
+    void setProfile(@NotNull @ForwardMethod("toNMS") GameProfile profile);
 }
