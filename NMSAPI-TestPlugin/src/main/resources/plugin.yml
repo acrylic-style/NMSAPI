@@ -1,0 +1,7 @@
+name: NMSAPI-TestPlugin
+main: xyz.acrylicstyle.nmsapi.test.NMSAPITest
+version: "0.0.1"
+commands:
+  nmsapi:
+    description: "Tests things"
+    permission: nmsapi.test

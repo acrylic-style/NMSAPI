@@ -8,18 +8,18 @@
         <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>NMSAPI-1.8.8</artifactId>
+    <artifactId>NMSAPI-TestPlugin</artifactId>
     <dependencies>
+        <dependency>
+            <groupId>xyz.acrylicstyle</groupId>
+            <artifactId>NMSAPI-1.8.8</artifactId>
+            <version>0.0.1</version>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>xyz.acrylicstyle</groupId>
-            <artifactId>NMSAPI-shared</artifactId>
-            <version>1</version>
         </dependency>
     </dependencies>
 </project>

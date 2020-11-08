@@ -41,6 +41,7 @@
     <modules>
         <module>NMSAPI-1.8.8</module>
         <module>NMSAPI-shared</module>
+        <module>NMSAPI-TestPlugin</module>
     </modules>
     <repositories>
         <repository>
@@ -69,7 +70,7 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>java-util-all</artifactId>
-            <version>0.11.37</version>
+            <version>0.11.37c</version>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
