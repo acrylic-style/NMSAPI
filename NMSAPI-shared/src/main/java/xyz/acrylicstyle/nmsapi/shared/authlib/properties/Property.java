@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.authlib.properties;
+package xyz.acrylicstyle.nmsapi.shared.authlib.properties;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
