@@ -33,17 +33,17 @@ public class NMSAPI {
     @NotNull
     public static RefClass<?> clazz(@NotNull String clazz) { return getRefClass(Type.OTHER, clazz); }
 
-    public static <T, R> CollectionList<R> map(@NotNull Iterable<T> iterable, @NotNull Function<T, R> mapFunction) {
+    public static <T, R> @NotNull CollectionList<R> map(@NotNull Iterable<T> iterable, @NotNull Function<T, R> mapFunction) {
         CollectionList<R> list = new CollectionList<>();
         iterable.forEach(t -> list.add(mapFunction.apply(t)));
         return list;
     }
 
-    public static <T, U, R> Multimap<T, R> map(@NotNull Multimap<T, U> multimap, @NotNull Function<U, R> mapFunction) {
+    public static <T, U, R> @NotNull Multimap<T, R> map(@NotNull Multimap<T, U> multiMap, @NotNull Function<U, R> mapFunction) {
         Multimap<T, R> map = HashMultimap.create();
-        multimap.keySet().forEach(key -> {
+        multiMap.keySet().forEach(key -> {
             List<R> list = new ArrayList<>();
-            multimap.get(key).forEach(u -> list.add(mapFunction.apply(u)));
+            multiMap.get(key).forEach(u -> list.add(mapFunction.apply(u)));
             map.putAll(key, list);
         });
         return map;

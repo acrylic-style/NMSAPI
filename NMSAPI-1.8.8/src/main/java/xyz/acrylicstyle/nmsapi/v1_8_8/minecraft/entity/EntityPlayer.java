@@ -15,6 +15,7 @@ import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
 import xyz.acrylicstyle.nmsapi.shared.authlib.AbstractGameProfile;
 import xyz.acrylicstyle.nmsapi.v1_8_8.craftbukkit.entity.CraftPlayer;
 import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.authlib.ComplexGameProfile;
+import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.network.PlayerConnection;
 
 public interface EntityPlayer {
     RefClass<?> CLASS = NMSAPI.nms("EntityPlayer");
@@ -99,4 +100,9 @@ public interface EntityPlayer {
      */
     @FieldSetter("bH")
     void setProfile(@NotNull ComplexGameProfile.Refl profile);
+
+    @FieldGetter("playerConnection")
+    @Contract(pure = true)
+    @NotNull
+    PlayerConnection getPlayerConnection();
 }
