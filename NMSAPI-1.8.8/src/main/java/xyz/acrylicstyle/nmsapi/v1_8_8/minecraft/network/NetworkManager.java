@@ -11,11 +11,12 @@ import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
 
 import java.net.SocketAddress;
 
-public interface NetworkManager {
+public interface NetworkManager extends xyz.acrylicstyle.nmsapi.shared.mineraft.network.NetworkManager {
     RefClass<?> CLASS = NMSAPI.nms("NetworkManager");
 
     @FieldGetter("channel")
     @Contract(pure = true)
+    @Override
     Channel getChannel();
 
     @FieldSetter("channel")

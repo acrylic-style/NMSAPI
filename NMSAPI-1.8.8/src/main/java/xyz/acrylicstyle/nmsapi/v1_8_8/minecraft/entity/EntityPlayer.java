@@ -13,21 +13,18 @@ import util.reflector.ForwardMethod;
 import xyz.acrylicstyle.mcutil.mojang.GameProfile;
 import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
 import xyz.acrylicstyle.nmsapi.shared.authlib.AbstractGameProfile;
+import xyz.acrylicstyle.nmsapi.shared.authlib.ComplexGameProfile;
 import xyz.acrylicstyle.nmsapi.v1_8_8.craftbukkit.entity.CraftPlayer;
-import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.authlib.ComplexGameProfile;
 import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.network.PlayerConnection;
 
-public interface EntityPlayer {
+public interface EntityPlayer extends xyz.acrylicstyle.nmsapi.shared.mineraft.entity.EntityPlayer {
     RefClass<?> CLASS = NMSAPI.nms("EntityPlayer");
 
     @NotNull
     static EntityPlayer getInstance(@NotNull Player player) { return CraftPlayer.getInstance(player).getHandle(); }
 
-    /**
-     * Get ping of this player.
-     * @return the ping
-     */
     @Contract(pure = true)
+    @Override
     int getPing();
 
     /**
@@ -78,20 +75,14 @@ public interface EntityPlayer {
     @FieldSetter("bT")
     void setIdleTimer(long idleTimer);
 
-    /**
-     * Returns the current game profile
-     * @return the current profile
-     */
     @CastTo(value = ComplexGameProfile.class, createInstance = true)
     @FieldGetter("bH")
     @NotNull
+    @Override
     GameProfile getProfile();
 
-    /**
-     * Sets the game profile to the provided profile.
-     * @param profile the profile
-     */
     @FieldSetter("bH")
+    @Override
     void setProfile(@NotNull @ForwardMethod("toNMS") AbstractGameProfile profile);
 
     /**
@@ -102,7 +93,9 @@ public interface EntityPlayer {
     void setProfile(@NotNull ComplexGameProfile.Refl profile);
 
     @FieldGetter("playerConnection")
+    @CastTo(PlayerConnection.class)
     @Contract(pure = true)
     @NotNull
+    @Override
     PlayerConnection getPlayerConnection();
 }

@@ -11,7 +11,7 @@ import util.reflector.ReflectorHandler;
 import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
 import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.entity.EntityPlayer;
 
-public interface CraftPlayer extends Player {
+public interface CraftPlayer extends Player, xyz.acrylicstyle.nmsapi.shared.craftbukkit.entity.CraftPlayer {
     RefClass<?> CLASS = NMSAPI.bukkit("entity.CraftPlayer");
 
     @NotNull
@@ -23,5 +23,6 @@ public interface CraftPlayer extends Player {
     @CastTo(EntityPlayer.class)
     @Contract(pure = true)
     @NotNull
+    @Override
     EntityPlayer getHandle();
 }

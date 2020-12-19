@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.authlib;
+package xyz.acrylicstyle.nmsapi.shared.authlib;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,6 @@ import util.reflector.Reflector;
 import util.reflector.ReflectorHandler;
 import xyz.acrylicstyle.mcutil.mojang.Property;
 import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
-import xyz.acrylicstyle.nmsapi.shared.authlib.AbstractGameProfile;
 import xyz.acrylicstyle.nmsapi.shared.authlib.properties.PropertyMap;
 
 import java.util.UUID;

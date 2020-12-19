@@ -8,13 +8,14 @@ import util.reflector.CastTo;
 import util.reflector.ForwardMethod;
 import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
 
-public interface PlayerConnection {
+public interface PlayerConnection extends xyz.acrylicstyle.nmsapi.shared.mineraft.network.PlayerConnection {
     RefClass<?> CLASS = NMSAPI.nms("PlayerConnection");
 
     @ForwardMethod("a")
     @CastTo(NetworkManager.class)
     @Contract(pure = true)
     @NotNull
+    @Override
     NetworkManager getNetworkManager();
 
     /**
