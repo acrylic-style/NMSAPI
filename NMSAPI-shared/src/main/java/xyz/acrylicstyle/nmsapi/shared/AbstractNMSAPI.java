@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class NMSAPI {
+public class AbstractNMSAPI {
     @NotNull
     public static RefClass<?> getRefClass(@NotNull Type type, @NotNull String clazz) {
         if (type == Type.NMS) {

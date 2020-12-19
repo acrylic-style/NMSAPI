@@ -6,10 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import util.reflect.RefClass;
 import util.reflector.CastTo;
 import util.reflector.ForwardMethod;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
 public interface PlayerConnection extends xyz.acrylicstyle.nmsapi.shared.mineraft.network.PlayerConnection {
-    RefClass<?> CLASS = NMSAPI.nms("PlayerConnection");
+    RefClass<?> CLASS = AbstractNMSAPI.nms("PlayerConnection");
 
     @ForwardMethod("a")
     @CastTo(NetworkManager.class)

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import util.CollectionList;
 import util.MultiCollection;
 import xyz.acrylicstyle.mcutil.mojang.Property;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
 import java.util.AbstractMap;
 import java.util.Collection;
@@ -60,18 +60,18 @@ public abstract class AbstractPropertyMap implements Multimap<String, Property> 
 
     @Override
     public boolean putAll(@Nullable String key, @NotNull Iterable<? extends Property> values) {
-        return delegate().putAll(key, NMSAPI.map(values, this::convertToNMS));
+        return delegate().putAll(key, AbstractNMSAPI.map(values, this::convertToNMS));
     }
 
     @Override
     public boolean putAll(@NotNull Multimap<? extends String, ? extends Property> multimap) {
-        return delegate().putAll(NMSAPI.map(multimap, this::convertToNMS));
+        return delegate().putAll(AbstractNMSAPI.map(multimap, this::convertToNMS));
     }
 
     @SuppressWarnings("Convert2MethodRef")
     @Override
     public Collection<Property> replaceValues(@Nullable String key, @NotNull Iterable<? extends Property> values) {
-        return new CollectionList<>((Collection<?>) delegate().replaceValues(key, NMSAPI.map(values, this::convertToNMS))).map(o -> convertToNMSAPI(o));
+        return new CollectionList<>((Collection<?>) delegate().replaceValues(key, AbstractNMSAPI.map(values, this::convertToNMS))).map(o -> convertToNMSAPI(o));
     }
 
     @SuppressWarnings("Convert2MethodRef")
@@ -106,6 +106,6 @@ public abstract class AbstractPropertyMap implements Multimap<String, Property> 
 
     @Override
     public Map<String, Collection<Property>> asMap() {
-        return new util.Collection<>(delegate().asMap()).mapValues((s, c) -> NMSAPI.map(c, this::translateToNMS));
+        return new util.Collection<>(delegate().asMap()).mapValues((s, c) -> AbstractNMSAPI.map(c, this::translateToNMS));
     }
 }

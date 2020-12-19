@@ -8,11 +8,11 @@ import util.reflector.CastTo;
 import util.reflector.ForwardMethod;
 import util.reflector.Reflector;
 import util.reflector.ReflectorHandler;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.entity.EntityPlayer;
 
 public interface CraftPlayer extends Player, xyz.acrylicstyle.nmsapi.shared.craftbukkit.entity.CraftPlayer {
-    RefClass<?> CLASS = NMSAPI.bukkit("entity.CraftPlayer");
+    RefClass<?> CLASS = AbstractNMSAPI.bukkit("entity.CraftPlayer");
 
     @NotNull
     static CraftPlayer getInstance(@NotNull Player player) {

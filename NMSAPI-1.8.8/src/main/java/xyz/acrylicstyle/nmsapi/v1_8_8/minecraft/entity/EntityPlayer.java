@@ -11,14 +11,14 @@ import util.reflector.FieldGetter;
 import util.reflector.FieldSetter;
 import util.reflector.ForwardMethod;
 import xyz.acrylicstyle.mcutil.mojang.GameProfile;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 import xyz.acrylicstyle.nmsapi.shared.authlib.AbstractGameProfile;
 import xyz.acrylicstyle.nmsapi.shared.authlib.ComplexGameProfile;
 import xyz.acrylicstyle.nmsapi.v1_8_8.craftbukkit.entity.CraftPlayer;
 import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.network.PlayerConnection;
 
 public interface EntityPlayer extends xyz.acrylicstyle.nmsapi.shared.mineraft.entity.EntityPlayer {
-    RefClass<?> CLASS = NMSAPI.nms("EntityPlayer");
+    RefClass<?> CLASS = AbstractNMSAPI.nms("EntityPlayer");
 
     @NotNull
     static EntityPlayer getInstance(@NotNull Player player) { return CraftPlayer.getInstance(player).getHandle(); }

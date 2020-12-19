@@ -9,13 +9,13 @@ import util.reflector.FieldSetter;
 import util.reflector.Reflector;
 import util.reflector.ReflectorHandler;
 import xyz.acrylicstyle.mcutil.mojang.Property;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 import xyz.acrylicstyle.nmsapi.shared.authlib.properties.PropertyMap;
 
 import java.util.UUID;
 
 public class ComplexGameProfile extends AbstractGameProfile {
-    public static final RefClass<?> CLASS = NMSAPI.clazz("com.mojang.authlib.GameProfile");
+    public static final RefClass<?> CLASS = AbstractNMSAPI.clazz("com.mojang.authlib.GameProfile");
 
     @SuppressWarnings("deprecation")
     public ComplexGameProfile(@NotNull Object o) {

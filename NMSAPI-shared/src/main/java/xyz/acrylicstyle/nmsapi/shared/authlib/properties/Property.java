@@ -4,10 +4,10 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.reflect.RefClass;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
 public class Property extends xyz.acrylicstyle.mcutil.mojang.Property {
-    public static final RefClass<?> CLASS = NMSAPI.clazz("com.mojang.authlib.properties.Property");
+    public static final RefClass<?> CLASS = AbstractNMSAPI.clazz("com.mojang.authlib.properties.Property");
 
     @SuppressWarnings("deprecation")
     public Property(@NotNull Object o) {

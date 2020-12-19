@@ -7,12 +7,12 @@ import util.reflect.RefClass;
 import util.reflector.FieldGetter;
 import util.reflector.FieldSetter;
 import util.reflector.ForwardMethod;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
 import java.net.SocketAddress;
 
 public interface NetworkManager extends xyz.acrylicstyle.nmsapi.shared.mineraft.network.NetworkManager {
-    RefClass<?> CLASS = NMSAPI.nms("NetworkManager");
+    RefClass<?> CLASS = AbstractNMSAPI.nms("NetworkManager");
 
     @FieldGetter("channel")
     @Contract(pure = true)

@@ -42,6 +42,7 @@
         <module>NMSAPI-1.8.8</module>
         <module>NMSAPI-shared</module>
         <module>NMSAPI-TestPlugin</module>
+        <module>NMSAPI-all</module>
     </modules>
     <repositories>
         <repository>

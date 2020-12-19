@@ -9,10 +9,10 @@ import util.MultiCollection;
 import util.reflect.Ref;
 import util.reflect.RefClass;
 import xyz.acrylicstyle.mcutil.mojang.Property;
-import xyz.acrylicstyle.nmsapi.shared.NMSAPI;
+import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
 public class PropertyMap extends AbstractPropertyMap implements Multimap<String, Property> {
-    public static final RefClass<?> CLASS = NMSAPI.clazz("com.mojang.authlib.properties.PropertyMap");
+    public static final RefClass<?> CLASS = AbstractNMSAPI.clazz("com.mojang.authlib.properties.PropertyMap");
 
     public Object o;
 
