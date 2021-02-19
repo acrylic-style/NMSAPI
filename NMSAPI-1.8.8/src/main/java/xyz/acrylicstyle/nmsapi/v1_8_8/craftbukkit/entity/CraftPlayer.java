@@ -11,7 +11,7 @@ import util.reflector.ReflectorHandler;
 import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.entity.EntityPlayer;
 
-public interface CraftPlayer extends Player, xyz.acrylicstyle.nmsapi.shared.craftbukkit.entity.CraftPlayer {
+public interface CraftPlayer extends xyz.acrylicstyle.nmsapi.shared.craftbukkit.entity.CraftPlayer, Player {
     RefClass<?> CLASS = AbstractNMSAPI.bukkit("entity.CraftPlayer");
 
     @NotNull

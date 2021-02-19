@@ -31,7 +31,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
+                            <minimizeJar>false</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
@@ -65,18 +65,13 @@
     <dependencies>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
-            <artifactId>minecraft-util</artifactId>
-            <version>0.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.acrylicstyle</groupId>
             <artifactId>java-util-all</artifactId>
-            <version>0.11.43</version>
+            <version>0.14.2</version>
         </dependency>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>api</artifactId>
-            <version>0.6.6</version>
+            <version>0.7.5</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -100,7 +95,8 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
+            <version>18.0.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

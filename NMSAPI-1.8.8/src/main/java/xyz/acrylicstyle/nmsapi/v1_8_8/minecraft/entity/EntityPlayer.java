@@ -10,6 +10,7 @@ import util.reflector.CastTo;
 import util.reflector.FieldGetter;
 import util.reflector.FieldSetter;
 import util.reflector.ForwardMethod;
+import util.reflector.TransformParam;
 import xyz.acrylicstyle.mcutil.mojang.GameProfile;
 import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 import xyz.acrylicstyle.nmsapi.shared.authlib.AbstractGameProfile;
@@ -17,7 +18,7 @@ import xyz.acrylicstyle.nmsapi.shared.authlib.ComplexGameProfile;
 import xyz.acrylicstyle.nmsapi.v1_8_8.craftbukkit.entity.CraftPlayer;
 import xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.network.PlayerConnection;
 
-public interface EntityPlayer extends xyz.acrylicstyle.nmsapi.shared.mineraft.entity.EntityPlayer {
+public interface EntityPlayer extends xyz.acrylicstyle.nmsapi.shared.minecraft.entity.EntityPlayer {
     RefClass<?> CLASS = AbstractNMSAPI.nms("EntityPlayer");
 
     @NotNull
@@ -90,7 +91,7 @@ public interface EntityPlayer extends xyz.acrylicstyle.nmsapi.shared.mineraft.en
      * @param profile the profile
      */
     @FieldSetter("bH")
-    void setProfile(@NotNull ComplexGameProfile.Refl profile);
+    void setProfile(@NotNull @TransformParam ComplexGameProfile.Refl profile);
 
     @FieldGetter("playerConnection")
     @CastTo(PlayerConnection.class)

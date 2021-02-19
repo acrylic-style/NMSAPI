@@ -6,17 +6,18 @@ import org.jetbrains.annotations.NotNull;
 import xyz.acrylicstyle.mcutil.lang.MCVersion;
 import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 import xyz.acrylicstyle.nmsapi.shared.craftbukkit.entity.CraftPlayer;
-import xyz.acrylicstyle.nmsapi.shared.mineraft.entity.EntityPlayer;
+import xyz.acrylicstyle.nmsapi.shared.minecraft.entity.EntityPlayer;
+import xyz.acrylicstyle.tomeito_api.utils.Log;
 import xyz.acrylicstyle.tomeito_api.utils.ReflectionUtil;
 
 public class NMSAPI extends AbstractNMSAPI {
-    @NotNull private static final MCVersion version = toMCVersion(ReflectionUtil.getServerVersion());
+    private static final Log.Logger LOGGER = Log.with("NMSAPI");
     private static boolean warned = false;
 
     @Contract(pure = true)
     @NotNull
     public static EntityPlayer getEntityPlayer(@NotNull Player player) {
-        if (version == MCVersion.v1_8_8) {
+        if (VERSION == MCVersion.v1_8_8) {
             return xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.entity.EntityPlayer.getInstance(player);
         } else {
             warn();
@@ -27,7 +28,7 @@ public class NMSAPI extends AbstractNMSAPI {
     @Contract(pure = true)
     @NotNull
     public static CraftPlayer getCraftPlayer(@NotNull Player player) {
-        if (version == MCVersion.v1_8_8) {
+        if (VERSION == MCVersion.v1_8_8) {
             return xyz.acrylicstyle.nmsapi.v1_8_8.craftbukkit.entity.CraftPlayer.getInstance(player);
         } else {
             warn();
@@ -35,20 +36,13 @@ public class NMSAPI extends AbstractNMSAPI {
         }
     }
 
-    @Contract(pure = true)
-    @NotNull
-    public static MCVersion toMCVersion(@NotNull String packageName) {
-        if (packageName.equals("v1_8_R3")) return MCVersion.v1_8_8;
-        return MCVersion.UNKNOWN;
-    }
-
     private static void warn() {
         if (!warned) {
-            System.err.println("[NMSAPI] ==================================================");
-            System.err.println("[NMSAPI]");
-            System.err.println("[NMSAPI] NMSAPI does not fully support " + ReflectionUtil.getServerVersion() + ". You've been warned!");
-            System.err.println("[NMSAPI]");
-            System.err.println("[NMSAPI] ==================================================");
+            LOGGER.warn("==================================================");
+            LOGGER.warn("");
+            LOGGER.warn("NMSAPI does not fully support " + ReflectionUtil.getServerVersion() + ". You've been warned!");
+            LOGGER.warn("");
+            LOGGER.warn("==================================================");
             warned = true;
         }
     }

@@ -8,7 +8,7 @@ import util.reflector.CastTo;
 import util.reflector.ForwardMethod;
 import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
-public interface PlayerConnection extends xyz.acrylicstyle.nmsapi.shared.mineraft.network.PlayerConnection {
+public interface PlayerConnection extends xyz.acrylicstyle.nmsapi.shared.minecraft.network.PlayerConnection {
     RefClass<?> CLASS = AbstractNMSAPI.nms("PlayerConnection");
 
     @ForwardMethod("a")

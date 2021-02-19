@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
-            <artifactId>NMSAPI-1.8.8</artifactId>
+            <artifactId>NMSAPI-all</artifactId>
             <version>0.0.1</version>
         </dependency>
         <dependency>

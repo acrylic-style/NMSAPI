@@ -1,4 +1,4 @@
-package xyz.acrylicstyle.nmsapi.shared.mineraft.network;
+package xyz.acrylicstyle.nmsapi.shared.minecraft.network;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

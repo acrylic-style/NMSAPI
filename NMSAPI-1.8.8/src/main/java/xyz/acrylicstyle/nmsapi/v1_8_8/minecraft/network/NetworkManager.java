@@ -11,7 +11,7 @@ import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
 import java.net.SocketAddress;
 
-public interface NetworkManager extends xyz.acrylicstyle.nmsapi.shared.mineraft.network.NetworkManager {
+public interface NetworkManager extends xyz.acrylicstyle.nmsapi.shared.minecraft.network.NetworkManager {
     RefClass<?> CLASS = AbstractNMSAPI.nms("NetworkManager");
 
     @FieldGetter("channel")
