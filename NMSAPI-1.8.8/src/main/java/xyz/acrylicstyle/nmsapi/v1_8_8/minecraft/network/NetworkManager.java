@@ -3,17 +3,13 @@ package xyz.acrylicstyle.nmsapi.v1_8_8.minecraft.network;
 import io.netty.channel.Channel;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import util.reflect.RefClass;
 import util.reflector.FieldGetter;
 import util.reflector.FieldSetter;
 import util.reflector.ForwardMethod;
-import xyz.acrylicstyle.nmsapi.shared.AbstractNMSAPI;
 
 import java.net.SocketAddress;
 
 public interface NetworkManager extends xyz.acrylicstyle.nmsapi.shared.minecraft.network.NetworkManager {
-    RefClass<?> CLASS = AbstractNMSAPI.nms("NetworkManager");
-
     @FieldGetter("channel")
     @Contract(pure = true)
     @Override

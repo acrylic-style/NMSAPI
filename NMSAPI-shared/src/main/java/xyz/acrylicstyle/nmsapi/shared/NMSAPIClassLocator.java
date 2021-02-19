@@ -4,7 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.Validate;
 
+import java.util.Locale;
+
 public class NMSAPIClassLocator<T> {
+    // xyz.acrylicstyle.nmsapi.[version].[clazz]
     private final String clazz;
 
     public NMSAPIClassLocator(@NotNull String clazz) {
@@ -20,5 +23,9 @@ public class NMSAPIClassLocator<T> {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Class<? extends T> current() {
+        return get(AbstractNMSAPI.VERSION.name().toLowerCase(Locale.ENGLISH));
     }
 }
